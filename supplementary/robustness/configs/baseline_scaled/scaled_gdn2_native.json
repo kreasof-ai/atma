@@ -19,7 +19,7 @@
   "num_chunks": 99,
   "batch_size": 524288,
   "val_tokens": 2097152,
-  "mbs": 16,
+  "mbs": 4,
   "cooldown_frac": 0.7,
   "sketch_dim": 64,
   "sigr_alpha": 0.0,
@@ -51,8 +51,7 @@
     16384,
     32768,
     65536,
-    131072,
-    262144
+    131072
   ],
   "needle_distances": [
     2048,
@@ -61,8 +60,7 @@
     16384,
     32768,
     65536,
-    131072,
-    262144
+    131072
   ],
   "num_eval_docs": 64,
   "num_needle_trials": 64,
