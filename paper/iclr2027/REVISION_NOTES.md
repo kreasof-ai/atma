@@ -1,6 +1,63 @@
 # ICLR 2027 revision notes
 
-## Current milestone (2026-09-05)
+## Current milestone (2026-09-09, systems-table completion)
+
+- Added TDA to Table 18 and the matching main Table 4: 40.6% task mean,
+  6.46 s TTFT, 6,668.5 ms per subsequent token, 5.98 GiB peak allocated
+  memory, and 38.64% final training MFU. Values trace to the completed
+  benchmark matrix and training log.
+- Both captions identify TDA full-prefix recomputation and its different
+  timing/memory conventions; headers now say prompt time and allocation.
+- Both statements remain fully on page 9; both PDFs remain 35 pages.
+
+## Previous milestone (2026-09-09, figures and page-nine statements)
+
+- Figure 5 includes TDA as the third untouched reference heatmap, completing
+  the nine-panel grid. Its depth cells average the same tasks and haystacks.
+- Figure 6 includes TDA full-prefix timing on logarithmic latency axes, with
+  the different backend and prefill/TTFT convention stated explicitly.
+- AI use and reproducibility statements both fit completely on page 9 in
+  both editions. References begin on page 10. Closing prose was condensed
+  while retaining the evidence limits and AI disclosure scope.
+- Both PDFs remain 35 pages and were rebuilt and visually checked.
+
+## Previous milestone (2026-09-09, integrated presentation)
+
+- Main Figure 1 now overlays untouched and capped attention curves, with
+  consistent model colors and explicit line styles. Main Table 2 places
+  NoPE/Polar caps immediately beside their untouched checkpoints.
+- TDA shares the AdamW reference group and the existing retrieval, task-quality,
+  likelihood, adapted-reasoning, and systems tables. Its standalone appendix
+  and standalone result tables were removed.
+- TDA integration/protocol details moved to Appendix D; direct full-prefix
+  measurements remain explicitly separated by backend inside the common
+  serving matrix, and gamma inspection moved into the retention audit.
+- Shared full BPB and BABILong tables also pair untouched/capped NoPE and Polar.
+  No new experiments or capped TDA results were introduced.
+- Both editions compile to 35 pages with main text ending on page 9. Generated
+  tables match archived data; revised figures, tables, and section transitions
+  were visually checked, with no unresolved references or overfull boxes.
+
+## Previous milestone (2026-09-09)
+
+Integrated the completed TDA 10B results from commits 58c788b8, 6dfa75a8,
+and d8d776d5, without launching new training or evaluation jobs.
+
+- Added TDA hybrid to the abstract, main endpoint table, length curves, and
+  downstream bars; replaced the obsolete missing-TDA limitation.
+- Identified the 388.64M-parameter convolution/TDA/memory integration and its
+  separate AdamW recipe. The budget is matched at 9.816B tokens and length 2K,
+  but this is not an isolated attention-operator comparison.
+- Reported both sides of the result: 0.23% base token retrieval and 2.116 mean
+  BPB at 256K, alongside 40% adapted BABILong (versus primary Polar's 28%).
+  TDA also retains 1% exact FinePDFs retrieval at 32K where Polar reaches zero.
+- Added Appendix M with data-generated full curves, task accuracies, direct
+  serving measurements, and the zero-input gamma scan. No capped TDA suite
+  was run; the scan does not bound token-dependent retention or explain decay.
+- Updated retrieval coverage to six models and 28,800 paired evaluations.
+- Both rebuilt editions have 35 pages; main text remains within nine pages.
+
+## Previous milestone (2026-09-05)
 
 A manuscript-only evidence and presentation revision is complete. No new
 training or benchmark runs were performed. The ICLR and arXiv sources and PDFs
@@ -55,8 +112,9 @@ non-fatal underfull spacing warnings remain.
    sample per cell.
 5. The retention cap diagnoses existing checkpoints; the training origin and a
    bounded train-time formulation remain open.
-6. No matched 9.816B-token TDA result is included. Its potential addition before
-   submission is future work, not evidence claimed by this version.
+6. TDA hybrid now has a budget-matched 9.816B-token result, but its AdamW
+   recipe, head geometry, and parameter count differ from the matched attention
+   group. It has one training seed and no cached serving or capped evaluation.
 
 ## Reproducible manuscript checks
 

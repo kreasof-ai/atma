@@ -199,7 +199,12 @@ This removes the quadratic \emph{score-matrix storage}. Full-context prefill sti
 \section{Evaluation Protocols}
 \label{appendix:protocol}
 
-Stage I contains 120 approximately 370--378M-parameter runs trained for 1,900 steps of 524,288 tokens at sequence length 2,048 on FineWeb-Edu. Stage II contains three matched attention models trained for 18,722 such steps (9.816B tokens). The five promoted checkpoints and ten open-weight controls are evaluated with checkpoint-exact forward paths. Stage I cells vary factorial settings and are not independent seed replicates.
+Stage I contains 120 approximately 370--378M-parameter runs trained for 1,900 steps of 524,288 tokens at sequence length 2,048 on FineWeb-Edu. Stage II contains three matched attention models trained for 18,722 such steps (9.816B tokens). The five original promoted checkpoints, the additional TDA hybrid, and ten open-weight controls are evaluated with checkpoint-exact forward paths. Stage I cells vary factorial settings and are not independent seed replicates.
+
+\paragraph{External hybrid recipe.}
+The additional TDA hybrid~\citep{huang2026threshold} has 388,641,924 parameters, width 1024, and 16 blocks: twelve local convolution blocks and four global TDA layers. Each global layer uses 16 heads of dimension 64, the upstream differential-threshold Triton reduction with normalization, and a per-head output RMS normalization. The gated-delta memory side channel shares the excitatory query/key view and values; this is one explicit integration choice, not a unique native TDA architecture. The configured threshold coefficient is 1, the ReLU power is 2, and the learned differential coefficient initializes at 0.5. The pinned TDA source revision begins \texttt{cd8ddc9d5b43}; the complete dependency revisions and checkpoint hashes are archived with the run.
+
+Training completed 18,722 steps of 524,288 FineWeb-Edu tokens (9.816B), with the same tokenizer, sequence length 2048, and L40S device class as the promoted runs. Initialization and data seeds are 202701; microbatch size is four. AdamW uses peak learning rate $3\times10^{-4}$, minimum learning-rate fraction 0.1, warmup fraction 0.05, $(\beta_1,\beta_2)=(0.9,0.95)$, and weight decay 0.1. Final validation loss is 3.06317 nats/token. Parameter count, head geometry, integration, and optimizer differ from the matched NoPE/RoPE/Polar group, so the comparison does not isolate the attention operator.
 
 \subsection{Raven optimizer control}
 The Raven rows use AdamW optimizer because the attempted matched-schedule control did not produce a usable baseline. In the 1B-token Raven Native pilot with the Atma Muon schedule, validation loss decreased from 10.83 to 3.76 nats by step 625, then rose to 6.88 at step 1,125 and ended at 4.62; teacher-forced retrieval was 0\% at every tested length from 2K through 64K. The reported Raven Native and Atma-Raven-Titans checkpoints therefore use AdamW and remain a separate model-family/optimizer group. This is evidence about the tested Muon schedule, not a general claim that Raven cannot converge under any Muon tuning.
@@ -207,11 +212,13 @@ The Raven rows use AdamW optimizer because the attempted matched-schedule contro
 Retrieval crosses passkey and NIAH tasks, synthetic and FinePDFs haystacks, eight lengths from 2K through 256K, three depths, and 50 paired trials per cell. The scorer appends the complete five-token target and evaluates each position conditioned on the preceding ground-truth target tokens. Token accuracy is the fraction of correct per-position argmax predictions; exact accuracy requires all five positions to be correct. Both are teacher-forced diagnostics, not autoregressive generation. An older free-generation protocol was retired because all base checkpoints scored uniformly zero. BABILong uses answer-only fine-tuning on tasks qa1--qa10 at 0K/1K/2K and greedy exact match on ten held-out rows per task and length. Base-task controls use LAMBADA, HellaSwag, PIQA, WinoGrande, ARC-Easy, ARC-Challenge, OpenBookQA, and BoolQ. Fixed-target BPB uses FinePDFs, PG-19, and Proof-Pile. All reported processes completed without failed, OOM, unsupported, missing, or null cells.
 
 \paragraph{Text coverage and aggregation.}
-The 24,000 retrieval evaluations count five models, each on $2\times2\times8\times3\times50=4{,}800$ trials. A single stream of concatenated FinePDFs records supplies every real-text haystack; shorter lengths use prefixes of that stream. The same 50 sample indices per task determine cues and five random digits across lengths, depths, suites, and models. These are paired placements and targets rather than independently sampled documents. Synthetic haystacks repeat the same filler. At each length, overall retrieval gives equal weight to the 12 task--suite--depth cells. Smoke runs are excluded from all reported full-evaluation means.
+The 28,800 retrieval evaluations count six models, including TDA hybrid, each on $2\times2\times8\times3\times50=4{,}800$ trials. A single stream of concatenated FinePDFs records supplies every real-text haystack; shorter lengths use prefixes of that stream. The same 50 sample indices per task determine cues and five random digits across lengths, depths, suites, and models. These are paired placements and targets rather than independently sampled documents. Synthetic haystacks repeat the same filler. At each length, overall retrieval gives equal weight to the 12 task--suite--depth cells. Smoke runs are excluded from all reported full-evaluation means.
 
 For primary fixed-target BPB, the evaluator selects the first qualifying documents with at least $262{,}144+256$ GPT-2 tokens: eight FinePDFs, five PG-19, and five Proof-Pile documents. Every context length predicts the same 256-token span immediately after position 262,144, giving 4,608 scored target tokens per model and length. Dataset BPB divides summed target negative log-likelihood in bits by summed UTF-8 target bytes; the reported mean weights the three datasets equally. Additional context changes the conditioning prefix rather than the target. These 18 spans provide a controlled extrapolation diagnostic, not a representative estimate over all documents in the three corpora.
 
 For proportions we report simple Wilson intervals where they aid interpretation. These intervals treat trials as binomial observations and do not exploit the paired design or account for correlations induced by shared templates. The archived retrieval payloads retain aggregate cell counts but the BABILong payloads do not retain per-model correctness vectors, so paired bootstrap or McNemar tests cannot be reconstructed without rerunning or recovering the original predictions.
+
+The TDA hybrid uses the same pinned benchmark revisions and budgets and a separately adapted, validation-selected BABILong checkpoint. Its checkpoint-exact direct scorer verifies dependency revisions and checkpoint keys. All nine pipeline stages completed, including retrieval through 256K without OOM.
 
 \begin{landscape}
 \section{Complete Factorial Sweep}
@@ -288,7 +295,7 @@ Both NoPE checkpoints developed much longer zero-input horizons than either Pola
 \begin{figure}[h]
 \centering
 \includegraphics[width=\linewidth]{fig_niah_heatmap.pdf}
-\caption{Retrieval depth sweeps for the three matched attention variants before and after the one-head retention cap, followed by untouched Raven Native and Atma-Raven-Titans reference panels. Each cell is teacher-forced token accuracy averaged over passkey and NIAH and over synthetic and FinePDFs haystacks. The Raven rows are separately optimized comparisons, not clamped ablations.}
+\caption{Retrieval depth sweeps for the three matched attention variants before and after the one-head retention cap, followed by untouched Raven Native, Atma-Raven-Titans, and TDA hybrid reference panels. Each cell is teacher-forced token accuracy averaged over passkey and NIAH and over synthetic and FinePDFs haystacks. The reference row contains separate AdamW recipes without clamping.}
 \label{fig:retrieval_depth_sweeps}
 \end{figure}
 
@@ -311,6 +318,8 @@ Atma-Raven-Titans & Synthetic & 63.0 & 60.7 & 53.8 & 46.9 & 41.7 & 35.8 & 25.9 &
  & FinePDFs & 23.2 & 2.6 & 0.7 & 0.2 & 1.4 & 0.5 & 1.6 & 0.7 \\
 Raven Native & Synthetic & 60.1 & 57.7 & 52.7 & 48.3 & 44.3 & 40.9 & 38.9 & 35.1 \\
  & FinePDFs & 22.1 & 15.4 & 8.2 & 3.3 & 5.3 & 2.9 & 3.7 & 5.4 \\
+TDA hybrid & Synthetic & 96.6 & 96.4 & 94.6 & 83.7 & 25.9 & 6.3 & 2.5 & 0.5 \\
+ & FinePDFs & 99.0 & 74.9 & 82.5 & 41.2 & 20.5 & 3.1 & 0.3 & 0.0 \\
 \bottomrule
 \end{tabular}}
 \caption{Untouched teacher-forced target-token retrieval accuracy (\%). Each entry averages two tasks and three depths, with 50 trials per cell. Only full evaluations enter these means; smoke runs are excluded.}
@@ -336,20 +345,23 @@ Atma-Raven-Titans & Synthetic & 8.0 & 5.7 & 3.3 & 2.0 & 0.7 & 0.3 & 0.0 & 0.0 \\
  & FinePDFs & 4.7 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
 Raven Native & Synthetic & 2.0 & 1.0 & 0.3 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
  & FinePDFs & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+TDA hybrid & Synthetic & 86.0 & 84.3 & 76.0 & 41.3 & 0.3 & 0.0 & 0.0 & 0.0 \\
+ & FinePDFs & 95.0 & 25.3 & 45.7 & 2.0 & 1.0 & 0.0 & 0.0 & 0.0 \\
 \bottomrule
 \end{tabular}}
 \caption{Untouched teacher-forced exact five-token retrieval accuracy (\%). Each entry averages two tasks and three depths, with 50 trials per cell. Only full evaluations enter these means; smoke runs are excluded.}
 \label{table:retrieval_exact_breakdown}
 \end{table}
 
-Figure~\ref{fig:retrieval_depth_sweeps} shows variation by needle depth across all five models. Tables~\ref{table:retrieval_breakdown} and~\ref{table:retrieval_exact_breakdown} separate partial target-token signal from exact five-token recall. Every tested model eventually reaches 0.0\% exact retrieval on real-text haystacks under unadapted length extrapolation:
+Figure~\ref{fig:retrieval_depth_sweeps} shows variation by needle depth across all six models, including TDA hybrid. Tables~\ref{table:retrieval_breakdown} and~\ref{table:retrieval_exact_breakdown} separate partial target-token signal from exact five-token recall. Every tested model eventually reaches 0.0\% exact retrieval on real-text haystacks under unadapted length extrapolation:
 \begin{itemize}
 \item \textbf{Raven Native and Atma-Raven-Titans:} Raven Native scores 0.0\% on FinePDFs at every tested length and no more than 2.0\% on synthetic haystacks. Atma-Raven-Titans scores 4.7\% at 2K on FinePDFs and 0.0\% from 4K onward.
+\item \textbf{TDA hybrid:} Exact FinePDFs retrieval is 45.7/2.0/1.0\% at 8K/16K/32K and zero from 64K onward. It remains nonzero one tested length beyond untouched Polar, but neither dominates every length. Synthetic exact retrieval reaches zero at 64K.
 \item \textbf{RoPE:} Exact FinePDFs retrieval falls from 77.3\% at 2K to 0.0\% at 4K and stays there through 256K.
 \item \textbf{NoPE:} Exact FinePDFs retrieval falls from 96.7\% at 2K to 18.0\% at 4K and 0.0\% from 8K onward.
 \item \textbf{Polar Attention:} Untouched Polar reaches 93.0\%, 67.3\%, 62.7\%, and 12.0\% on FinePDFs at 2K, 4K, 8K, and 16K. On synthetic haystacks, it retains 65.7\% exact retrieval at 64K and 18.0\% at 256K, with a 95\% Wilson interval of 14.1--22.7\% at 256K. The other models score 0.0\% there.
 \end{itemize}
-Thus, the loss of exact natural-text retrieval at long context is not unique to ATMA. Polar delays this loss relative to the tested baselines but does not eliminate it.
+Thus, the loss of exact natural-text retrieval at long context is not unique to ATMA. Polar delays this loss relative to NoPE, RoPE, and Raven but does not eliminate it; TDA retains a small exact signal at 32K.
 
 \subsection{Open-weight context}
 Table~\ref{table:open_weight_controls} reports the ten archived open-weight controls. They differ in training data, tokenizer, architecture, parameter count, and native context length; several were trained at lengths beyond 2K. They are therefore practical context, not matched length-extrapolation baselines and not evidence of a Polar advantage over the corresponding model families.
@@ -378,8 +390,13 @@ Falcon-H1-0.5B & 1.99 & 2.54 & 92.5 & 19.4 \\
 \label{table:open_weight_controls}
 \end{table}
 
-\section{Short-Context Quality and Systems}
+\section{Likelihood, Reasoning, and Quality}
 \label{appendix:quality}
+
+Tables~\ref{tab:all_bpb} and~\ref{tab:all_babi} place all six models and paired NoPE/Polar caps together. TDA's untouched mean BPB rises from 1.418 to 2.116 between 2K and 256K, while its adapted BABILong score changes from 50\% to 40\%. Untouched Polar reaches 28\% at 256K and its capped adapted checkpoint reaches 42\%; these contrasts answer different questions from base retrieval.
+
+\input{reference_results_tables}
+
 
 \begin{table}[!ht]
 \centering
@@ -394,8 +411,9 @@ Matched & NoPE & 30.16 & \textbf{37.88} & 66.27 & \textbf{51.93} & \textbf{50.53
 Matched & RoPE & \textbf{30.25} & 37.19 & 66.76 & 50.67 & 49.12 & 29.43 & \textbf{32.40} & \textbf{60.95} & 44.60 \\
 Matched & Polar & 28.47 & 36.19 & \textbf{66.87} & 51.62 & 49.12 & 26.09 & 31.80 & 56.21 & 43.29 \\
 \midrule
-Raven/AdamW & Atma-Raven-Titans & 26.00 & \textbf{34.12} & \textbf{65.56} & \textbf{52.49} & 48.07 & \textbf{27.76} & \textbf{29.00} & 61.41 & \textbf{43.05} \\
-Raven/AdamW & Raven Native & \textbf{27.48} & 33.56 & 64.69 & 51.70 & \textbf{49.12} & 27.09 & 28.80 & \textbf{61.93} & \textbf{43.05} \\
+AdamW & Atma-Raven-Titans & 26.00 & \textbf{34.12} & \textbf{65.56} & \textbf{52.49} & 48.07 & \textbf{27.76} & \textbf{29.00} & 61.41 & \textbf{43.05} \\
+AdamW & Raven Native & \textbf{27.48} & 33.56 & 64.69 & 51.70 & \textbf{49.12} & 27.09 & 28.80 & \textbf{61.93} & \textbf{43.05} \\
+AdamW & TDA hybrid & 22.69 & 31.69 & 63.60 & 51.54 & 45.44 & 26.42 & 26.80 & 56.88 & 40.63 \\
 \bottomrule
 \end{tabular}}
 \caption{Task-level zero-shot accuracy (\%) on the eight short-context controls (22,939 examples per model). LAMBADA, WinoGrande, and BoolQ use standard accuracy; HellaSwag, PIQA, ARC-Easy, ARC-Challenge, and OpenBookQA use length-normalized accuracy. Mean is the unweighted average of the eight displayed metrics; bold is best within each comparison group.}
@@ -405,7 +423,7 @@ Raven/AdamW & Raven Native & \textbf{27.48} & 33.56 & 64.69 & 51.70 & \textbf{49
 \begin{figure}[h]
 \centering
 \includegraphics[width=\linewidth]{fig_serving_scaling.pdf}
-\caption{Single-sequence serving on one L40S. Attention decode scales with KV-cache length; recurrent Raven uses fixed state.}
+\caption{Single-sequence serving on one L40S (logarithmic latency axes). Attention models use cached decoding and Raven uses recurrent state; TDA recomputes the full prefix at each token. Prompt measurements are prefill latency for the cached backends and TTFT for TDA. Backend differences preclude an architecture-only speed comparison.}
 \label{fig:serving_scaling}
 \end{figure}
 
@@ -415,22 +433,25 @@ Raven/AdamW & Raven Native & \textbf{27.48} & 33.56 & 64.69 & 51.70 & \textbf{49
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{llrrrrr}
 \toprule
-\textbf{Group} & \textbf{Model} & \textbf{Base mean} & \textbf{128K prefill} & \textbf{Decode} & \textbf{Engine alloc.} & \textbf{Train MFU} \\
+\textbf{Group} & \textbf{Model} & \textbf{Base mean} & \textbf{128K prompt} & \textbf{Decode} & \textbf{Allocation} & \textbf{Train MFU} \\
 & & (\%) & (s) & (ms/token) & (GiB) & (\%, 2K) \\
 \midrule
 Matched & NoPE & 45.1 & 1.47 & 16.4 & 39.40 & 42.77 \\
 Matched & Polar & 43.3 & 1.62 & 16.3 & 39.41 & 40.44 \\
 Matched & RoPE & 44.6 & 1.47 & 16.5 & 39.41 & 42.45 \\
-Raven/AdamW & Atma-Raven-Titans & 43.1 & 1.00 & 2.27 & 8.62 & 30.92 \\
-Raven/AdamW & Raven Native & 43.0 & 1.36 & 3.27 & 6.46 & 21.53 \\
+AdamW & Atma-Raven-Titans & 43.1 & 1.00 & 2.27 & 8.62 & 30.92 \\
+AdamW & Raven Native & 43.0 & 1.36 & 3.27 & 6.46 & 21.53 \\
+\midrule
+AdamW/direct & TDA hybrid & 40.6 & 6.46 & 6668.5 & 5.98 & 38.64 \\
 \bottomrule
 \end{tabular}}
-\caption{Short-context quality and serving trade-offs. Serving uses one sequence and one timing sample. Engine allocation includes the attention backend's preallocated KV pool; it is not occupied per-sequence cache size. See the memory-accounting discussion below.}
+\caption{Short-context and systems trade-offs on one L40S, one sequence and one timing sample. TDA uses full-prefix recomputation (TTFT and peak allocated memory); other rows use cached/recurrent serving (prefill and engine allocation). Attention allocation includes a preallocated KV pool. These backend and memory conventions preclude an architecture-only comparison. Appendix~\ref{appendix:systems} gives details.}
 \label{table:quality_systems_summary}
 \end{table}
 
 Table~\ref{table:base_tasks_breakdown} gives the exact per-task controls shown in main-text Figure~\ref{fig:short_context_controls}. Figure~\ref{fig:serving_scaling} shows the serving-length trend, and Table~\ref{table:quality_systems_summary} summarizes the quality--systems trade-off.
 
+\FloatBarrier
 \section{Systems Implementation and Optimization Breakdown}
 \label{appendix:systems}
 
@@ -459,6 +480,8 @@ Engine allocation includes weights, runtime buffers, and any preallocated KV poo
 
 \begin{landscape}
 \subsection{Single-sequence scaling}
+TDA has no cached decoder in this repository. Table~\ref{table:serving_detailed_matrix} measures the exact forward path with full-prefix recomputation at each generated token, under protocol \texttt{direct-full-recompute-v1}. Each shape receives a full warmup; loading and tokenization are excluded, and CUDA synchronization brackets timing. At 128K, TTFT is 6.464\,s and subsequent decoding is 0.150 tokens/s, with 5.98/11.00\,GiB peak allocated/reserved memory. These are executable-backend measurements, not a bound on optimized TDA performance or a like-for-like comparison with paged serving.
+
 Table~\ref{table:serving_detailed_matrix} gives the underlying single-sequence measurements. On one NVIDIA L40S, attention decode increases from approximately 2.3 ms/token at 2K to 16.3--16.5 ms/token at 128K because every step reads a longer KV cache. The recurrent models remain nearly flat because they update fixed-size state. Prefill is less monotonic at short lengths because launch overhead and kernel occupancy dominate before the matrix operations reach their efficient regime. These timings use batch size 1, 32 generated tokens, and one recorded timing sample per cell. They are descriptive measurements, not confidence intervals.
 \begingroup
 \small
@@ -503,6 +526,13 @@ Raven Native & Prefill latency (s) & 0.214 & 0.054 & 0.070 & 0.139 & 0.320 & 0.6
 & Prefill throughput (tok/s) & 9,558 & 75,738 & 116,378 & 117,605 & 102,354 & 97,527 & 96,559 \\
 & Decode latency (ms/tok) & 3.26 & 3.25 & 3.24 & 3.24 & 3.25 & 3.25 & 3.27 \\
 & Decode throughput (tok/s) & 306.4 & 307.5 & 308.2 & 308.3 & 307.6 & 307.5 & 306.1 \\
+\midrule
+\multicolumn{9}{l}{\textit{Direct full-prefix recomputation (different backend)}} \\
+TDA hybrid & TTFT (s) & 0.021 & 0.032 & 0.077 & 0.193 & 0.572 & 1.843 & 6.464 \\
+ & Decode latency (ms/tok) & 18.97 & 30.26 & 71.44 & 187.59 & 565.26 & 1837.32 & 6668.50 \\
+ & Decode throughput (tok/s) & 52.702 & 33.049 & 13.999 & 5.331 & 1.769 & 0.544 & 0.150 \\
+ & Peak allocated (GiB) & 0.82 & 0.90 & 1.06 & 1.39 & 2.05 & 3.36 & 5.98 \\
+ & Peak reserved (GiB) & 0.88 & 1.05 & 1.39 & 2.04 & 3.31 & 5.88 & 11.00 \\
 \end{longtable}
 \endgroup
 \end{landscape}
@@ -537,7 +567,7 @@ Decode, context 512 & Batch 128 & 2,939 tok/s & 2,247 tok/s & 1.31$\times$ \\
 \section{Retention-Horizon Diagnostic}
 \label{appendix:retention_audit}
 
-This section records the post-hoc sequence from parameter inspection to a multi-clamp sweep and broad benchmark re-evaluation. It analyzes released checkpoints rather than a new trained architecture. The primary checkpoint comparisons in Section 5 use untouched models. Every cap below is opt-in, applied only at inference, and removed after each condition.
+This section records the post-hoc sequence from parameter inspection to a multi-clamp sweep and broad benchmark re-evaluation. It analyzes released checkpoints rather than a new trained architecture. The primary checkpoint comparisons in Section 5 show untouched models together with explicitly marked inference-only caps. Every cap below is opt-in, applied only at inference, and removed after each condition.
 
 The diagnostic follows three systematic stages:
 \begin{enumerate}
@@ -546,12 +576,7 @@ The diagnostic follows three systematic stages:
   \item \textbf{Independent benchmark re-evaluation:} Re-benchmarking the selected intervention across short-context downstream tasks, retrieval (synthetic and FinePDFs real-text haystacks, passkey and NIAH), fixed-target long-document likelihood (FinePDFs, PG-19, Proof-Pile), and BABILong reasoning.
 \end{enumerate}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{fig_retention_results.pdf}
-\caption{Complete retention-intervention curves for the primary checkpoints. Dashed open curves are untouched; solid curves apply the one-head cap. Dotted filled Raven curves are untouched references. The broad re-evaluation uses pinned archived baselines; same-process sweeps and fresh paired replications are reported separately.}
-\label{fig:retention_results}
-\end{figure}
+Figure~\ref{fig:main_results} shows the complete primary before/after curves alongside the untouched reference models.
 
 \subsection{Parameter-only operating points}
 The memory gate has one learned row per query/memory head, rather than one scalar per attention KV head. For each row we decompose the logit as
@@ -565,6 +590,8 @@ Here $x=0$ defines a reproducible learned operating point. It is not the empiric
 Table~\ref{table:gamma_parameters_full} reports the parameter operating points across all base checkpoints. The promoted NoPE and Polar checkpoints trained on L40S contain isolated Block 2 heads with learned half-lives of $21.01$M and $3.07$M tokens. RoPE has a maximum $H_{1/2}$ of 682.2 tokens, while Atma-Raven-Titans ranges from $30.5$ to $41.4$ tokens. We therefore do not cap Atma-Raven-Titans.
 
 Scanning the separately fine-tuned BABILong checkpoints gives 20.86M tokens for NoPE, 3.05M for Polar, and 680 for RoPE. The outlier therefore remains nearly unchanged after adaptation. Each BABILong cap is still selected from the final fine-tuned checkpoint rather than copied from the base model.
+
+For TDA hybrid, a parameter scan covers all 64 memory layer-heads in both base and adapted checkpoints. For $\gamma_0=\sigma(b_\gamma+\mathrm{mem\_gamma\_bias})$, the maximum zero-input half-life is 36.74379 tokens in both checkpoints (zero-based block 6, head 7), with $\gamma_0=0.981312483$. No head exceeds 256 tokens at zero input. This scan does not exhibit the extreme parameter-only outlier seen in NoPE. However, token-dependent gates can exceed their zero-input values: the maximum head's input-weight row has nonzero norm (approximately 1.273). The scan neither bounds runtime retention nor explains retrieval decay. No capped TDA benchmark was run, and no claim that the cap is inert follows from this diagnostic.
 
 \subsection{Paired multi-clamp sweep}
 For a target maximum half-life $H_{\max}$, the diagnostic clips the final activation-conditioned gate logit,

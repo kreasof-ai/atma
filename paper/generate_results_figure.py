@@ -8,6 +8,7 @@ from pathlib import Path
 
 from reportlab.lib.colors import HexColor
 from reportlab.pdfgen import canvas
+from tda_data import load_tda
 
 from re_evaluation_data import (
     ALL_MODELS,
@@ -29,14 +30,17 @@ MODELS = ("nope", "polar", "rope")
 LABELS = {
     "nope": "NoPE", "polar": "Polar", "rope": "RoPE",
     "raven_native": "Raven Native", "atma_raven_titans": "Atma-Raven-Titans",
+    "tda_hybrid": "TDA hybrid",
 }
 COLORS = {
     "nope": "#D55E00", "polar": "#0072B2", "rope": "#CC79A7",
     "raven_native": "#009E73", "atma_raven_titans": "#E69F00",
+    "tda_hybrid": "#444444",
 }
 MARKERS = {
     "nope": "square", "polar": "circle", "rope": "diamond",
     "raven_native": "triangle", "atma_raven_titans": "down_triangle",
+    "tda_hybrid": "square",
 }
 
 
@@ -123,13 +127,21 @@ def draw_series(c, xs, values, project_y, model, *, capped=False, reference=Fals
         draw_marker(c, MARKERS[model], x, y, color, filled=capped or reference)
 
 
-def generate_pdf(out_path, *, include_caps=False):
+def generate_pdf(out_path, *, include_caps=True):
     baseline_r = baseline_retrieval(models=ALL_MODELS)
     retrieval = (baseline_r, capped_retrieval())
     baseline_b = baseline_babilong(models=ALL_MODELS)
     babilong = (baseline_b, capped_babilong())
     baseline_l = mean_longdoc(baseline_longdoc(models=ALL_MODELS))
     longdoc = (baseline_l, mean_longdoc(capped_longdoc()))
+    references = REFERENCE_MODELS
+    models = ALL_MODELS
+    tda = load_tda()
+    baseline_r["tda_hybrid"] = tda["retrieval"]["token_accuracy"]["overall"]
+    baseline_b["tda_hybrid"] = tda["babi"]
+    baseline_l["tda_hybrid"] = tda["bpb"]["mean"]
+    references += ("tda_hybrid",)
+    models += ("tda_hybrid",)
 
     page_w, page_h = 7.15 * 72, 3.1 * 72
     c = canvas.Canvas(str(out_path), pagesize=(page_w, page_h))
@@ -137,8 +149,8 @@ def generate_pdf(out_path, *, include_caps=False):
     legend_y = page_h - 9
     c.setFont("Helvetica", 6.2)
     legend_x = 42
-    legend_widths = (48, 48, 46, 82, 121)
-    for model, item_width in zip(ALL_MODELS, legend_widths):
+    legend_widths = (48, 48, 46, 82, 107, 65)
+    for model, item_width in zip(models, legend_widths):
         color = HexColor(COLORS[model])
         draw_marker(c, MARKERS[model], legend_x, legend_y, color, filled=True, size=1.8)
         c.setFillColor(HexColor("#222222"))
@@ -146,7 +158,7 @@ def generate_pdf(out_path, *, include_caps=False):
         legend_x += item_width
     legend_y -= 13
     legend_x = 126
-    for label, capped, reference in ((("Matched untouched", False, False), ("Matched one-head cap", True, False), ("Raven reference", False, True)) if include_caps else (("Matched attention", True, False), ("Raven reference", False, True))):
+    for label, capped, reference in ((("Untouched", False, False), ("One-head cap", True, False), ("AdamW references", False, True)) if include_caps else (("Matched attention", True, False), ("Separate AdamW recipes", False, True))):
         c.setStrokeColor(HexColor("#444444"))
         c.setLineWidth(1.25 if capped else 0.9)
         if capped:
@@ -172,7 +184,7 @@ def generate_pdf(out_path, *, include_caps=False):
     for model in MODELS:
         for condition, capped in (zip(retrieval, (False, True)) if include_caps else [(baseline_r, True)]):
             draw_series(c, xs, [condition[model][length] for length in LENGTHS], py, model, capped=capped)
-    for model in REFERENCE_MODELS:
+    for model in references:
         draw_series(c, xs, [baseline_r[model][length] for length in LENGTHS], py, model, reference=True)
 
     bpy = lambda value: y0 + height * value / 70.0
@@ -187,7 +199,7 @@ def generate_pdf(out_path, *, include_caps=False):
     for model in MODELS:
         for condition, capped in (zip(babilong, (False, True)) if include_caps else [(baseline_b, True)]):
             draw_series(c, bxs, [condition[model][length] for length in BABI_LENGTHS], bpy, model, capped=capped)
-    for model in REFERENCE_MODELS:
+    for model in references:
         draw_series(c, bxs, [baseline_b[model][length] for length in BABI_LENGTHS], bpy, model, reference=True)
     c.setFont("Helvetica", 6.5)
     c.setFillColor(HexColor("#555555"))
@@ -201,7 +213,7 @@ def generate_pdf(out_path, *, include_caps=False):
     for model in MODELS:
         for condition, capped in (zip(longdoc, (False, True)) if include_caps else [(baseline_l, True)]):
             draw_series(c, lxs, [condition[model][length] for length in LENGTHS], lpy, model, capped=capped)
-    for model in REFERENCE_MODELS:
+    for model in references:
         draw_series(c, lxs, [baseline_l[model][length] for length in LENGTHS], lpy, model, reference=True)
     c.setFont("Helvetica", 6.5)
     c.setFillColor(HexColor("#555555"))

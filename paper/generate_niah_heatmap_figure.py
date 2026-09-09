@@ -9,16 +9,19 @@ from reportlab.lib.colors import HexColor
 from reportlab.pdfgen import canvas
 
 from re_evaluation_data import ALL_MODELS, DEPTHS, LENGTHS, MODELS, REFERENCE_MODELS, baseline_retrieval, capped_retrieval
+from tda_data import load_tda
 
 
 OUT = Path(os.environ.get("ATMA_NIAH_HEATMAP_OUT", Path(__file__).with_name("fig_niah_heatmap.pdf")))
 LABELS = {
     "nope": "NoPE", "polar": "Polar", "rope": "RoPE",
     "raven_native": "Raven Native", "atma_raven_titans": "Atma-Raven-Titans",
+    "tda_hybrid": "TDA hybrid",
 }
 MODEL_COLORS = {
     "nope": "#D55E00", "polar": "#0072B2", "rope": "#CC79A7",
     "raven_native": "#009E73", "atma_raven_titans": "#E69F00",
+    "tda_hybrid": "#444444",
 }
 
 
@@ -50,6 +53,7 @@ def text_color(value):
 
 def generate_pdf(out_path):
     baseline = baseline_retrieval(by_depth=True, models=ALL_MODELS)
+    baseline["tda_hybrid"] = load_tda()["retrieval_by_depth"]
     capped = capped_retrieval(by_depth=True)
     page_w, page_h = 504.0, 330.0
     c = canvas.Canvas(str(out_path), pagesize=(page_w, page_h))
@@ -68,15 +72,15 @@ def generate_pdf(out_path):
             panels.append((condition, data, model, margin_x + col_i * (panel_w + gap_x),
                            page_h - 26.0 - panel_h - row_i * (panel_h + gap_y)))
     ref_y = page_h - 26.0 - panel_h - 2 * (panel_h + gap_y)
-    ref_xs = (58.0, 292.0)
-    for model, px in zip(REFERENCE_MODELS, ref_xs):
+    ref_xs = tuple(margin_x + i * (panel_w + gap_x) for i in range(3))
+    for model, px in zip(REFERENCE_MODELS + ("tda_hybrid",), ref_xs):
         panels.append(("Untouched reference", baseline, model, px, ref_y))
 
     for condition, data, model, px, py in panels:
         top_y = py + panel_h
         endpoint = sum(data[model]["256k"].values()) / len(DEPTHS)
         is_reference = condition == "Untouched reference"
-        c.setFont("Helvetica-Bold", 6.6 if is_reference else 7.4)
+        c.setFont("Helvetica-Bold", 6.1 if is_reference else 7.4)
         c.setFillColor(HexColor(MODEL_COLORS[model]))
         condition_label = "Reference" if is_reference else condition
         c.drawString(px, top_y - 8, f"{LABELS[model]} - {condition_label} ({endpoint:.1f}% @256K)")

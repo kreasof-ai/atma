@@ -1,18 +1,15 @@
-"""Generate the 2-panel serving latency resource scaling figure (fig_serving_scaling.pdf).
-
-Panel (a): Prefill Latency (seconds) vs Context Length (2K -> 128K).
-Panel (b): Decode Latency (ms/token) vs Context Length (2K -> 128K).
-Highlights constant O(1) decode latency for recurrent Raven models vs linear O(L) KV cache decode latency for attention models.
-"""
+"""Generate log-scale serving curves, labeling TDA full-prefix recomputation."""
 
 from __future__ import annotations
 
 import json
+import math
 import os
 from pathlib import Path
 
 from reportlab.lib.colors import HexColor
 from reportlab.pdfgen import canvas
+from tda_data import load_tda
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = Path(os.environ.get("ATMA_SERVING_SCALING_OUT", Path(__file__).with_name("fig_serving_scaling.pdf")))
@@ -20,13 +17,14 @@ OUT = Path(os.environ.get("ATMA_SERVING_SCALING_OUT", Path(__file__).with_name("
 LENGTHS = ["2k", "4k", "8k", "16k", "32k", "64k", "128k"]
 LENGTH_LABELS = ["2K", "4K", "8K", "16K", "32K", "64K", "128K"]
 
-MODELS = ["polar", "nope", "rope", "atma_raven_titans", "raven_native"]
+MODELS = ["polar", "nope", "rope", "atma_raven_titans", "raven_native", "tda_hybrid"]
 LABELS = {
     "polar": "Polar",
     "nope": "NoPE",
     "rope": "RoPE",
     "atma_raven_titans": "Atma-Raven-Titans",
     "raven_native": "Raven Native",
+    "tda_hybrid": "TDA (full prefix)",
 }
 COLORS = {
     "polar": "#0072B2",
@@ -34,6 +32,7 @@ COLORS = {
     "rope": "#CC79A7",
     "atma_raven_titans": "#E69F00",
     "raven_native": "#009E73",
+    "tda_hybrid": "#444444",
 }
 
 # Empirical serving latency data from benchmarks/logs/atma_10b/serving_*.log
@@ -55,7 +54,9 @@ DECODE_LATENCY_MS = {
 
 
 def draw_panel(c: canvas.Canvas, x0: float, y0: float, width: float, height: float,
-               data_dict: dict[str, list[float]], ymax: float, ylabel: str, title: str):
+               data_dict: dict[str, list[float]], ticks: list[float], ylabel: str, title: str):
+    ymin, ymax = ticks[0], ticks[-1]
+    project = lambda v: y0 + height * math.log(v / ymin) / math.log(ymax / ymin)
     # Axes
     c.setStrokeColor(HexColor("#333333"))
     c.setLineWidth(0.6)
@@ -64,15 +65,13 @@ def draw_panel(c: canvas.Canvas, x0: float, y0: float, width: float, height: flo
 
     # Y-axis Grid
     c.setFont("Helvetica", 6.0)
-    step = ymax / 4.0
-    for i in range(5):
-        yval = i * step
-        yp = y0 + height * (yval / ymax)
+    for yval in ticks:
+        yp = project(yval)
         c.setStrokeColor(HexColor("#E2E8F0"))
         c.setLineWidth(0.35)
         c.line(x0, yp, x0 + width, yp)
         c.setFillColor(HexColor("#444444"))
-        c.drawRightString(x0 - 3, yp - 2, f"{yval:.1f}" if ymax < 5 else f"{int(round(yval))}")
+        c.drawRightString(x0 - 3, yp - 2, f"{yval:g}")
 
     # X-axis Labels
     xs = [x0 + width * i / (len(LENGTHS) - 1) for i in range(len(LENGTHS))]
@@ -101,7 +100,7 @@ def draw_panel(c: canvas.Canvas, x0: float, y0: float, width: float, height: flo
     for m_key in MODELS:
         color = HexColor(COLORS[m_key])
         vals = data_dict[m_key]
-        points = [(x, y0 + height * (v / ymax)) for x, v in zip(xs, vals)]
+        points = [(x, project(v)) for x, v in zip(xs, vals)]
 
         c.setStrokeColor(color)
         c.setLineWidth(1.2)
@@ -124,13 +123,16 @@ def draw_panel(c: canvas.Canvas, x0: float, y0: float, width: float, height: flo
 
 
 def generate_pdf(out_path: Path):
+    tda = load_tda()["serving"]
+    PREFILL_LATENCY_S["tda_hybrid"] = [tda[l]["time_to_first_token_s"] for l in LENGTHS]
+    DECODE_LATENCY_MS["tda_hybrid"] = [1000 * tda[l]["decode_latency_per_token_s"] for l in LENGTHS]
     page_w = 504.0
     page_h = 172.0
 
     c = canvas.Canvas(str(out_path), pagesize=(page_w, page_h))
 
     # Legend at Top
-    legend_widths = [48, 45, 45, 80, 70]
+    legend_widths = [48, 45, 45, 108, 78, 91]
     legend_x = (page_w - sum(legend_widths)) / 2.0
     legend_y = page_h - 10.0
     c.setFont("Helvetica-Bold", 6.5)
@@ -157,17 +159,17 @@ def generate_pdf(out_path: Path):
     plot_h = 108.0
 
     # Panel (a): Prefill Latency
-    draw_panel(c, 34.0, plot_y, plot_w, plot_h, PREFILL_LATENCY_S, 1.8,
-               "Prefill Time (seconds)", "(a) Prefill Latency Scaling")
+    draw_panel(c, 34.0, plot_y, plot_w, plot_h, PREFILL_LATENCY_S, [0.01, 0.1, 1, 10],
+               "Prefill / TTFT (s, log scale)", "(a) Prompt processing")
 
     # Panel (b): Decode Latency
-    draw_panel(c, 280.0, plot_y, plot_w, plot_h, DECODE_LATENCY_MS, 18.0,
-               "Decode Latency (ms/token)", "(b) Decode Latency Scaling")
+    draw_panel(c, 280.0, plot_y, plot_w, plot_h, DECODE_LATENCY_MS, [1, 10, 100, 1000, 10000],
+               "Decode (ms/token, log scale)", "(b) Subsequent-token decoding")
 
-    # Highlight Raven flat decode on Panel (b)
+    # Label the distinct TDA decoding backend within the plot.
     c.setFont("Helvetica-Bold", 6.2)
-    c.setFillColor(HexColor("#009E73"))
-    c.drawString(288.0, plot_y + 55.0, "Raven: Flat 2.27ms/tok (7.2x faster @128K)")
+    c.setFillColor(HexColor("#444444"))
+    c.drawString(288.0, plot_y + 66.0, "TDA recomputes the full prefix")
 
     c.save()
     print(f"wrote {out_path.resolve()}")
