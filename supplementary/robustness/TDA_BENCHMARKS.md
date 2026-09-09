@@ -158,3 +158,77 @@ python -m benchmarks.aggregate --log_dir supplementary/robustness/work/evaluatio
 
 The BABILong gate is written under `work/setup/tda`, outside the final aggregation
 input, because it is a one-example feasibility check.
+
+## Completed benchmark interpretation (2026-09-09)
+
+The [completed result bundle](work/evaluation/tda_pipeline/README.md) contains all
+nine pipeline stages and 537 aggregate rows. The base checkpoint and the separately
+BABILong-adapted checkpoint answer different questions and should remain separate
+in the interpretation.
+
+| Measure | 2K | 256K |
+|---|---:|---:|
+| Synthetic retrieval token accuracy | 96.60% | 0.47% |
+| Real-text retrieval token accuracy | 99.00% | 0.00% |
+| Synthetic retrieval exact-value accuracy | 86.00% | 0.00% |
+| Real-text retrieval exact-value accuracy | 95.00% | 0.00% |
+| FinePDFs BPB (8 documents) | 1.037 | 1.908 |
+| PG-19 BPB (5 documents) | 1.303 | 1.451 |
+| Proof-Pile BPB (5 documents) | 1.912 | 2.988 |
+| Adapted BABILong macro exact-match accuracy | 50.00% | 40.00% |
+
+Retrieval values average passkey and NIAH across the three tested depths within each
+suite. The base model retrieves well at short context but loses essentially all
+five-token retrieval accuracy at 256K. Fixed-target BPB also worsens, especially on
+FinePDFs and Proof-Pile; this is not uniform long-context likelihood stability.
+The [raw retrieval and BPB logs](work/evaluation/tda_pipeline/results/) retain the
+full length/depth grids, document counts, and pinned dataset revisions.
+
+The eight downstream tasks have a 40.63% unweighted mean of their established primary
+accuracies (raw for LAMBADA, WinoGrande, and BoolQ; length-normalized for the remaining
+five). This is a descriptive base-LM quality control, not a reasoning or
+instruction-following score. The separate adapted BABILong model retains 40% macro
+accuracy at 256K versus 50% at 2K under the controlled short-context adaptation recipe.
+That result does not imply comparable retrieval by the untouched base checkpoint.
+BABILong cells contain only ten held-out examples per task; these results describe
+one trained seed rather than across-seed uncertainty.
+
+At 128K, direct full-prefix serving measured 20,276 prefill tokens/s, 6.464 s to the
+first token, 0.150 subsequent tokens/s, and 6.668 s per subsequent token. Peak allocated
+and reserved memory were 5.98 and 11.00 GiB. These are one-sample, warmed measurements
+of full-prefix recomputation, not a cached TDA decoder or a bound on optimized TDA
+serving performance. They must not be interpreted as an architecture-only speed
+comparison with the paged-serving baselines.
+
+### Gamma inspection and decision on a second benchmark run
+
+Before scheduling a 256-token gamma-half-life cap, we inspected all 64 Titans memory
+layer-heads in both saved checkpoints using `gamma_diagnostics.inspect_parameters`.
+The [JSON scan](work/evaluation/tda_gamma256/parameters/gamma_parameters.json) and
+[CSV scan](work/evaluation/tda_gamma256/parameters/gamma_parameters.csv) preserve the
+per-head values. These are parameter-only, **zero-input** operating points:
+`gamma_0 = sigmoid(learned_bias + mem_gamma_bias)` and
+`half_life = log(0.5) / log(gamma_0)`.
+
+| Checkpoint | Maximum zero-input half-life | Maximum gamma_0 | Block / head (zero-based) | Heads above 256 tokens |
+|---|---:|---:|---|---:|
+| TDA 10B base | 36.74379 tokens | 0.981312483 | 6 / 7 | 0 / 64 |
+| BABILong-adapted TDA | 36.74379 tokens | 0.981312483 | 6 / 7 | 0 / 64 |
+
+A 256-token half-life ceiling corresponds to gamma <= 0.997296056. Both checkpoints'
+maximum zero-input operating points are already well below that ceiling. The scan
+therefore provides no evidence of the extreme parameter-only retention horizon that
+motivated the NoPE clamping follow-up. The shared maximum does not mean the two
+checkpoints have identical weights or identical runtime gamma values.
+
+**Decision:** defer a second full TDA benchmark run with a 256-token half-life cap.
+The existing benchmarks plus this diagnostic are the current evidence; no clamped
+TDA results were produced. This is a compute-prioritization decision, not a measured
+finding that the clamp is inert or that gamma cannot contribute to retrieval decay.
+Gamma depends on the input through `w_gamma(x)`, and the maximum head has a nonzero
+weight-row norm (approximately 1.273). Runtime gamma can therefore exceed its
+zero-input value. The scan neither bounds all token-dependent half-lives nor the
+model's overall effective context. If runtime measurements show substantial time
+above the 256-token threshold, revisit a targeted paired clamp experiment before
+considering another complete suite. No causal attribution of the observed long-context
+degradation to gamma is established by this parameter inspection alone.

@@ -20,3 +20,10 @@ Serving results use `direct-full-recompute-v1`, not cached decoding. Keep them
 separate from the existing paged-serving results. BABILong uses a separate adapted
 checkpoint; it does not modify the original 10B weights. The full benchmark commands
 and interpretation constraints are in `../../../TDA_BENCHMARKS.md`.
+
+The [TDA benchmark interpretation](../../../TDA_BENCHMARKS.md#completed-benchmark-interpretation-2026-09-09)
+summarizes these results and the subsequent gamma inspection. Both the base and
+BABILong-adapted checkpoints have a maximum zero-input half-life of 36.74 tokens
+(block 6, head 7); none of their 64 heads exceeds 256 tokens at zero input. A second
+full gamma-capped suite is deferred, with token-dependent gamma explicitly left
+unresolved. The scan is preserved in [the gamma diagnostic bundle](../tda_gamma256/parameters/gamma_parameters.json).
