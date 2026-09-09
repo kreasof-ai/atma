@@ -61,6 +61,8 @@ def main():
                     help="retrieval only: needle depth fractions")
     ap.add_argument("--samples", type=int, default=100, help="samples per cell")
     ap.add_argument("--serving_samples", type=int, default=1)
+    ap.add_argument("--serving_backend", choices=("paged", "direct"), default="paged",
+                    help="direct measures full-prefix recomputation, not cached decoding (supports TDA)")
     ap.add_argument("--seed", type=int, default=1234,
                     help="retrieval sample seed (same seed yields paired items across models)")
     ap.add_argument("--dataset", default="RMT-team/babilong")
@@ -238,12 +240,20 @@ def main():
         elif args.benchmark == "serving":
             from benchmarks.serving import emit_log, run_serving
 
-            res = run_serving(
-                args.model, args.lengths, decode_tokens=args.decode_tokens,
-                samples=args.serving_samples, max_num_seqs=args.max_num_seqs,
-                max_num_batched_tokens=args.max_num_batched_tokens,
-                strict=args.strict, log_fn=log,
-            )
+            if args.serving_backend == "direct":
+                from benchmarks.direct_serving import run_direct_serving
+                res = run_direct_serving(
+                    args.model, args.lengths, decode_tokens=args.decode_tokens,
+                    samples=args.serving_samples, max_num_seqs=args.max_num_seqs,
+                    log_fn=log,
+                )
+            else:
+                res = run_serving(
+                    args.model, args.lengths, decode_tokens=args.decode_tokens,
+                    samples=args.serving_samples, max_num_seqs=args.max_num_seqs,
+                    max_num_batched_tokens=args.max_num_batched_tokens,
+                    strict=args.strict, log_fn=log,
+                )
             emit_log(fh, res)
         log(f"[run] done in {res['elapsed_s']}s -> {out}")
     finally:

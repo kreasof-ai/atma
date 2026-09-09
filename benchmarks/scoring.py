@@ -91,7 +91,15 @@ class DirectScorer:
 
     def _load_model(self, torch):
         architecture = self.cfg.get("arch_type") or self.cfg.get("attn_type", "polar")
-        if "arch_type" in self.cfg:
+        if architecture in {"tda_hybrid", "mamba3_native", "gdn2_native"}:
+            from external_baselines.verify_checkpoint import _add_pinned_sources
+            from supplementary.robustness.run_worker import _verify_external_dependencies
+
+            _verify_external_dependencies(self.cfg)
+            _add_pinned_sources()
+            from external_baselines.model import create_model
+            model = create_model(self.cfg)
+        elif "arch_type" in self.cfg:
             from raven_baseline.model import create_model
             model = create_model(self.cfg)
         else:

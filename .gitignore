@@ -31,3 +31,7 @@ paper/**/*.toc
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Local TDA benchmark runtime lock and large adapted checkpoint binary.
+/supplementary/robustness/work/evaluation/tda_pipeline/.lock
+/supplementary/robustness/work/evaluation/tda_pipeline/babilong_checkpoint/weights.pt

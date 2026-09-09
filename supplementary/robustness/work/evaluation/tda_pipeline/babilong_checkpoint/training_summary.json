@@ -1,0 +1,33 @@
+{
+  "best_epoch": 1,
+  "best_val_nll": 0.5562177499502359,
+  "checkpoint": "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/babilong_checkpoint",
+  "curve": [
+    {
+      "elapsed_s": 222.4,
+      "epoch": 1,
+      "lr": 1.6330117273984822e-05,
+      "step": 300,
+      "train_nll": 1.4617950983625831,
+      "val_nll": 0.5562177499502359
+    },
+    {
+      "elapsed_s": 445.3,
+      "epoch": 2,
+      "lr": 6.936199775201998e-06,
+      "step": 600,
+      "train_nll": 0.4827058824585445,
+      "val_nll": 0.5780599465125741
+    },
+    {
+      "elapsed_s": 667.3,
+      "epoch": 3,
+      "lr": 2.0000000000000003e-06,
+      "step": 900,
+      "train_nll": 0.3918184096406401,
+      "val_nll": 0.5818434151956943
+    }
+  ],
+  "elapsed_s": 667.3,
+  "total_steps": 900
+}

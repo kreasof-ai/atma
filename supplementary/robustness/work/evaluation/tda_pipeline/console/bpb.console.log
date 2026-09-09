@@ -1,0 +1,136 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+[run] benchmark=longdoc model=/home/sagemaker-user/atma/checkpoints/supplementary_robustness/scaled_tda_hybrid tasks=[] lengths=['2k', '4k', '8k', '16k', '32k', '64k', '128k', '256k'] samples=100 gamma_clamp=None
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1511.80it/s]
+
+Generating train split: 0 examples [00:00, ? examples/s]
+Generating train split: 1000 examples [00:00, 3526.80 examples/s]
+Generating train split: 2000 examples [00:00, 5671.66 examples/s]
+Generating train split: 3000 examples [00:00, 5356.34 examples/s]
+Generating train split: 4000 examples [00:00, 6542.63 examples/s]
+Generating train split: 6000 examples [00:00, 8460.65 examples/s]
+Generating train split: 8000 examples [00:01, 10063.94 examples/s]
+Generating train split: 10000 examples [00:01, 11789.89 examples/s]
+Generating train split: 12000 examples [00:01, 12798.54 examples/s]
+Generating train split: 14000 examples [00:01, 12459.39 examples/s]
+Generating train split: 16000 examples [00:01, 12481.49 examples/s]
+Generating train split: 18000 examples [00:01, 11926.33 examples/s]
+Generating train split: 21696 examples [00:02, 12572.39 examples/s]
+Generating train split: 23696 examples [00:02, 13181.13 examples/s]
+Generating train split: 25696 examples [00:02, 13403.28 examples/s]
+Generating train split: 27696 examples [00:02, 13688.11 examples/s]
+Generating train split: 30696 examples [00:02, 13758.08 examples/s]
+Generating train split: 32696 examples [00:02, 13552.86 examples/s]
+Generating train split: 34696 examples [00:02, 13947.02 examples/s]
+Generating train split: 36696 examples [00:03, 14827.06 examples/s]
+Generating train split: 38696 examples [00:03, 13984.47 examples/s]
+Generating train split: 42392 examples [00:03, 14127.05 examples/s]
+Generating train split: 44392 examples [00:03, 13938.12 examples/s]
+Generating train split: 46392 examples [00:03, 13402.25 examples/s]
+Generating train split: 48392 examples [00:03, 13111.23 examples/s]
+Generating train split: 50392 examples [00:04, 13280.65 examples/s]
+Generating train split: 52392 examples [00:04, 13770.89 examples/s]
+Generating train split: 54392 examples [00:04, 14071.08 examples/s]
+Generating train split: 56392 examples [00:04, 13669.55 examples/s]
+Generating train split: 58392 examples [00:04, 14337.48 examples/s]
+Generating train split: 60392 examples [00:04, 14209.64 examples/s]
+Generating train split: 63088 examples [00:05, 12418.99 examples/s]
+Generating train split: 65088 examples [00:05, 11244.13 examples/s]
+Generating train split: 68088 examples [00:05, 10727.00 examples/s]
+Generating train split: 70088 examples [00:05, 12046.62 examples/s]
+Generating train split: 72088 examples [00:05, 11378.95 examples/s]
+Generating train split: 74088 examples [00:06, 10852.14 examples/s]
+Generating train split: 76088 examples [00:06, 11780.73 examples/s]
+Generating train split: 78088 examples [00:06, 11164.15 examples/s]
+Generating train split: 80088 examples [00:06, 10238.10 examples/s]
+Generating train split: 83784 examples [00:06, 11019.66 examples/s]
+Generating train split: 85784 examples [00:07, 10275.04 examples/s]
+Generating train split: 87784 examples [00:07, 10120.14 examples/s]
+Generating train split: 90784 examples [00:07, 10906.28 examples/s]
+Generating train split: 92784 examples [00:07, 11972.56 examples/s]
+Generating train split: 95784 examples [00:08, 12523.01 examples/s]
+Generating train split: 97784 examples [00:08, 11954.23 examples/s]
+Generating train split: 99784 examples [00:08, 11191.06 examples/s]
+Generating train split: 101784 examples [00:08, 11028.22 examples/s]
+Generating train split: 104480 examples [00:08, 10432.28 examples/s]
+Generating train split: 106480 examples [00:09, 10113.00 examples/s]
+Generating train split: 108480 examples [00:09, 9866.38 examples/s] 
+Generating train split: 111480 examples [00:09, 9761.67 examples/s]
+Generating train split: 113480 examples [00:09, 11217.32 examples/s]
+Generating train split: 115480 examples [00:09, 9927.19 examples/s] 
+Generating train split: 117480 examples [00:10, 9343.28 examples/s]
+Generating train split: 119480 examples [00:10, 10597.46 examples/s]
+Generating train split: 121480 examples [00:10, 11380.35 examples/s]
+Generating train split: 125176 examples [00:11, 7252.34 examples/s] 
+Generating train split: 127176 examples [00:11, 6907.53 examples/s]
+Generating train split: 129176 examples [00:12, 6140.67 examples/s]
+Generating train split: 133176 examples [00:12, 8645.49 examples/s]
+Generating train split: 135176 examples [00:12, 8982.33 examples/s]
+Generating train split: 138176 examples [00:12, 10802.04 examples/s]
+Generating train split: 140176 examples [00:12, 11735.45 examples/s]
+Generating train split: 142176 examples [00:12, 11974.78 examples/s]
+Generating train split: 144872 examples [00:12, 14346.56 examples/s]
+Generating train split: 146872 examples [00:14, 5239.43 examples/s] 
+Generating train split: 148872 examples [00:14, 6461.85 examples/s]
+Generating train split: 150872 examples [00:14, 5385.77 examples/s]
+Generating train split: 153872 examples [00:15, 5669.49 examples/s]
+Generating train split: 156872 examples [00:15, 5941.39 examples/s]
+Generating train split: 159872 examples [00:16, 5977.55 examples/s]
+Generating train split: 161872 examples [00:16, 5568.01 examples/s]
+Generating train split: 163872 examples [00:16, 6815.53 examples/s]
+Generating train split: 166567 examples [00:17, 6068.47 examples/s]
+Generating train split: 168567 examples [00:17, 5786.86 examples/s]
+Generating train split: 171567 examples [00:18, 5926.07 examples/s]
+Generating train split: 173567 examples [00:18, 5903.56 examples/s]
+Generating train split: 175567 examples [00:18, 7236.20 examples/s]
+Generating train split: 177567 examples [00:18, 6286.77 examples/s]
+Generating train split: 179567 examples [00:19, 5618.03 examples/s]
+Generating train split: 181567 examples [00:19, 7015.43 examples/s]
+Generating train split: 183567 examples [00:19, 6419.87 examples/s]
+Generating train split: 184567 examples [00:20, 6064.30 examples/s]
+Generating train split: 186262 examples [00:20, 9237.72 examples/s]
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (339910 > 262400). Running this sequence through the model will result in indexing errors
+[longdoc] selected 1/8 from codelion/finepdfs-1B after scanning 1798 rows
+[longdoc] selected 2/8 from codelion/finepdfs-1B after scanning 5936 rows
+[longdoc] selected 3/8 from codelion/finepdfs-1B after scanning 8638 rows
+[longdoc] selected 4/8 from codelion/finepdfs-1B after scanning 16812 rows
+[longdoc] selected 5/8 from codelion/finepdfs-1B after scanning 17777 rows
+[longdoc] selected 6/8 from codelion/finepdfs-1B after scanning 20727 rows
+[longdoc] selected 7/8 from codelion/finepdfs-1B after scanning 24585 rows
+[longdoc] selected 8/8 from codelion/finepdfs-1B after scanning 24626 rows
+[longdoc]   finepdfs context=   2k docs=8 nll=1.2759 bpb=1.0368
+[longdoc]   finepdfs context=   4k docs=8 nll=1.2210 bpb=0.9922
+[longdoc]   finepdfs context=   8k docs=8 nll=1.2562 bpb=1.0208
+[longdoc]   finepdfs context=  16k docs=8 nll=1.2508 bpb=1.0164
+[longdoc]   finepdfs context=  32k docs=8 nll=1.3977 bpb=1.1358
+[longdoc]   finepdfs context=  64k docs=8 nll=1.5472 bpb=1.2572
+[longdoc]   finepdfs context= 128k docs=8 nll=1.7567 bpb=1.4275
+[longdoc]   finepdfs context= 256k docs=8 nll=2.3483 bpb=1.9083
+[longdoc] selected 1/8 from emozilla/pg19 after scanning 22 rows
+[longdoc] selected 2/8 from emozilla/pg19 after scanning 38 rows
+[longdoc] selected 3/8 from emozilla/pg19 after scanning 62 rows
+[longdoc] selected 4/8 from emozilla/pg19 after scanning 81 rows
+[longdoc] selected 5/8 from emozilla/pg19 after scanning 92 rows
+[longdoc]       pg19 context=   2k docs=5 nll=3.5569 bpb=1.3035
+[longdoc]       pg19 context=   4k docs=5 nll=3.5643 bpb=1.3062
+[longdoc]       pg19 context=   8k docs=5 nll=3.5348 bpb=1.2954
+[longdoc]       pg19 context=  16k docs=5 nll=3.5459 bpb=1.2995
+[longdoc]       pg19 context=  32k docs=5 nll=3.6062 bpb=1.3216
+[longdoc]       pg19 context=  64k docs=5 nll=3.6864 bpb=1.3509
+[longdoc]       pg19 context= 128k docs=5 nll=3.8642 bpb=1.4161
+[longdoc]       pg19 context= 256k docs=5 nll=3.9607 bpb=1.4515
+[longdoc] selected 1/8 from hoskinson-center/proof-pile after scanning 20081 rows
+[longdoc] selected 2/8 from hoskinson-center/proof-pile after scanning 22803 rows
+[longdoc] selected 3/8 from hoskinson-center/proof-pile after scanning 32629 rows
+[longdoc] selected 4/8 from hoskinson-center/proof-pile after scanning 41384 rows
+[longdoc] selected 5/8 from hoskinson-center/proof-pile after scanning 44492 rows
+[longdoc] proof_pile context=   2k docs=5 nll=3.3531 bpb=1.9123
+[longdoc] proof_pile context=   4k docs=5 nll=3.4815 bpb=1.9855
+[longdoc] proof_pile context=   8k docs=5 nll=3.6955 bpb=2.1075
+[longdoc] proof_pile context=  16k docs=5 nll=3.7965 bpb=2.1652
+[longdoc] proof_pile context=  32k docs=5 nll=3.9901 bpb=2.2756
+[longdoc] proof_pile context=  64k docs=5 nll=4.1643 bpb=2.3749
+[longdoc] proof_pile context= 128k docs=5 nll=4.6558 bpb=2.6552
+[longdoc] proof_pile context= 256k docs=5 nll=5.2391 bpb=2.9879
+[run] done in 1111.3s -> /home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/results/bpb.log

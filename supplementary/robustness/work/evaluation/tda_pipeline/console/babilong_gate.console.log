@@ -1,0 +1,49 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+[run] benchmark=babilong model=/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/babilong_checkpoint tasks=['qa1'] lengths=['256k'] samples=1 gamma_clamp=None
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1397.46it/s]
+[babilong] prompts = builtin-v1
+[babilong] held-out rows = [90, 100); dataset = RMT-team/babilong@ee0d588794c7ac098062ee0d247c733d62e94fe2
+
+Generating qa1 split: 0 examples [00:00, ? examples/s]
+Generating qa1 split: 100 examples [00:01, 61.46 examples/s]
+Generating qa1 split: 100 examples [00:01, 60.48 examples/s]
+
+Generating qa2 split: 0 examples [00:00, ? examples/s]
+Generating qa2 split: 100 examples [00:01, 80.16 examples/s]
+Generating qa2 split: 100 examples [00:01, 78.70 examples/s]
+
+Generating qa3 split: 0 examples [00:00, ? examples/s]
+Generating qa3 split: 100 examples [00:01, 79.99 examples/s]
+Generating qa3 split: 100 examples [00:01, 78.51 examples/s]
+
+Generating qa4 split: 0 examples [00:00, ? examples/s]
+Generating qa4 split: 100 examples [00:01, 80.63 examples/s]
+Generating qa4 split: 100 examples [00:01, 79.20 examples/s]
+
+Generating qa5 split: 0 examples [00:00, ? examples/s]
+Generating qa5 split: 100 examples [00:01, 82.69 examples/s]
+Generating qa5 split: 100 examples [00:01, 81.15 examples/s]
+
+Generating qa6 split: 0 examples [00:00, ? examples/s]
+Generating qa6 split: 100 examples [00:01, 81.16 examples/s]
+Generating qa6 split: 100 examples [00:01, 79.54 examples/s]
+
+Generating qa7 split: 0 examples [00:00, ? examples/s]
+Generating qa7 split: 100 examples [00:01, 82.40 examples/s]
+Generating qa7 split: 100 examples [00:01, 80.83 examples/s]
+
+Generating qa8 split: 0 examples [00:00, ? examples/s]
+Generating qa8 split: 100 examples [00:01, 81.91 examples/s]
+Generating qa8 split: 100 examples [00:01, 80.41 examples/s]
+
+Generating qa9 split: 0 examples [00:00, ? examples/s]
+Generating qa9 split: 100 examples [00:01, 84.16 examples/s]
+Generating qa9 split: 100 examples [00:01, 82.63 examples/s]
+
+Generating qa10 split: 0 examples [00:00, ? examples/s]
+Generating qa10 split: 100 examples [00:01, 82.39 examples/s]
+Generating qa10 split: 100 examples [00:01, 80.56 examples/s]
+[babilong]  qa1 @ 256k: acc=0.0% (n=1)
+[run] done in 107.9s -> /home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/gate/babilong_gate.log

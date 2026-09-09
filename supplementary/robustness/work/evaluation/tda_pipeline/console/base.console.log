@@ -1,0 +1,155 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+[run] benchmark=base model=/home/sagemaker-user/atma/checkpoints/supplementary_robustness/scaled_tda_hybrid tasks=['lambada', 'hellaswag', 'piqa', 'winogrande', 'arc_easy', 'arc_challenge', 'openbookqa', 'boolq'] lengths=['2k', '4k', '8k', '16k', '32k', '64k', '128k', '256k'] samples=100 gamma_clamp=None
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1590.33it/s]
+
+Generating test split:   0%|          | 0/5153 [00:00<?, ? examples/s]
+Generating test split: 100%|██████████| 5153/5153 [00:00<00:00, 143917.54 examples/s]
+[base] task=lambada dataset=EleutherAI/lambada_openai@900124bf3b8235c6daf21033af9948b3f07346c4 samples=5153
+[base] lambada samples=5153 acc=22.69% target_ppl=44.945
+
+Generating train split:   0%|          | 0/39905 [00:00<?, ? examples/s]
+Generating train split: 100%|██████████| 39905/39905 [00:00<00:00, 437347.34 examples/s]
+
+Generating test split:   0%|          | 0/10003 [00:00<?, ? examples/s]
+Generating test split: 100%|██████████| 10003/10003 [00:00<00:00, 439814.06 examples/s]
+
+Generating validation split:   0%|          | 0/10042 [00:00<?, ? examples/s]
+Generating validation split: 100%|██████████| 10042/10042 [00:00<00:00, 490060.16 examples/s]
+[base] task=hellaswag dataset=Rowan/hellaswag@218ec52e09a7e7462a5400043bb9a69a41d06b76 samples=10042
+[base] hellaswag: 250/10042
+[base] hellaswag: 500/10042
+[base] hellaswag: 750/10042
+[base] hellaswag: 1000/10042
+[base] hellaswag: 1250/10042
+[base] hellaswag: 1500/10042
+[base] hellaswag: 1750/10042
+[base] hellaswag: 2000/10042
+[base] hellaswag: 2250/10042
+[base] hellaswag: 2500/10042
+[base] hellaswag: 2750/10042
+[base] hellaswag: 3000/10042
+[base] hellaswag: 3250/10042
+[base] hellaswag: 3500/10042
+[base] hellaswag: 3750/10042
+[base] hellaswag: 4000/10042
+[base] hellaswag: 4250/10042
+[base] hellaswag: 4500/10042
+[base] hellaswag: 4750/10042
+[base] hellaswag: 5000/10042
+[base] hellaswag: 5250/10042
+[base] hellaswag: 5500/10042
+[base] hellaswag: 5750/10042
+[base] hellaswag: 6000/10042
+[base] hellaswag: 6250/10042
+[base] hellaswag: 6500/10042
+[base] hellaswag: 6750/10042
+[base] hellaswag: 7000/10042
+[base] hellaswag: 7250/10042
+[base] hellaswag: 7500/10042
+[base] hellaswag: 7750/10042
+[base] hellaswag: 8000/10042
+[base] hellaswag: 8250/10042
+[base] hellaswag: 8500/10042
+[base] hellaswag: 8750/10042
+[base] hellaswag: 9000/10042
+[base] hellaswag: 9250/10042
+[base] hellaswag: 9500/10042
+[base] hellaswag: 9750/10042
+[base] hellaswag: 10000/10042
+[base] hellaswag samples=10042 acc=29.16% acc_norm=31.69% primary=accuracy_norm
+
+Generating train split:   0%|          | 0/16113 [00:00<?, ? examples/s]
+Generating train split: 100%|██████████| 16113/16113 [00:00<00:00, 1491104.50 examples/s]
+
+Generating test split:   0%|          | 0/3084 [00:00<?, ? examples/s]
+Generating test split: 100%|██████████| 3084/3084 [00:00<00:00, 966253.35 examples/s]
+
+Generating validation split:   0%|          | 0/1838 [00:00<?, ? examples/s]
+Generating validation split: 100%|██████████| 1838/1838 [00:00<00:00, 776816.88 examples/s]
+[base] task=piqa dataset=lighteval/piqa@41782e6bf0ef7de82a2ca8a9feb1dca042837fae samples=1838
+[base] piqa: 250/1838
+[base] piqa: 500/1838
+[base] piqa: 750/1838
+[base] piqa: 1000/1838
+[base] piqa: 1250/1838
+[base] piqa: 1500/1838
+[base] piqa: 1750/1838
+[base] piqa samples=1838 acc=63.76% acc_norm=63.60% primary=accuracy_norm
+
+Generating train split:   0%|          | 0/40398 [00:00<?, ? examples/s]
+Generating train split: 100%|██████████| 40398/40398 [00:00<00:00, 2494868.56 examples/s]
+
+Generating test split:   0%|          | 0/1767 [00:00<?, ? examples/s]
+Generating test split: 100%|██████████| 1767/1767 [00:00<00:00, 833202.38 examples/s]
+
+Generating validation split:   0%|          | 0/1267 [00:00<?, ? examples/s]
+Generating validation split: 100%|██████████| 1267/1267 [00:00<00:00, 674388.73 examples/s]
+[base] task=winogrande dataset=allenai/winogrande@01e74176c63542e6b0bcb004dcdea22d94fb67b5 samples=1267
+[base] winogrande: 250/1267
+[base] winogrande: 500/1267
+[base] winogrande: 750/1267
+[base] winogrande: 1000/1267
+[base] winogrande: 1250/1267
+[base] winogrande samples=1267 acc=51.54% acc_norm=51.54% primary=accuracy
+
+Generating train split:   0%|          | 0/2251 [00:00<?, ? examples/s]
+Generating train split: 100%|██████████| 2251/2251 [00:00<00:00, 561953.35 examples/s]
+
+Generating test split:   0%|          | 0/2376 [00:00<?, ? examples/s]
+Generating test split: 100%|██████████| 2376/2376 [00:00<00:00, 717573.90 examples/s]
+
+Generating validation split:   0%|          | 0/570 [00:00<?, ? examples/s]
+Generating validation split: 100%|██████████| 570/570 [00:00<00:00, 300875.07 examples/s]
+[base] task=arc_easy dataset=allenai/ai2_arc@210d026faf9955653af8916fad021475a3f00453 samples=570
+[base] arc_easy: 250/570
+[base] arc_easy: 500/570
+[base] arc_easy samples=570 acc=52.63% acc_norm=45.44% primary=accuracy_norm
+
+Generating train split:   0%|          | 0/1119 [00:00<?, ? examples/s]
+Generating train split: 100%|██████████| 1119/1119 [00:00<00:00, 353846.97 examples/s]
+
+Generating test split:   0%|          | 0/1172 [00:00<?, ? examples/s]
+Generating test split: 100%|██████████| 1172/1172 [00:00<00:00, 433753.14 examples/s]
+
+Generating validation split:   0%|          | 0/299 [00:00<?, ? examples/s]
+Generating validation split: 100%|██████████| 299/299 [00:00<00:00, 160534.68 examples/s]
+[base] task=arc_challenge dataset=allenai/ai2_arc@210d026faf9955653af8916fad021475a3f00453 samples=299
+[base] arc_challenge: 250/299
+[base] arc_challenge samples=299 acc=24.08% acc_norm=26.42% primary=accuracy_norm
+
+Generating train split:   0%|          | 0/4957 [00:00<?, ? examples/s]
+Generating train split: 100%|██████████| 4957/4957 [00:00<00:00, 1012277.37 examples/s]
+
+Generating validation split:   0%|          | 0/500 [00:00<?, ? examples/s]
+Generating validation split: 100%|██████████| 500/500 [00:00<00:00, 270600.26 examples/s]
+
+Generating test split:   0%|          | 0/500 [00:00<?, ? examples/s]
+Generating test split: 100%|██████████| 500/500 [00:00<00:00, 278063.11 examples/s]
+[base] task=openbookqa dataset=allenai/openbookqa@388097ea7776314e93a529163e0fea805b8a6454 samples=500
+[base] openbookqa: 250/500
+[base] openbookqa: 500/500
+[base] openbookqa samples=500 acc=16.60% acc_norm=26.80% primary=accuracy_norm
+
+Generating train split:   0%|          | 0/9427 [00:00<?, ? examples/s]
+Generating train split: 100%|██████████| 9427/9427 [00:00<00:00, 651986.21 examples/s]
+
+Generating validation split:   0%|          | 0/3270 [00:00<?, ? examples/s]
+Generating validation split: 100%|██████████| 3270/3270 [00:00<00:00, 601604.27 examples/s]
+[base] task=boolq dataset=google/boolq@35b264d03638db9f4ce671b711558bf7ff0f80d5 samples=3270
+[base] boolq: 250/3270
+[base] boolq: 500/3270
+[base] boolq: 750/3270
+[base] boolq: 1000/3270
+[base] boolq: 1250/3270
+[base] boolq: 1500/3270
+[base] boolq: 1750/3270
+[base] boolq: 2000/3270
+[base] boolq: 2250/3270
+[base] boolq: 2500/3270
+[base] boolq: 2750/3270
+[base] boolq: 3000/3270
+[base] boolq: 3250/3270
+[base] boolq samples=3270 acc=56.88% acc_norm=56.88% primary=accuracy
+[run] done in 184.7s -> /home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/results/base.log

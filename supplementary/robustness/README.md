@@ -384,6 +384,10 @@ population uncertainty estimate.
 
 ## Return and summarize artifacts
 
+For the completed TDA 10B checkpoint, see [TDA benchmark commands](TDA_BENCHMARKS.md)
+for downstream tasks, retrieval, BPB, separate BABILong adaptation, and explicitly
+labeled full-prefix inference measurements.
+
 From each machine, return its `.log`, `.done` marker, exact source config, checkpoint
 SHA-256, repository commit, and preflight output. Strictly reload external checkpoints:
 

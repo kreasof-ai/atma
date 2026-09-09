@@ -119,23 +119,27 @@ def _flatten(benchmark, result, source):
                         samples=metrics.get("documents"),
                     ))
     elif benchmark == "serving":
+        serving_suite = ("direct_full_recompute" if result.get("backend") == "direct-full-recompute"
+                         else "generation")
         for length, metrics in result.get("results", {}).items():
             for source_key, metric in (
                 ("prefill_tokens_per_s", "prefill_tokens_per_s"),
                 ("decode_tokens_per_s", "decode_tokens_per_s"),
+                ("time_to_first_token_s", "time_to_first_token_s"),
+                ("decode_latency_per_token_s", "decode_latency_per_token_s"),
                 ("peak_allocated_bytes", "peak_allocated_bytes"),
                 ("peak_reserved_bytes", "peak_reserved_bytes"),
                 ("oom", "oom"),
             ):
                 if source_key in metrics:
                     rows.append(_row(
-                        model, benchmark, source, suite="generation", task=None, dataset=None,
+                        model, benchmark, source, suite=serving_suite, task=None, dataset=None,
                         length=length, depth=None, metric=metric, value=metrics[source_key],
                         samples=metrics.get("samples"),
                     ))
         if result.get("max_successful_context_tokens") is not None:
             rows.append(_row(
-                model, benchmark, source, suite="generation", task=None, dataset=None,
+                model, benchmark, source, suite=serving_suite, task=None, dataset=None,
                 length=None, depth=None, metric="max_successful_context_tokens",
                 value=result["max_successful_context_tokens"], samples=None,
             ))

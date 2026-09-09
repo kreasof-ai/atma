@@ -1,0 +1,13 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+[run] benchmark=serving model=/home/sagemaker-user/atma/checkpoints/supplementary_robustness/scaled_tda_hybrid tasks=[] lengths=['2k', '4k', '8k', '16k', '32k', '64k', '128k'] samples=100 gamma_clamp=None
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1645.31it/s]
+[serving:direct-full-recompute] context=2k prefill=96598.7 tok/s decode=52.702410810687084 tok/s
+[serving:direct-full-recompute] context=4k prefill=127449.2 tok/s decode=33.04900010078036 tok/s
+[serving:direct-full-recompute] context=8k prefill=107078.9 tok/s decode=13.99871707859578 tok/s
+[serving:direct-full-recompute] context=16k prefill=85064.9 tok/s decode=5.330863049427063 tok/s
+[serving:direct-full-recompute] context=32k prefill=57270.7 tok/s decode=1.769106106121326 tok/s
+[serving:direct-full-recompute] context=64k prefill=35552.9 tok/s decode=0.5442721121263032 tok/s
+[serving:direct-full-recompute] context=128k prefill=20276.4 tok/s decode=0.14995877804242702 tok/s
+[run] done in 650.3s -> /home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/results/serving_direct.log

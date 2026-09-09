@@ -1,0 +1,5 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1621.30it/s]
+strict reload OK: scaled_tda_hybrid, params=388,641,924, loss/token=12.71057

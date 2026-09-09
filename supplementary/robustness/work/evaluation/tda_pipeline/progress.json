@@ -1,0 +1,36 @@
+{
+  "fingerprint": "174063a773da3caebf4bbcce17a539ec514e1c84259884f32624f7f8eabf2763",
+  "completed": {
+    "verify": {
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/console/verify.console.log": "49a9c6e66dc00f21a191ee49ee02035c6db04c13cd986e6a42a98b2e29ac9a79"
+    },
+    "base": {
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/results/base.log": "f602cc9e2e8d7a13b03bb7406b29a950214d2296fd8bdeee3e48ed45db51c3e6"
+    },
+    "retrieval_synthetic": {
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/results/retrieval_synthetic.log": "2fb4dc8007a19cf2504ffa5ce21fee849c1b231a79e253f174803d9adf0aef02"
+    },
+    "retrieval_real": {
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/results/retrieval_real.log": "f93fcf56b2015ded6e73e6900a359eaf8eaaeff91c355a3b7bf67783ec37f44d"
+    },
+    "bpb": {
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/results/bpb.log": "05d82d476e4375685c7093b46fb46affb22b388dca195035f65628e96b9b7c79"
+    },
+    "serving_direct": {
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/results/serving_direct.log": "b1714fe4f6e8a6d16435672859ed9f7c09cabd1a5ea0114d3e04f1ca22680318"
+    },
+    "babilong_finetune": {
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/console/babilong_finetune.console.log": "848e49bffe9c9dc0a23b5de9335d9dbd7fb70a629a89e94f3e9770824ab2996c",
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/babilong_checkpoint/weights.pt": "b76d21f7597111e127de2fd52e565aed970fa5b1c696fe1979d89297cce0b710",
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/babilong_checkpoint/config.json": "adabccab7d7e99a9987774ecc8a627c486b8db100e1a7badff6c282269543bc6",
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/babilong_checkpoint/finetune_manifest.json": "56f2e150f72a30c0831542dba71dbab8e733e330611ba6ee4e813458490794f1",
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/babilong_checkpoint/training_summary.json": "3d7aa9cac45f09daf8203fe2f8ba9b3841f9f70bd1d2e3e9596e3420473070a6"
+    },
+    "babilong_gate": {
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/gate/babilong_gate.log": "f5efd191d86b0d2921d396b218491c87056c36ade817f6e9aec842eb8845900e"
+    },
+    "babilong": {
+      "/home/sagemaker-user/atma/supplementary/robustness/work/evaluation/tda_pipeline/results/babilong.log": "76bd519666f89ef09a36a2e4b6731bd19e6546de9426e65f2356aaf9404b9d69"
+    }
+  }
+}

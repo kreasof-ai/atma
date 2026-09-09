@@ -76,6 +76,12 @@ def atma_config_from_dict(cfg: dict):
 
 
 def checkpoint_config(cfg: dict):
+    if cfg.get("arch_type") in {"tda_hybrid", "mamba3_native", "gdn2_native"}:
+        raise NotImplementedError(
+            "External checkpoints have no paged serving backend. Use DirectScorer for "
+            "quality benchmarks or --serving_backend direct for explicitly labeled "
+            "full-prefix recomputation measurements."
+        )
     if "arch_type" not in cfg:
         return atma_config_from_dict(cfg)
     from types import SimpleNamespace
