@@ -3,11 +3,15 @@
 ## Current milestone (2026-09-09, systems-table completion)
 
 - Added TDA to Table 18 and the matching main Table 4: 40.6% task mean,
-  6.46 s TTFT, 6,668.5 ms per subsequent token, 5.98 GiB peak allocated
-  memory, and 38.64% final training MFU. Values trace to the completed
-  benchmark matrix and training log.
-- Both captions identify TDA full-prefix recomputation and its different
-  timing/memory conventions; headers now say prompt time and allocation.
+  6.46 s TTFT, 6,668.5 ms per subsequent token, and 38.64% final training MFU.
+  Values trace to the completed benchmark matrix and training log.
+- Removed the misleading Allocation column from Table 4 and Table 18 to avoid
+  conflating the attention engine's 90% preallocated KV pool (~39.4 GiB, where
+  occupied 128K KV is only 0.5 GiB) with TDA's un-cached peak allocation (5.98 GiB).
+  Full memory complexity and allocation accounting remain detailed in Appendix D.
+- Made metric format uniform in Table 20: aligned TDA hybrid rows with the other
+  models (Prefill latency, Prefill throughput, Decode latency, Decode throughput),
+  removing extraneous memory rows and standardizing precision.
 - Both statements remain fully on page 9; both PDFs remain 35 pages.
 
 ## Previous milestone (2026-09-09, figures and page-nine statements)

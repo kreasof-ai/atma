@@ -235,21 +235,21 @@ Table~\ref{tab:systems} shows the quality--systems trade-off. Raven Native reach
 \small
 \setlength{\tabcolsep}{3.2pt}
 \resizebox{\linewidth}{!}{%
-\begin{tabular}{llrrrrr}
+\begin{tabular}{llrrrr}
 \toprule
-\textbf{Group} & \textbf{Model} & \textbf{Base mean} & \textbf{128K prompt} & \textbf{Decode} & \textbf{Allocation} & \textbf{Train MFU} \\
-& & (\%) & (s) & (ms/token) & (GiB) & (\%, 2K) \\
+\textbf{Group} & \textbf{Model} & \textbf{Base mean} & \textbf{128K prompt} & \textbf{Decode} & \textbf{Train MFU} \\
+& & (\%) & (s) & (ms/token) & (\%, 2K) \\
 \midrule
-Matched & NoPE & 45.1 & 1.47 & 16.4 & 39.40 & 42.77 \\
-Matched & Polar & 43.3 & 1.62 & 16.3 & 39.41 & 40.44 \\
-Matched & RoPE & 44.6 & 1.47 & 16.5 & 39.41 & 42.45 \\
-Raven/AdamW & Atma-Raven-Titans & 43.1 & 1.00 & 2.27 & 8.62 & 30.92 \\
-Raven/AdamW & Raven Native & 43.0 & 1.36 & 3.27 & 6.46 & 21.53 \\
+Matched & NoPE & 45.1 & 1.47 & 16.4 & 42.77 \\
+Matched & Polar & 43.3 & 1.62 & 16.3 & 40.44 \\
+Matched & RoPE & 44.6 & 1.47 & 16.5 & 42.45 \\
+Raven/AdamW & Atma-Raven-Titans & 43.1 & 1.00 & 2.27 & 30.92 \\
+Raven/AdamW & Raven Native & 43.0 & 1.36 & 3.27 & 21.53 \\
 \midrule
-AdamW/direct & TDA hybrid & 40.6 & 6.46 & 6668.5 & 5.98 & 38.64 \\
+AdamW/direct & TDA hybrid & 40.6 & 6.46 & 6668.5 & 38.64 \\
 \bottomrule
 \end{tabular}}
-\caption{Short-context and systems trade-offs on one L40S, one sequence and one timing sample. TDA uses full-prefix recomputation (TTFT and peak allocated memory); other rows use cached/recurrent serving (prefill and engine allocation). Attention allocation includes a preallocated KV pool. These backend and memory conventions preclude an architecture-only comparison. Appendix~\ref{appendix:systems} gives details.}
+\caption{Short-context and systems trade-offs on one L40S, one sequence and one timing sample. TDA uses full-prefix recomputation (TTFT); other rows use cached/recurrent serving (prefill). Backend differences preclude an architecture-only speed comparison. Memory complexity and allocation accounting are detailed in Appendix~\ref{appendix:systems}.}
 \label{tab:systems}
 \end{table}
 

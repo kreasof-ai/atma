@@ -50,7 +50,7 @@ def load_tda():
     bpb["mean"] = {length: mean(bpb[d][length] for d in DATASET_IDS) for length in LENGTHS}
     babi = {length: one("babilong", "macro_accuracy", length=length) for length in BABI_LENGTHS}
     downstream = {task: 100 * one("base", metric, task=task) for task, metric in TASK_METRICS.items()}
-    serving_metrics = ("time_to_first_token_s", "decode_latency_per_token_s",
+    serving_metrics = ("time_to_first_token_s", "prefill_tokens_per_s", "decode_latency_per_token_s",
                        "decode_tokens_per_s", "peak_allocated_bytes", "peak_reserved_bytes")
     serving = {length: {m: one("serving", m, suite="direct_full_recompute", length=length)
                         for m in serving_metrics} for length in LENGTHS[:-1]}

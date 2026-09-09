@@ -431,21 +431,21 @@ AdamW & TDA hybrid & 22.69 & 31.69 & 63.60 & 51.54 & 45.44 & 26.42 & 26.80 & 56.
 \centering
 \small
 \resizebox{\linewidth}{!}{%
-\begin{tabular}{llrrrrr}
+\begin{tabular}{llrrrr}
 \toprule
-\textbf{Group} & \textbf{Model} & \textbf{Base mean} & \textbf{128K prompt} & \textbf{Decode} & \textbf{Allocation} & \textbf{Train MFU} \\
-& & (\%) & (s) & (ms/token) & (GiB) & (\%, 2K) \\
+\textbf{Group} & \textbf{Model} & \textbf{Base mean} & \textbf{128K prompt} & \textbf{Decode} & \textbf{Train MFU} \\
+& & (\%) & (s) & (ms/token) & (\%, 2K) \\
 \midrule
-Matched & NoPE & 45.1 & 1.47 & 16.4 & 39.40 & 42.77 \\
-Matched & Polar & 43.3 & 1.62 & 16.3 & 39.41 & 40.44 \\
-Matched & RoPE & 44.6 & 1.47 & 16.5 & 39.41 & 42.45 \\
-AdamW & Atma-Raven-Titans & 43.1 & 1.00 & 2.27 & 8.62 & 30.92 \\
-AdamW & Raven Native & 43.0 & 1.36 & 3.27 & 6.46 & 21.53 \\
+Matched & NoPE & 45.1 & 1.47 & 16.4 & 42.77 \\
+Matched & Polar & 43.3 & 1.62 & 16.3 & 40.44 \\
+Matched & RoPE & 44.6 & 1.47 & 16.5 & 42.45 \\
+AdamW & Atma-Raven-Titans & 43.1 & 1.00 & 2.27 & 30.92 \\
+AdamW & Raven Native & 43.0 & 1.36 & 3.27 & 21.53 \\
 \midrule
-AdamW/direct & TDA hybrid & 40.6 & 6.46 & 6668.5 & 5.98 & 38.64 \\
+AdamW/direct & TDA hybrid & 40.6 & 6.46 & 6668.5 & 38.64 \\
 \bottomrule
 \end{tabular}}
-\caption{Short-context and systems trade-offs on one L40S, one sequence and one timing sample. TDA uses full-prefix recomputation (TTFT and peak allocated memory); other rows use cached/recurrent serving (prefill and engine allocation). Attention allocation includes a preallocated KV pool. These backend and memory conventions preclude an architecture-only comparison. Appendix~\ref{appendix:systems} gives details.}
+\caption{Short-context and systems trade-offs on one L40S, one sequence and one timing sample. TDA uses full-prefix recomputation (TTFT); other rows use cached/recurrent serving (prefill). Backend differences preclude an architecture-only speed comparison. Memory complexity and allocation accounting are detailed in Appendix~\ref{appendix:systems}.}
 \label{table:quality_systems_summary}
 \end{table}
 
@@ -528,11 +528,10 @@ Raven Native & Prefill latency (s) & 0.214 & 0.054 & 0.070 & 0.139 & 0.320 & 0.6
 & Decode throughput (tok/s) & 306.4 & 307.5 & 308.2 & 308.3 & 307.6 & 307.5 & 306.1 \\
 \midrule
 \multicolumn{9}{l}{\textit{Direct full-prefix recomputation (different backend)}} \\
-TDA hybrid & TTFT (s) & 0.021 & 0.032 & 0.077 & 0.193 & 0.572 & 1.843 & 6.464 \\
- & Decode latency (ms/tok) & 18.97 & 30.26 & 71.44 & 187.59 & 565.26 & 1837.32 & 6668.50 \\
- & Decode throughput (tok/s) & 52.702 & 33.049 & 13.999 & 5.331 & 1.769 & 0.544 & 0.150 \\
- & Peak allocated (GiB) & 0.82 & 0.90 & 1.06 & 1.39 & 2.05 & 3.36 & 5.98 \\
- & Peak reserved (GiB) & 0.88 & 1.05 & 1.39 & 2.04 & 3.31 & 5.88 & 11.00 \\
+TDA hybrid & Prefill latency (s) & 0.021 & 0.032 & 0.077 & 0.193 & 0.572 & 1.843 & 6.464 \\
+& Prefill throughput (tok/s) & 96,599 & 127,449 & 107,079 & 85,065 & 57,271 & 35,553 & 20,276 \\
+& Decode latency (ms/tok) & 18.97 & 30.26 & 71.44 & 187.59 & 565.26 & 1837.32 & 6668.50 \\
+& Decode throughput (tok/s) & 52.7 & 33.0 & 14.0 & 5.3 & 1.8 & 0.5 & 0.1 \\
 \end{longtable}
 \endgroup
 \end{landscape}
