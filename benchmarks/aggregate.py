@@ -36,6 +36,16 @@ def _extract(path: Path):
 
 def _model_name(result, path):
     cfg = result.get("model_config") or {}
+    if cfg.get("is_foveal"):
+        f_cfg = cfg.get("foveal_config") or {}
+        core = cfg.get("attn_type") or f_cfg.get("attn_type") or "unknown"
+        if core == "unknown":
+            for c in ("polar", "nope", "rope"):
+                if c in path.stem:
+                    core = c
+                    break
+        mode = cfg.get("adaptation_mode") or f_cfg.get("adaptation_mode") or "local"
+        return f"{core}_{mode}"
     name = cfg.get("arch_type") or cfg.get("attn_type")
     if name:
         return name

@@ -18,23 +18,92 @@ def resolve_checkpoint(model_path: str) -> tuple[str, str]:
     if os.path.isfile(model_path):
         return model_path, os.path.dirname(os.path.abspath(model_path))
     if os.path.isdir(model_path):
+        latest_path = os.path.join(model_path, "latest.json")
+        if os.path.isfile(latest_path):
+            try:
+                with open(latest_path, encoding="utf-8") as f:
+                    latest_data = json.load(f)
+                if "checkpoint" in latest_data:
+                    ckpt_file = os.path.join(model_path, latest_data["checkpoint"])
+                    if os.path.isfile(ckpt_file):
+                        return ckpt_file, os.path.abspath(model_path)
+            except Exception:
+                pass
         for name in _WEIGHT_NAMES:
             p = os.path.join(model_path, name)
             if os.path.isfile(p):
                 return p, os.path.abspath(model_path)
+        import glob
+
+        cpt_files = sorted(
+            glob.glob(os.path.join(model_path, "cpt-step-*.pt")), reverse=True
+        )
+        if cpt_files:
+            return cpt_files[0], os.path.abspath(model_path)
+        cal_files = sorted(
+            glob.glob(os.path.join(model_path, "calibration-step-*.pt")), reverse=True
+        )
+        if cal_files:
+            return cal_files[0], os.path.abspath(model_path)
     return model_path, os.path.dirname(os.path.abspath(model_path))
 
 
 def read_checkpoint_config(model_path: str) -> dict:
     """Load the AtmaConfig JSON saved alongside a checkpoint."""
-    _, ckpt_dir = resolve_checkpoint(model_path)
+    weights_path, ckpt_dir = resolve_checkpoint(model_path)
+    cfg = {}
     cfg_path = os.path.join(ckpt_dir, "config.json")
     if os.path.exists(cfg_path):
         try:
-            return json.load(open(cfg_path, encoding="utf-8"))
+            with open(cfg_path, encoding="utf-8") as f:
+                cfg = json.load(f)
         except Exception:
-            return {}
-    return {}
+            cfg = {}
+    elif os.path.isfile(weights_path):
+        try:
+            import torch
+
+            payload = torch.load(weights_path, map_location="cpu", weights_only=False)
+            if isinstance(payload, dict) and "config" in payload:
+                cfg = payload["config"]
+        except Exception:
+            cfg = {}
+
+    if cfg and (
+        "adaptation_mode" in cfg
+        or (isinstance(cfg.get("checkpoint"), str) and "train_tokens" in cfg)
+    ):
+        foveal_cfg_dict = dict(cfg)
+        base_source = cfg.get("checkpoint")
+        base_cfg = {}
+        if base_source:
+            try:
+                from dataclasses import asdict
+                from foveal_cpt.checkpoint import (
+                    _atma_config,
+                    resolve_checkpoint as resolve_foveal_base,
+                )
+
+                base_dir = resolve_foveal_base(base_source, cfg.get("hf_cache"))
+                base_cfg_obj = _atma_config(base_dir)
+                base_cfg = asdict(base_cfg_obj)
+            except Exception:
+                pass
+        merged = dict(base_cfg)
+        merged["is_foveal"] = True
+        merged["foveal_config"] = foveal_cfg_dict
+        merged["adaptation_mode"] = foveal_cfg_dict.get("adaptation_mode", "local")
+        merged["base_checkpoint"] = base_source
+        if "dtype" in merged and not isinstance(merged["dtype"], str):
+            merged["dtype"] = str(merged["dtype"])
+        if "sequence_length" in foveal_cfg_dict:
+            merged["sequence_length"] = foveal_cfg_dict["sequence_length"]
+        if "local_window" in foveal_cfg_dict:
+            merged["local_window"] = foveal_cfg_dict["local_window"]
+            merged["attn_window"] = foveal_cfg_dict["local_window"]
+        return merged
+
+    return cfg
 
 
 def unsupported_features(cfg: dict) -> list[str]:

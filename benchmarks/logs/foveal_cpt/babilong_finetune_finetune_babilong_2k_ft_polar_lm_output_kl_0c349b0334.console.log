@@ -1,0 +1,17 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[babilong-ft] dataset=RMT-team/babilong@ee0d588794c7ac098062ee0d247c733d62e94fe2 prompts=builtin-v1
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1748.54it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1514.05it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1595.55it/s]
+[babilong-ft] loaded qa1@0k rows [0, 2)
+[babilong-ft] loaded qa1@0k rows [80, 82)
+[babilong-ft] train=2 val=2 seq_len=2048 max_unpadded=146
+[babilong-ft] {"elapsed_s": 1.2, "epoch": 1, "lr": 2e-05, "step": 1, "train_nll": 11.083005905151367, "val_nll": 7.966558933258057}
+[babilong-ft] complete {"best_epoch": 1, "best_val_nll": 7.966558933258057, "checkpoint": "/tmp/opencode/pipeline_ft/polar_lm_output_kl", "curve": [{"elapsed_s": 1.2, "epoch": 1, "lr": 2e-05, "step": 1, "train_nll": 11.083005905151367, "val_nll": 7.966558933258057}], "elapsed_s": 2.5, "total_steps": 1}

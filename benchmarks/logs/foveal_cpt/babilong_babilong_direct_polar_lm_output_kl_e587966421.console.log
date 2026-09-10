@@ -1,0 +1,47 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[run] benchmark=babilong model=/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output_kl/cpt tasks=['qa1'] lengths=['0k', '1k'] samples=2 gamma_clamp=None
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1581.56it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1192.75it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1664.24it/s]
+[babilong] prompts = builtin-v1
+[babilong] held-out rows = [90, 100); dataset = RMT-team/babilong@main
+[babilong]  qa1 @   0k: acc=50.0% (n=2)
+
+Generating qa1 split: 0 examples [00:00, ? examples/s]
+Generating qa1 split: 100 examples [00:00, 13959.61 examples/s]
+
+Generating qa2 split: 0 examples [00:00, ? examples/s]
+Generating qa2 split: 100 examples [00:00, 19014.03 examples/s]
+
+Generating qa3 split: 0 examples [00:00, ? examples/s]
+Generating qa3 split: 100 examples [00:00, 18902.63 examples/s]
+
+Generating qa4 split: 0 examples [00:00, ? examples/s]
+Generating qa4 split: 100 examples [00:00, 21735.52 examples/s]
+
+Generating qa5 split: 0 examples [00:00, ? examples/s]
+Generating qa5 split: 100 examples [00:00, 20074.20 examples/s]
+
+Generating qa6 split: 0 examples [00:00, ? examples/s]
+Generating qa6 split: 100 examples [00:00, 21360.28 examples/s]
+
+Generating qa7 split: 0 examples [00:00, ? examples/s]
+Generating qa7 split: 100 examples [00:00, 21779.54 examples/s]
+
+Generating qa8 split: 0 examples [00:00, ? examples/s]
+Generating qa8 split: 100 examples [00:00, 25204.64 examples/s]
+
+Generating qa9 split: 0 examples [00:00, ? examples/s]
+Generating qa9 split: 100 examples [00:00, 23086.22 examples/s]
+
+Generating qa10 split: 0 examples [00:00, ? examples/s]
+Generating qa10 split: 100 examples [00:00, 14055.04 examples/s]
+[babilong]  qa1 @   1k: acc=0.0% (n=2)
+[run] done in 6.5s -> /home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_polar_lm_output_kl_e587966421.log

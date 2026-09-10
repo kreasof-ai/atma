@@ -28,7 +28,10 @@ def _infer_max_model_len(lengths, max_tokens):
             vals.append(_parse_len(length))
         except ValueError:
             pass
-    return (max(vals) if vals else 65536) + max_tokens + 64
+    max_val = max(vals) if vals else 65536
+    if max_val <= 0:
+        max_val = 2048
+    return max_val + max_tokens + 64
 
 
 def _dataset_revisions(path):

@@ -17,12 +17,19 @@ def load_model(model: nn.Module, path_or_state_dict, *, strict: bool = False) ->
         state_dict = path_or_state_dict
 
     # Clean compiled/wrapped state dict prefixes
+    model_param_names = set(model.state_dict().keys())
     cleaned_state = {}
     for k, v in state_dict.items():
         name = k
         # Strip torch.compile wrapper prefix
         if name.startswith("_orig_mod."):
             name = name[len("_orig_mod."):]
+        if ".attn.base." in name:
+            name = name.replace(".attn.base.", ".attn.")
+        if name not in model_param_names and (
+            ".index_" in name or ".route_" in name or name.endswith(".base_attn")
+        ):
+            continue
         cleaned_state[name] = v
 
     # Perform weight loading

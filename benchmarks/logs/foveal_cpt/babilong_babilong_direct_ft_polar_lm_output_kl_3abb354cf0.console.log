@@ -1,0 +1,13 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+[run] benchmark=babilong model=/tmp/opencode/pipeline_ft/polar_lm_output_kl tasks=['qa1'] lengths=['0k'] samples=2 gamma_clamp=None
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1819.95it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1529.23it/s]
+[babilong] prompts = builtin-v1
+[babilong] held-out rows = [90, 100); dataset = RMT-team/babilong@ee0d588794c7ac098062ee0d247c733d62e94fe2
+[babilong]  qa1 @   0k: acc=50.0% (n=2)
+[run] done in 3.2s -> /home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_polar_lm_output_kl_3abb354cf0.log
