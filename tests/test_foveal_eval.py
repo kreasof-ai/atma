@@ -129,6 +129,33 @@ class FovealEvalTest(unittest.TestCase):
         multi = _resolve_stages(["base", "retrieval"])
         self.assertEqual(multi, {"base", "retrieval"})
 
+    def test_foveal_finetuned_checkpoint_resolution(self):
+        from dataclasses import fields
+        from foveal_cpt.config import FovealConfig
+        from benchmarks.model import read_checkpoint_config
+
+        # Simulated config saved by finetune_babilong for nope core
+        raw_cfg = {
+            "adaptation_mode": "local",
+            "is_foveal": True,
+            "base_checkpoint": "ChavyvAkvar/atma-10b-L40S-mbs16-nope__reg-baseline__distr-0__mem-1__win-0",
+            "foveal_config": {
+                "checkpoint": "ChavyvAkvar/atma-10b-L40S-mbs16-nope__reg-baseline__distr-0__mem-1__win-0",
+                "adaptation_mode": "local",
+            },
+        }
+        foveal_cfg_raw = raw_cfg.get("foveal_config") or raw_cfg
+        while "foveal_config" in foveal_cfg_raw and isinstance(foveal_cfg_raw["foveal_config"], dict):
+            foveal_cfg_raw = foveal_cfg_raw["foveal_config"]
+        valid_fields = {f.name for f in fields(FovealConfig)}
+        foveal_dict = {k: v for k, v in foveal_cfg_raw.items() if k in valid_fields}
+        if "checkpoint" not in foveal_dict or not foveal_dict["checkpoint"]:
+            base_ck = raw_cfg.get("base_checkpoint") or raw_cfg.get("checkpoint")
+            if base_ck:
+                foveal_dict["checkpoint"] = base_ck
+        foveal_cfg = FovealConfig(**foveal_dict)
+        self.assertIn("nope", foveal_cfg.checkpoint)
+
 
 if __name__ == "__main__":
     unittest.main()

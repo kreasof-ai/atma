@@ -418,7 +418,7 @@ def main() -> int:
     parser.add_argument("--cache_dir", type=str, default=None)
 
     # Retrieval args
-    parser.add_argument("--suites", nargs="+", choices=("synthetic", "real"), default=("synthetic",))
+    parser.add_argument("--suites", nargs="+", choices=("synthetic", "real"), default=("synthetic", "real"))
     parser.add_argument("--tasks", nargs="+", choices=("passkey", "niah"), default=("passkey", "niah"))
     parser.add_argument("--smoke_lengths", nargs="+", default=("2k", "8k"))
     parser.add_argument("--smoke_samples", type=int, default=5)
@@ -451,7 +451,11 @@ def main() -> int:
     parser.add_argument("--max_scan", type=int, default=100000)
 
     # BABILong args
-    parser.add_argument("--babilong_tasks", nargs="+", default=["qa1", "qa2", "qa3", "qa4", "qa5"])
+    parser.add_argument(
+        "--babilong_tasks",
+        nargs="+",
+        default=["qa1", "qa2", "qa3", "qa4", "qa5", "qa6", "qa7", "qa8", "qa9", "qa10"],
+    )
     parser.add_argument(
         "--babilong_lengths",
         nargs="+",

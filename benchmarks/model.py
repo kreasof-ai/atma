@@ -69,12 +69,19 @@ def read_checkpoint_config(model_path: str) -> dict:
         except Exception:
             cfg = {}
 
+    if cfg and cfg.get("is_foveal"):
+        return cfg
+
     if cfg and (
         "adaptation_mode" in cfg
         or (isinstance(cfg.get("checkpoint"), str) and "train_tokens" in cfg)
     ):
-        foveal_cfg_dict = dict(cfg)
-        base_source = cfg.get("checkpoint")
+        foveal_cfg_dict = dict(cfg.get("foveal_config") or cfg)
+        base_source = (
+            cfg.get("base_checkpoint")
+            or foveal_cfg_dict.get("checkpoint")
+            or cfg.get("checkpoint")
+        )
         base_cfg = {}
         if base_source:
             try:

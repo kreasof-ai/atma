@@ -96,10 +96,15 @@ class DirectScorer:
             from foveal_cpt.config import FovealConfig
 
             foveal_cfg_raw = self.cfg.get("foveal_config") or self.cfg
+            while "foveal_config" in foveal_cfg_raw and isinstance(foveal_cfg_raw["foveal_config"], dict):
+                foveal_cfg_raw = foveal_cfg_raw["foveal_config"]
             valid_fields = {f.name for f in fields(FovealConfig)}
-            foveal_cfg = FovealConfig(
-                **{k: v for k, v in foveal_cfg_raw.items() if k in valid_fields}
-            )
+            foveal_dict = {k: v for k, v in foveal_cfg_raw.items() if k in valid_fields}
+            if "checkpoint" not in foveal_dict or not foveal_dict["checkpoint"]:
+                base_ck = self.cfg.get("base_checkpoint") or self.cfg.get("checkpoint")
+                if base_ck:
+                    foveal_dict["checkpoint"] = base_ck
+            foveal_cfg = FovealConfig(**foveal_dict)
             model, atma_config, _ = load_pretrained(foveal_cfg, device="cpu")
             load_foveal_weights(model, self.weights_path)
             model.to(self.device)
