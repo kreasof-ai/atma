@@ -422,7 +422,11 @@ def main() -> int:
     parser.add_argument("--tasks", nargs="+", choices=("passkey", "niah"), default=("passkey", "niah"))
     parser.add_argument("--smoke_lengths", nargs="+", default=("2k", "8k"))
     parser.add_argument("--smoke_samples", type=int, default=5)
-    parser.add_argument("--lengths", nargs="+", default=("2k", "4k", "8k", "16k", "32k"))
+    parser.add_argument(
+        "--lengths",
+        nargs="+",
+        default=("2k", "4k", "8k", "16k", "32k", "64k", "128k", "256k"),
+    )
     parser.add_argument("--depths", nargs="+", type=float, default=(0.1, 0.5, 0.9))
     parser.add_argument("--samples", type=int, default=10)
     parser.add_argument("--seed", type=int, default=1234)
@@ -437,14 +441,22 @@ def main() -> int:
 
     # Longdoc args
     parser.add_argument("--longdoc_datasets", nargs="+", choices=tuple(LONGDOC_SPECS), default=tuple(LONGDOC_SPECS))
-    parser.add_argument("--longdoc_lengths", nargs="+", default=("2k", "4k", "8k", "16k", "32k"))
+    parser.add_argument(
+        "--longdoc_lengths",
+        nargs="+",
+        default=("2k", "4k", "8k", "16k", "32k", "64k", "128k", "256k"),
+    )
     parser.add_argument("--target_tokens", type=int, default=256)
     parser.add_argument("--num_docs", type=int, default=4)
     parser.add_argument("--max_scan", type=int, default=100000)
 
     # BABILong args
     parser.add_argument("--babilong_tasks", nargs="+", default=["qa1", "qa2", "qa3", "qa4", "qa5"])
-    parser.add_argument("--babilong_lengths", nargs="+", default=["0k", "1k", "2k", "4k", "8k", "16k", "32k"])
+    parser.add_argument(
+        "--babilong_lengths",
+        nargs="+",
+        default=["0k", "1k", "2k", "4k", "8k", "16k", "32k", "64k", "128k", "256k"],
+    )
     parser.add_argument("--babilong_samples", type=int, default=10)
     parser.add_argument("--babilong_backend", choices=("direct", "paged"), default="direct")
     parser.add_argument("--row_start", type=int, default=90)
@@ -477,7 +489,11 @@ def main() -> int:
     parser.add_argument("--finetune_val_end", type=int, default=90)
 
     # Serving args
-    parser.add_argument("--serving_lengths", nargs="+", default=("2k", "4k", "8k", "16k", "32k", "64k", "128k"))
+    parser.add_argument(
+        "--serving_lengths",
+        nargs="+",
+        default=("2k", "4k", "8k", "16k", "32k", "64k", "128k", "256k"),
+    )
     parser.add_argument("--decode_tokens", type=int, default=32)
     parser.add_argument("--serving_samples", type=int, default=1)
     parser.add_argument("--max_num_seqs", type=int, default=1)
