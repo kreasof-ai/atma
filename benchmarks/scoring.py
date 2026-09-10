@@ -9,6 +9,13 @@ from pathlib import Path
 # Match scaled_ablation.eval_hf_checkpoints: model.blocks reads this during import.
 os.environ.setdefault("FLA_CUSTOM_OP", "1")
 
+try:
+    import torch._dynamo
+
+    torch._dynamo.config.recompile_limit = 1000
+except Exception:
+    pass
+
 from benchmarks.model import (
     atma_config_from_dict,
     read_checkpoint_config,
@@ -119,6 +126,13 @@ class DirectScorer:
                         foveal_cfg.min_remote_pages,
                         foveal_cfg.max_remote_pages,
                     )
+                    attn.compile_flex = True
+                    try:
+                        from torch.nn.attention.flex_attention import flex_attention
+
+                        attn._compiled_flex = torch.compile(flex_attention, dynamic=True)
+                    except Exception:
+                        pass
             return model
 
         architecture = self.cfg.get("arch_type") or self.cfg.get("attn_type", "polar")
