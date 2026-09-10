@@ -1,0 +1,122 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+[run] benchmark=serving model=/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt tasks=[] lengths=['2k', '4k', '8k', '16k', '32k', '64k', '128k', '256k'] samples=100 gamma_clamp=None
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1855.17it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1766.77it/s]
+ModelRunner rank 0 starting on device: cuda
+Total parameters: 378.22M
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt
+Per-seq state tables (conv + mem): 28 keys, 2.2 MB
+KV cache: 4 layers, 16 blocks × 256 (16.8 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+Warning: Failed loading tokenizer from custom path '/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt'. Falling back to standard 'gpt2' tokenizer.
+[serving] context=   2k prefill=14363.6 tok/s decode=449.4 tok/s peak=0.87 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1515.28it/s]
+ModelRunner rank 0 starting on device: cuda
+Total parameters: 378.22M
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt
+Per-seq state tables (conv + mem): 28 keys, 2.2 MB
+KV cache: 4 layers, 17 blocks × 256 (17.8 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+Warning: Failed loading tokenizer from custom path '/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt'. Falling back to standard 'gpt2' tokenizer.
+[serving] context=   4k prefill=122723.2 tok/s decode=471.9 tok/s peak=0.98 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1739.47it/s]
+ModelRunner rank 0 starting on device: cuda
+Total parameters: 378.22M
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt
+Per-seq state tables (conv + mem): 28 keys, 2.2 MB
+KV cache: 4 layers, 33 blocks × 256 (34.6 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+Warning: Failed loading tokenizer from custom path '/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt'. Falling back to standard 'gpt2' tokenizer.
+[serving] context=   8k prefill=163581.4 tok/s decode=470.6 tok/s peak=1.15 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1622.08it/s]
+ModelRunner rank 0 starting on device: cuda
+Total parameters: 378.22M
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt
+Per-seq state tables (conv + mem): 28 keys, 2.2 MB
+KV cache: 4 layers, 65 blocks × 256 (68.2 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+Warning: Failed loading tokenizer from custom path '/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt'. Falling back to standard 'gpt2' tokenizer.
+[serving] context=  16k prefill=180293.7 tok/s decode=467.7 tok/s peak=1.54 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1600.12it/s]
+ModelRunner rank 0 starting on device: cuda
+Total parameters: 378.22M
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt
+Per-seq state tables (conv + mem): 28 keys, 2.2 MB
+KV cache: 4 layers, 129 blocks × 256 (135.3 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+Warning: Failed loading tokenizer from custom path '/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt'. Falling back to standard 'gpt2' tokenizer.
+[serving] context=  32k prefill=171297.5 tok/s decode=464.3 tok/s peak=2.33 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1743.81it/s]
+ModelRunner rank 0 starting on device: cuda
+Total parameters: 378.22M
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt
+Per-seq state tables (conv + mem): 28 keys, 2.2 MB
+KV cache: 4 layers, 257 blocks × 256 (269.5 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+Warning: Failed loading tokenizer from custom path '/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt'. Falling back to standard 'gpt2' tokenizer.
+[serving] context=  64k prefill=171135.6 tok/s decode=463.2 tok/s peak=3.89 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1577.55it/s]
+ModelRunner rank 0 starting on device: cuda
+Total parameters: 378.22M
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt
+Per-seq state tables (conv + mem): 28 keys, 2.2 MB
+KV cache: 4 layers, 513 blocks × 256 (537.9 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+Warning: Failed loading tokenizer from custom path '/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt'. Falling back to standard 'gpt2' tokenizer.
+[serving] context= 128k prefill=170606.5 tok/s decode=462.9 tok/s peak=7.26 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1798.78it/s]
+ModelRunner rank 0 starting on device: cuda
+Total parameters: 378.22M
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt
+Per-seq state tables (conv + mem): 28 keys, 2.2 MB
+KV cache: 4 layers, 1025 blocks × 256 (1074.8 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+Warning: Failed loading tokenizer from custom path '/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt'. Falling back to standard 'gpt2' tokenizer.
+[serving] context= 256k prefill=162298.7 tok/s decode=451.9 tok/s peak=13.76 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1765.28it/s]
+[run] done in 105.3s -> /home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_lm_output_2a861ff0ae.log

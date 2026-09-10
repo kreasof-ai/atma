@@ -1,0 +1,1 @@
+[run] benchmark=babilong model=/home/sagemaker-user/atma/checkpoints/foveal_babilong_2k_ft/nope_local tasks=['qa1', 'qa2', 'qa3', 'qa4', 'qa5'] lengths=['0k', '1k', '2k', '4k', '8k', '16k', '32k', '64k', '128k', '256k'] samples=10 gamma_clamp=None

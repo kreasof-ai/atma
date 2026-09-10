@@ -1,0 +1,50 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[run] benchmark=longdoc model=/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output_kl/cpt tasks=[] lengths=['2k', '4k', '8k', '16k', '32k', '64k', '128k', '256k'] samples=100 gamma_clamp=None
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1872.77it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1941.81it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1783.29it/s]
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (627620 > 262400). Running this sequence through the model will result in indexing errors
+[longdoc] selected 1/4 from emozilla/pg19 after scanning 22 rows
+[longdoc] selected 2/4 from emozilla/pg19 after scanning 38 rows
+[longdoc] selected 3/4 from emozilla/pg19 after scanning 62 rows
+[longdoc] selected 4/4 from emozilla/pg19 after scanning 81 rows
+[longdoc]       pg19 context=   2k docs=4 nll=3.1698 bpb=1.1374
+[longdoc]       pg19 context=   4k docs=4 nll=3.1599 bpb=1.1339
+[longdoc]       pg19 context=   8k docs=4 nll=3.1373 bpb=1.1258
+[longdoc]       pg19 context=  16k docs=4 nll=3.1408 bpb=1.1270
+[longdoc]       pg19 context=  32k docs=4 nll=3.1449 bpb=1.1285
+[longdoc]       pg19 context=  64k docs=4 nll=3.1695 bpb=1.1373
+[longdoc]       pg19 context= 128k docs=4 nll=3.1812 bpb=1.1415
+[longdoc]       pg19 context= 256k docs=4 nll=3.1966 bpb=1.1470
+[longdoc] selected 1/4 from hoskinson-center/proof-pile after scanning 20081 rows
+[longdoc] selected 2/4 from hoskinson-center/proof-pile after scanning 22803 rows
+[longdoc] selected 3/4 from hoskinson-center/proof-pile after scanning 32629 rows
+[longdoc] selected 4/4 from hoskinson-center/proof-pile after scanning 41384 rows
+[longdoc] proof_pile context=   2k docs=4 nll=4.1975 bpb=2.2451
+[longdoc] proof_pile context=   4k docs=4 nll=4.2047 bpb=2.2490
+[longdoc] proof_pile context=   8k docs=4 nll=4.3003 bpb=2.3001
+[longdoc] proof_pile context=  16k docs=4 nll=4.3014 bpb=2.3007
+[longdoc] proof_pile context=  32k docs=4 nll=4.2961 bpb=2.2979
+[longdoc] proof_pile context=  64k docs=4 nll=4.3087 bpb=2.3046
+[longdoc] proof_pile context= 128k docs=4 nll=4.2460 bpb=2.2711
+[longdoc] proof_pile context= 256k docs=4 nll=4.2335 bpb=2.2644
+[longdoc] selected 1/4 from codelion/finepdfs-1B after scanning 1798 rows
+[longdoc] selected 2/4 from codelion/finepdfs-1B after scanning 5936 rows
+[longdoc] selected 3/4 from codelion/finepdfs-1B after scanning 8638 rows
+[longdoc] selected 4/4 from codelion/finepdfs-1B after scanning 16812 rows
+[longdoc]   finepdfs context=   2k docs=4 nll=1.0483 bpb=0.8835
+[longdoc]   finepdfs context=   4k docs=4 nll=1.0025 bpb=0.8449
+[longdoc]   finepdfs context=   8k docs=4 nll=1.0522 bpb=0.8867
+[longdoc]   finepdfs context=  16k docs=4 nll=1.0774 bpb=0.9079
+[longdoc]   finepdfs context=  32k docs=4 nll=1.0995 bpb=0.9266
+[longdoc]   finepdfs context=  64k docs=4 nll=1.1039 bpb=0.9303
+[longdoc]   finepdfs context= 128k docs=4 nll=1.1485 bpb=0.9679
+[longdoc]   finepdfs context= 256k docs=4 nll=1.1950 bpb=1.0071
+[run] done in 155.9s -> /home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_polar_lm_output_kl_fb535f4bbf.log

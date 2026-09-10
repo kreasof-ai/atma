@@ -33,6 +33,17 @@
       "success": true,
       "suite": "2k_ft"
     },
+    "0e322426bb": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_rope_lm_output_kl_0e322426bb.console.log",
+      "elapsed_s": 856.3,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_rope_lm_output_kl_0e322426bb.log",
+      "model": "rope_lm_output_kl",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
+    },
     "0eff7c7601": {
       "benchmark": "retrieval",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/smoke_retrieval_synthetic_rope_local_0eff7c7601.console.log",
@@ -66,6 +77,61 @@
       "success": true,
       "suite": "generation"
     },
+    "11fb18d7e1": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_polar_local_11fb18d7e1.console.log",
+      "elapsed_s": 781.1,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_polar_local_11fb18d7e1.log",
+      "model": "polar_local",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
+    },
+    "16f1a058f6": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_polar_lm_output_16f1a058f6.console.log",
+      "elapsed_s": 293.6,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_polar_lm_output_16f1a058f6.log",
+      "model": "polar_lm_output",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
+    },
+    "1c9ef12a33": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_polar_local_1c9ef12a33.console.log",
+      "elapsed_s": 625.0,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_polar_local_1c9ef12a33.log",
+      "model": "polar_local",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
+    },
+    "25e7e92029": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_local_25e7e92029.console.log",
+      "elapsed_s": 116.1,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_local_25e7e92029.log",
+      "model": "rope_local",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
+    "27ea92382b": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_nope_lm_output_27ea92382b.console.log",
+      "elapsed_s": 862.8,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_nope_lm_output_27ea92382b.log",
+      "model": "nope_lm_output",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
+    },
     "287a38db33": {
       "benchmark": "serving",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_local_287a38db33.console.log",
@@ -73,6 +139,17 @@
       "exit_code": 0,
       "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_local_287a38db33.log",
       "model": "polar_local",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
+    "2a861ff0ae": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_lm_output_2a861ff0ae.console.log",
+      "elapsed_s": 123.6,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_lm_output_2a861ff0ae.log",
+      "model": "polar_lm_output",
       "stage": "serving",
       "success": true,
       "suite": "generation"
@@ -99,6 +176,39 @@
       "success": true,
       "suite": "synthetic"
     },
+    "3391516977": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_nope_lm_output_3391516977.console.log",
+      "elapsed_s": 121.7,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_nope_lm_output_3391516977.log",
+      "model": "nope_lm_output",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
+    "339316d750": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_polar_kl_339316d750.console.log",
+      "elapsed_s": 302.7,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_polar_kl_339316d750.log",
+      "model": "polar_kl",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
+    },
+    "3749088be7": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_rope_local_3749088be7.console.log",
+      "elapsed_s": 802.7,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_rope_local_3749088be7.log",
+      "model": "rope_local",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
+    },
     "37542d85af": {
       "benchmark": "retrieval",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/smoke_retrieval_synthetic_polar_lm_output_37542d85af.console.log",
@@ -109,6 +219,17 @@
       "stage": "smoke",
       "success": true,
       "suite": "synthetic"
+    },
+    "38d2ead219": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_nope_lm_output_kl_38d2ead219.console.log",
+      "elapsed_s": 344.8,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_nope_lm_output_kl_38d2ead219.log",
+      "model": "nope_lm_output_kl",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
     },
     "3abb354cf0": {
       "benchmark": "babilong",
@@ -143,6 +264,28 @@
       "success": true,
       "suite": "synthetic"
     },
+    "48b0129a7e": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_rope_lm_output_48b0129a7e.console.log",
+      "elapsed_s": 877.0,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_rope_lm_output_48b0129a7e.log",
+      "model": "rope_lm_output",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
+    },
+    "4b0be455d7": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_lm_output_kl_4b0be455d7.console.log",
+      "elapsed_s": 22.4,
+      "exit_code": 1,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_lm_output_kl_4b0be455d7.log",
+      "model": "nope_lm_output_kl",
+      "stage": "babilong",
+      "success": false,
+      "suite": "direct_ft"
+    },
     "4b33446806": {
       "benchmark": "retrieval",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/smoke_retrieval_synthetic_rope_lm_output_4b33446806.console.log",
@@ -153,6 +296,28 @@
       "stage": "smoke",
       "success": true,
       "suite": "synthetic"
+    },
+    "4b6cb311e4": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_polar_kl_4b6cb311e4.console.log",
+      "elapsed_s": 363.6,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_polar_kl_4b6cb311e4.log",
+      "model": "polar_kl",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "4d58b07f6d": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_rope_lm_output_kl_4d58b07f6d.console.log",
+      "elapsed_s": 339.5,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_rope_lm_output_kl_4d58b07f6d.log",
+      "model": "rope_lm_output_kl",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
     },
     "4d647407bb": {
       "benchmark": "retrieval",
@@ -187,6 +352,83 @@
       "success": true,
       "suite": "generation"
     },
+    "4ffadccdce": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_nope_lm_output_kl_4ffadccdce.console.log",
+      "elapsed_s": 203.6,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_nope_lm_output_kl_4ffadccdce.log",
+      "model": "nope_lm_output_kl",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    },
+    "50cbb09a2f": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_lm_output_50cbb09a2f.console.log",
+      "elapsed_s": 22.4,
+      "exit_code": 1,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_lm_output_50cbb09a2f.log",
+      "model": "nope_lm_output",
+      "stage": "babilong",
+      "success": false,
+      "suite": "direct_ft"
+    },
+    "53ab59d175": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_nope_lm_output_kl_53ab59d175.console.log",
+      "elapsed_s": 857.1,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_nope_lm_output_kl_53ab59d175.log",
+      "model": "nope_lm_output_kl",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
+    },
+    "561e501b3c": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_polar_kl_561e501b3c.console.log",
+      "elapsed_s": 807.1,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_polar_kl_561e501b3c.log",
+      "model": "polar_kl",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
+    },
+    "5625096f8a": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_polar_local_5625096f8a.console.log",
+      "elapsed_s": 138.7,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_polar_local_5625096f8a.log",
+      "model": "polar_local",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "5741e1a7cf": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_nope_lm_output_kl_5741e1a7cf.console.log",
+      "elapsed_s": 405.2,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_nope_lm_output_kl_5741e1a7cf.log",
+      "model": "nope_lm_output_kl",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "57a8fede19": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_polar_kl_57a8fede19.console.log",
+      "elapsed_s": 194.0,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_polar_kl_57a8fede19.log",
+      "model": "polar_kl",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    },
     "59224e55f4": {
       "benchmark": "retrieval",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/smoke_retrieval_synthetic_rope_lm_output_kl_59224e55f4.console.log",
@@ -197,6 +439,17 @@
       "stage": "smoke",
       "success": true,
       "suite": "synthetic"
+    },
+    "5e18687192": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_nope_kl_5e18687192.console.log",
+      "elapsed_s": 340.7,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_nope_kl_5e18687192.log",
+      "model": "nope_kl",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
     },
     "5f96df63aa": {
       "benchmark": "longdoc",
@@ -209,6 +462,39 @@
       "success": true,
       "suite": "fixed_target"
     },
+    "5fffae3a6e": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_polar_local_5fffae3a6e.console.log",
+      "elapsed_s": 177.8,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_polar_local_5fffae3a6e.log",
+      "model": "polar_local",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    },
+    "60a84f6921": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_nope_kl_60a84f6921.console.log",
+      "elapsed_s": 206.5,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_nope_kl_60a84f6921.log",
+      "model": "nope_kl",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    },
+    "63629785c1": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_rope_kl_63629785c1.console.log",
+      "elapsed_s": 850.6,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_rope_kl_63629785c1.log",
+      "model": "rope_kl",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
+    },
     "640ef86db2": {
       "benchmark": "retrieval",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/smoke_retrieval_synthetic_nope_lm_output_640ef86db2.console.log",
@@ -219,6 +505,28 @@
       "stage": "smoke",
       "success": true,
       "suite": "synthetic"
+    },
+    "654271ff03": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_rope_lm_output_654271ff03.console.log",
+      "elapsed_s": 423.0,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_rope_lm_output_654271ff03.log",
+      "model": "rope_lm_output",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "675c5e0925": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_local_675c5e0925.console.log",
+      "elapsed_s": 22.4,
+      "exit_code": 1,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_local_675c5e0925.log",
+      "model": "nope_local",
+      "stage": "babilong",
+      "success": false,
+      "suite": "direct_ft"
     },
     "67dacf48b8": {
       "benchmark": "retrieval",
@@ -231,6 +539,39 @@
       "success": true,
       "suite": "synthetic"
     },
+    "6d3b4caf1f": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_rope_lm_output_6d3b4caf1f.console.log",
+      "elapsed_s": 369.4,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_rope_lm_output_6d3b4caf1f.log",
+      "model": "rope_lm_output",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
+    },
+    "6dee9533d2": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_lm_output_kl_6dee9533d2.console.log",
+      "elapsed_s": 22.4,
+      "exit_code": 1,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_lm_output_kl_6dee9533d2.log",
+      "model": "rope_lm_output_kl",
+      "stage": "babilong",
+      "success": false,
+      "suite": "direct_ft"
+    },
+    "6f066727fc": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_lm_output_6f066727fc.console.log",
+      "elapsed_s": 22.6,
+      "exit_code": 1,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_lm_output_6f066727fc.log",
+      "model": "rope_lm_output",
+      "stage": "babilong",
+      "success": false,
+      "suite": "direct_ft"
+    },
     "71bd07314a": {
       "benchmark": "retrieval",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/smoke_retrieval_synthetic_polar_lm_output_kl_71bd07314a.console.log",
@@ -241,6 +582,17 @@
       "stage": "smoke",
       "success": true,
       "suite": "synthetic"
+    },
+    "72b48f739a": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_polar_lm_output_72b48f739a.console.log",
+      "elapsed_s": 827.9,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_polar_lm_output_72b48f739a.log",
+      "model": "polar_lm_output",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
     },
     "75410e5eca": {
       "benchmark": "retrieval",
@@ -253,6 +605,50 @@
       "success": true,
       "suite": "synthetic"
     },
+    "75bb82a1da": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_nope_local_75bb82a1da.console.log",
+      "elapsed_s": 203.7,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_nope_local_75bb82a1da.log",
+      "model": "nope_local",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    },
+    "761c38dfd3": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_polar_lm_output_kl_761c38dfd3.console.log",
+      "elapsed_s": 343.9,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_polar_lm_output_kl_761c38dfd3.log",
+      "model": "polar_lm_output_kl",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "776dfeee74": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_kl_776dfeee74.console.log",
+      "elapsed_s": 22.4,
+      "exit_code": 1,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_kl_776dfeee74.log",
+      "model": "nope_kl",
+      "stage": "babilong",
+      "success": false,
+      "suite": "direct_ft"
+    },
+    "7eb15cecd8": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_rope_kl_7eb15cecd8.console.log",
+      "elapsed_s": 191.9,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_rope_kl_7eb15cecd8.log",
+      "model": "rope_kl",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    },
     "85de83c9f8": {
       "benchmark": "retrieval",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/smoke_retrieval_synthetic_rope_kl_85de83c9f8.console.log",
@@ -264,6 +660,28 @@
       "success": true,
       "suite": "synthetic"
     },
+    "86827e17e4": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_rope_lm_output_kl_86827e17e4.console.log",
+      "elapsed_s": 179.4,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_rope_lm_output_kl_86827e17e4.log",
+      "model": "rope_lm_output_kl",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    },
+    "8a32297a93": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_nope_local_8a32297a93.console.log",
+      "elapsed_s": 422.5,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_nope_local_8a32297a93.log",
+      "model": "nope_local",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
     "8d5be68003": {
       "benchmark": "serving",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_local_8d5be68003.console.log",
@@ -271,6 +689,17 @@
       "exit_code": 0,
       "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_local_8d5be68003.log",
       "model": "rope_local",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
+    "8df1f9590e": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_lm_output_kl_8df1f9590e.console.log",
+      "elapsed_s": 119.4,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_lm_output_kl_8df1f9590e.log",
+      "model": "rope_lm_output_kl",
       "stage": "serving",
       "success": true,
       "suite": "generation"
@@ -319,6 +748,28 @@
       "success": true,
       "suite": "generation"
     },
+    "9895220a94": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_rope_lm_output_kl_9895220a94.console.log",
+      "elapsed_s": 393.2,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_rope_lm_output_kl_9895220a94.log",
+      "model": "rope_lm_output_kl",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "98cfe3d8fb": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_polar_lm_output_kl_98cfe3d8fb.console.log",
+      "elapsed_s": 575.3,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_polar_lm_output_kl_98cfe3d8fb.log",
+      "model": "polar_lm_output_kl",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
+    },
     "9efe68eb8a": {
       "benchmark": "retrieval",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/smoke_retrieval_synthetic_nope_kl_9efe68eb8a.console.log",
@@ -330,6 +781,61 @@
       "success": true,
       "suite": "synthetic"
     },
+    "9f1c3b747a": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_polar_local_9f1c3b747a.console.log",
+      "elapsed_s": 329.4,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_polar_local_9f1c3b747a.log",
+      "model": "polar_local",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "a1462a5ff1": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_rope_lm_output_a1462a5ff1.console.log",
+      "elapsed_s": 214.3,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_rope_lm_output_a1462a5ff1.log",
+      "model": "rope_lm_output",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    },
+    "a1bcc36331": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_local_a1bcc36331.console.log",
+      "elapsed_s": 116.9,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_local_a1bcc36331.log",
+      "model": "polar_local",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
+    "a41ed98eda": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_polar_local_a41ed98eda.console.log",
+      "elapsed_s": 268.5,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_polar_local_a41ed98eda.log",
+      "model": "polar_local",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
+    },
+    "a61048f895": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_kl_a61048f895.console.log",
+      "elapsed_s": 117.7,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_kl_a61048f895.log",
+      "model": "rope_kl",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
     "a9672173ca": {
       "benchmark": "serving",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_lm_output_a9672173ca.console.log",
@@ -337,6 +843,28 @@
       "exit_code": 0,
       "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_lm_output_a9672173ca.log",
       "model": "polar_lm_output",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
+    "ac37b7f613": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_kl_ac37b7f613.console.log",
+      "elapsed_s": 115.0,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_kl_ac37b7f613.log",
+      "model": "polar_kl",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
+    "b9f9c23886": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_nope_local_b9f9c23886.console.log",
+      "elapsed_s": 122.5,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_nope_local_b9f9c23886.log",
+      "model": "nope_local",
       "stage": "serving",
       "success": true,
       "suite": "generation"
@@ -363,6 +891,28 @@
       "success": true,
       "suite": "synthetic"
     },
+    "c51042fd60": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_lm_output_c51042fd60.console.log",
+      "elapsed_s": 125.6,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_lm_output_c51042fd60.log",
+      "model": "rope_lm_output",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
+    "c67dc4369b": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_nope_local_c67dc4369b.console.log",
+      "elapsed_s": 794.7,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_nope_local_c67dc4369b.log",
+      "model": "nope_local",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
+    },
     "c99cf3e0c0": {
       "benchmark": "retrieval",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/smoke_retrieval_synthetic_rope_lm_output_kl_c99cf3e0c0.console.log",
@@ -373,6 +923,50 @@
       "stage": "smoke",
       "success": true,
       "suite": "synthetic"
+    },
+    "ca60742ae7": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_lm_output_kl_ca60742ae7.console.log",
+      "elapsed_s": 114.4,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_polar_lm_output_kl_ca60742ae7.log",
+      "model": "polar_lm_output_kl",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
+    "caefebe8ea": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_nope_kl_caefebe8ea.console.log",
+      "elapsed_s": 402.9,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_nope_kl_caefebe8ea.log",
+      "model": "nope_kl",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "cdebd25012": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_kl_cdebd25012.console.log",
+      "elapsed_s": 22.6,
+      "exit_code": 1,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_kl_cdebd25012.log",
+      "model": "rope_kl",
+      "stage": "babilong",
+      "success": false,
+      "suite": "direct_ft"
+    },
+    "d207d362fe": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_nope_kl_d207d362fe.console.log",
+      "elapsed_s": 842.2,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_nope_kl_d207d362fe.log",
+      "model": "nope_kl",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
     },
     "d334b8a8ed": {
       "benchmark": "retrieval",
@@ -385,6 +979,28 @@
       "success": true,
       "suite": "synthetic"
     },
+    "d3373f3a8d": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_rope_local_d3373f3a8d.console.log",
+      "elapsed_s": 309.2,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_rope_local_d3373f3a8d.log",
+      "model": "rope_local",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
+    },
+    "d3d2413ae6": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_polar_kl_d3d2413ae6.console.log",
+      "elapsed_s": 572.6,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_polar_kl_d3d2413ae6.log",
+      "model": "polar_kl",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
+    },
     "d6aab34701": {
       "benchmark": "serving",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_lm_output_kl_d6aab34701.console.log",
@@ -392,6 +1008,39 @@
       "exit_code": 0,
       "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_rope_lm_output_kl_d6aab34701.log",
       "model": "rope_lm_output_kl",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
+    "d6c1232106": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_rope_local_d6c1232106.console.log",
+      "elapsed_s": 400.3,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_rope_local_d6c1232106.log",
+      "model": "rope_local",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "dda8d192b1": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_local_dda8d192b1.console.log",
+      "elapsed_s": 22.5,
+      "exit_code": 1,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_local_dda8d192b1.log",
+      "model": "rope_local",
+      "stage": "babilong",
+      "success": false,
+      "suite": "direct_ft"
+    },
+    "df31926f98": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_nope_kl_df31926f98.console.log",
+      "elapsed_s": 118.3,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_nope_kl_df31926f98.log",
+      "model": "nope_kl",
       "stage": "serving",
       "success": true,
       "suite": "generation"
@@ -418,6 +1067,50 @@
       "success": true,
       "suite": "direct"
     },
+    "e7453fce22": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_polar_lm_output_kl_e7453fce22.console.log",
+      "elapsed_s": 293.9,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_polar_lm_output_kl_e7453fce22.log",
+      "model": "polar_lm_output_kl",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
+    },
+    "e86cf6918a": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_nope_lm_output_e86cf6918a.console.log",
+      "elapsed_s": 358.2,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_nope_lm_output_e86cf6918a.log",
+      "model": "nope_lm_output",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
+    },
+    "ed45828fd7": {
+      "benchmark": "finetune_babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_polar_lm_output_kl_ed45828fd7.console.log",
+      "elapsed_s": 806.8,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_polar_lm_output_kl_ed45828fd7.log",
+      "model": "polar_lm_output_kl",
+      "stage": "babilong_finetune",
+      "success": true,
+      "suite": "2k_ft"
+    },
+    "ef546bfa23": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_rope_kl_ef546bfa23.console.log",
+      "elapsed_s": 409.6,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_rope_kl_ef546bfa23.log",
+      "model": "rope_kl",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
     "f03c80b561": {
       "benchmark": "retrieval",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/smoke_retrieval_synthetic_polar_kl_f03c80b561.console.log",
@@ -428,6 +1121,72 @@
       "stage": "smoke",
       "success": true,
       "suite": "synthetic"
+    },
+    "f206b8a967": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_polar_lm_output_f206b8a967.console.log",
+      "elapsed_s": 352.7,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_polar_lm_output_f206b8a967.log",
+      "model": "polar_lm_output",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "f50f247182": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_polar_lm_output_f50f247182.console.log",
+      "elapsed_s": 575.4,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_polar_lm_output_f50f247182.log",
+      "model": "polar_lm_output",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
+    },
+    "f9417c9e39": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_rope_local_f9417c9e39.console.log",
+      "elapsed_s": 207.6,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_rope_local_f9417c9e39.log",
+      "model": "rope_local",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    },
+    "fa933ef322": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_nope_local_fa933ef322.console.log",
+      "elapsed_s": 313.2,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_nope_local_fa933ef322.log",
+      "model": "nope_local",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
+    },
+    "fb34ef73ac": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_rope_kl_fb34ef73ac.console.log",
+      "elapsed_s": 338.6,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_rope_kl_fb34ef73ac.log",
+      "model": "rope_kl",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
+    },
+    "fb535f4bbf": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_polar_lm_output_kl_fb535f4bbf.console.log",
+      "elapsed_s": 187.2,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_polar_lm_output_kl_fb535f4bbf.log",
+      "model": "polar_lm_output_kl",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
     },
     "fb604832a2": {
       "benchmark": "base",
@@ -440,6 +1199,17 @@
       "success": true,
       "suite": "zero_shot"
     },
+    "fc4c87df50": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_nope_lm_output_fc4c87df50.console.log",
+      "elapsed_s": 416.8,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/retrieval_retrieval_synthetic_nope_lm_output_fc4c87df50.log",
+      "model": "nope_lm_output",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
     "fdd37ecba0": {
       "benchmark": "serving",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_nope_lm_output_fdd37ecba0.console.log",
@@ -450,7 +1220,40 @@
       "stage": "serving",
       "success": true,
       "suite": "generation"
+    },
+    "fdf192ccb7": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_nope_lm_output_fdf192ccb7.console.log",
+      "elapsed_s": 219.2,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_nope_lm_output_fdf192ccb7.log",
+      "model": "nope_lm_output",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    },
+    "ff976bb83a": {
+      "benchmark": "serving",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_nope_lm_output_kl_ff976bb83a.console.log",
+      "elapsed_s": 115.2,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_nope_lm_output_kl_ff976bb83a.log",
+      "model": "nope_lm_output_kl",
+      "stage": "serving",
+      "success": true,
+      "suite": "generation"
+    },
+    "ffa3e50691": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_polar_lm_output_ffa3e50691.console.log",
+      "elapsed_s": 172.1,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_polar_lm_output_ffa3e50691.log",
+      "model": "polar_lm_output",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
     }
   },
-  "updated_at": "2026-09-10T11:52:13Z"
+  "updated_at": "2026-09-10T19:19:36Z"
 }

@@ -1,0 +1,29 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+[run] benchmark=babilong model=/home/sagemaker-user/atma/checkpoints/foveal_babilong_2k_ft/nope_lm_output tasks=['qa1', 'qa2', 'qa3', 'qa4', 'qa5'] lengths=['0k', '1k', '2k', '4k', '8k', '16k', '32k', '64k', '128k', '256k'] samples=10 gamma_clamp=None
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1904.66it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1981.01it/s]
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/sagemaker-user/atma/benchmarks/run.py", line 271, in <module>
+    main()
+  File "/home/sagemaker-user/atma/benchmarks/run.py", line 165, in main
+    model = DirectScorer(
+            ^^^^^^^^^^^^^
+  File "/home/sagemaker-user/atma/benchmarks/scoring.py", line 80, in __init__
+    self.model = self._load_model(torch)
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sagemaker-user/atma/benchmarks/scoring.py", line 104, in _load_model
+    load_foveal_weights(model, self.weights_path)
+  File "/home/sagemaker-user/atma/foveal_cpt/checkpoint.py", line 113, in load_foveal_weights
+    result = model.load_state_dict(state, strict=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/torch/nn/modules/module.py", line 2643, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for Model:
+	Missing key(s) in state_dict: "blocks.2.attn.base.v_null", "blocks.2.attn.base.null_base", "blocks.2.attn.base.null_slope_raw", "blocks.2.attn.base.len_gain_raw", "blocks.2.attn.base.mag_beta_raw", "blocks.2.attn.base.mu_proj.weight", "blocks.2.attn.base.mu_proj.bias", "blocks.6.attn.base.v_null", "blocks.6.attn.base.null_base", "blocks.6.attn.base.null_slope_raw", "blocks.6.attn.base.len_gain_raw", "blocks.6.attn.base.mag_beta_raw", "blocks.6.attn.base.mu_proj.weight", "blocks.6.attn.base.mu_proj.bias", "blocks.10.attn.base.v_null", "blocks.10.attn.base.null_base", "blocks.10.attn.base.null_slope_raw", "blocks.10.attn.base.len_gain_raw", "blocks.10.attn.base.mag_beta_raw", "blocks.10.attn.base.mu_proj.weight", "blocks.10.attn.base.mu_proj.bias", "blocks.14.attn.base.v_null", "blocks.14.attn.base.null_base", "blocks.14.attn.base.null_slope_raw", "blocks.14.attn.base.len_gain_raw", "blocks.14.attn.base.mag_beta_raw", "blocks.14.attn.base.mu_proj.weight", "blocks.14.attn.base.mu_proj.bias". 

@@ -1,0 +1,77 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+[babilong-ft] dataset=RMT-team/babilong@ee0d588794c7ac098062ee0d247c733d62e94fe2 prompts=builtin-v1
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1939.67it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1872.46it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1736.77it/s]
+[babilong-ft] loaded qa1@0k rows [0, 80)
+[babilong-ft] loaded qa2@0k rows [0, 80)
+[babilong-ft] loaded qa3@0k rows [0, 80)
+[babilong-ft] loaded qa4@0k rows [0, 80)
+[babilong-ft] loaded qa5@0k rows [0, 80)
+[babilong-ft] loaded qa6@0k rows [0, 80)
+[babilong-ft] loaded qa7@0k rows [0, 80)
+[babilong-ft] loaded qa8@0k rows [0, 80)
+[babilong-ft] loaded qa9@0k rows [0, 80)
+[babilong-ft] loaded qa10@0k rows [0, 80)
+[babilong-ft] loaded qa1@1k rows [0, 80)
+[babilong-ft] loaded qa2@1k rows [0, 80)
+[babilong-ft] loaded qa3@1k rows [0, 80)
+[babilong-ft] loaded qa4@1k rows [0, 80)
+[babilong-ft] loaded qa5@1k rows [0, 80)
+[babilong-ft] loaded qa6@1k rows [0, 80)
+[babilong-ft] loaded qa7@1k rows [0, 80)
+[babilong-ft] loaded qa8@1k rows [0, 80)
+[babilong-ft] loaded qa9@1k rows [0, 80)
+[babilong-ft] loaded qa10@1k rows [0, 80)
+[babilong-ft] loaded qa1@2k rows [0, 80)
+[babilong-ft] loaded qa2@2k rows [0, 80)
+[babilong-ft] loaded qa3@2k rows [0, 80)
+[babilong-ft] loaded qa4@2k rows [0, 80)
+[babilong-ft] loaded qa5@2k rows [0, 80)
+[babilong-ft] loaded qa6@2k rows [0, 80)
+[babilong-ft] loaded qa7@2k rows [0, 80)
+[babilong-ft] loaded qa8@2k rows [0, 80)
+[babilong-ft] loaded qa9@2k rows [0, 80)
+[babilong-ft] loaded qa10@2k rows [0, 80)
+[babilong-ft] loaded qa1@0k rows [80, 90)
+[babilong-ft] loaded qa2@0k rows [80, 90)
+[babilong-ft] loaded qa3@0k rows [80, 90)
+[babilong-ft] loaded qa4@0k rows [80, 90)
+[babilong-ft] loaded qa5@0k rows [80, 90)
+[babilong-ft] loaded qa6@0k rows [80, 90)
+[babilong-ft] loaded qa7@0k rows [80, 90)
+[babilong-ft] loaded qa8@0k rows [80, 90)
+[babilong-ft] loaded qa9@0k rows [80, 90)
+[babilong-ft] loaded qa10@0k rows [80, 90)
+[babilong-ft] loaded qa1@1k rows [80, 90)
+[babilong-ft] loaded qa2@1k rows [80, 90)
+[babilong-ft] loaded qa3@1k rows [80, 90)
+[babilong-ft] loaded qa4@1k rows [80, 90)
+[babilong-ft] loaded qa5@1k rows [80, 90)
+[babilong-ft] loaded qa6@1k rows [80, 90)
+[babilong-ft] loaded qa7@1k rows [80, 90)
+[babilong-ft] loaded qa8@1k rows [80, 90)
+[babilong-ft] loaded qa9@1k rows [80, 90)
+[babilong-ft] loaded qa10@1k rows [80, 90)
+[babilong-ft] loaded qa1@2k rows [80, 90)
+[babilong-ft] loaded qa2@2k rows [80, 90)
+[babilong-ft] loaded qa3@2k rows [80, 90)
+[babilong-ft] loaded qa4@2k rows [80, 90)
+[babilong-ft] loaded qa5@2k rows [80, 90)
+[babilong-ft] loaded qa6@2k rows [80, 90)
+[babilong-ft] loaded qa7@2k rows [80, 90)
+[babilong-ft] loaded qa8@2k rows [80, 90)
+[babilong-ft] loaded qa9@2k rows [80, 90)
+[babilong-ft] loaded qa10@2k rows [80, 90)
+[babilong-ft] train=2400 val=300 seq_len=2048 max_unpadded=1781
+[babilong-ft] {"elapsed_s": 251.4, "epoch": 1, "lr": 1.6330117273984822e-05, "step": 300, "train_nll": 1.1083486448600401, "val_nll": 0.5015548562943746}
+[babilong-ft] {"elapsed_s": 503.3, "epoch": 2, "lr": 6.936199775201998e-06, "step": 600, "train_nll": 0.3969473813462954, "val_nll": 0.5327045703996875}
+[babilong-ft] {"elapsed_s": 753.3, "epoch": 3, "lr": 2.0000000000000003e-06, "step": 900, "train_nll": 0.2603453888767919, "val_nll": 0.6668819936260292}
+[babilong-ft] complete {"best_epoch": 1, "best_val_nll": 0.5015548562943746, "checkpoint": "/home/sagemaker-user/atma/checkpoints/foveal_babilong_2k_ft/polar_kl", "curve": [{"elapsed_s": 251.4, "epoch": 1, "lr": 1.6330117273984822e-05, "step": 300, "train_nll": 1.1083486448600401, "val_nll": 0.5015548562943746}, {"elapsed_s": 503.3, "epoch": 2, "lr": 6.936199775201998e-06, "step": 600, "train_nll": 0.3969473813462954, "val_nll": 0.5327045703996875}, {"elapsed_s": 753.3, "epoch": 3, "lr": 2.0000000000000003e-06, "step": 900, "train_nll": 0.2603453888767919, "val_nll": 0.6668819936260292}], "elapsed_s": 753.3, "total_steps": 900}
