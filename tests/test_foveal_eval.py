@@ -117,6 +117,18 @@ class FovealEvalTest(unittest.TestCase):
         hidden_64 = scorer._forward_hidden(input_ids_64)
         self.assertEqual(hidden_64.shape, (1, 64, 64))
 
+    def test_pipeline_stages_resolution(self):
+        from foveal_cpt.run_eval_pipeline import _resolve_stages, _build_jobs
+        import argparse
+
+        # "all" should expand to all 5 core benchmark stages
+        stages = _resolve_stages(["all"])
+        self.assertEqual(stages, {"base", "retrieval", "longdoc", "babilong_pipeline", "serving"})
+
+        # Multiple explicit stages
+        multi = _resolve_stages(["base", "retrieval"])
+        self.assertEqual(multi, {"base", "retrieval"})
+
 
 if __name__ == "__main__":
     unittest.main()

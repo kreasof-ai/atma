@@ -258,7 +258,7 @@ def run_finetune(args):
     if not 0.0 < args.min_lr_ratio <= 1.0:
         raise ValueError("min_lr_ratio must be in (0, 1]")
     existing_checkpoint = args.output_dir / "weights.pt"
-    if existing_checkpoint.exists():
+    if existing_checkpoint.exists() and not getattr(args, "overwrite", False):
         raise FileExistsError(
             f"refusing to overwrite existing fine-tuned checkpoint: {existing_checkpoint}"
         )
@@ -463,6 +463,7 @@ def _parser():
     parser.add_argument("--min_lr_ratio", type=float, default=0.1)
     parser.add_argument("--grad_clip", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=1234)
+    parser.add_argument("--overwrite", action="store_true", help="overwrite existing checkpoint")
     parser.add_argument("--device", default=None)
     return parser
 

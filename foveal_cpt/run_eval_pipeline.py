@@ -157,6 +157,13 @@ def _download_foveal_checkpoint(
     }
 
 
+def _resolve_stages(stage_args: list[str] | str) -> set[str]:
+    raw = set(stage_args) if isinstance(stage_args, list) else {stage_args}
+    if "all" in raw:
+        return {"base", "retrieval", "longdoc", "babilong_pipeline", "serving"}
+    return raw
+
+
 def _job_fingerprint(job: BenchmarkJob) -> str:
     payload = json.dumps(asdict(job), sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:10]
@@ -169,10 +176,11 @@ def _job_output(log_dir: Path, job: BenchmarkJob) -> Path:
 
 
 def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
+    stages = _resolve_stages(args.stage)
     jobs = []
 
     # 1. Smoke Stage (quick retrieval gate)
-    if args.stage in ("smoke", "all"):
+    if "smoke" in stages:
         for model in args.models:
             jobs.append(
                 BenchmarkJob(
@@ -192,7 +200,7 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
             )
 
     # 2. Retrieval Stage
-    if args.stage in ("retrieval", "all"):
+    if "retrieval" in stages:
         for model in args.models:
             for suite in args.suites:
                 extra = []
@@ -217,7 +225,7 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
                 )
 
     # 3. Downstream LM Tasks (Base Benchmark)
-    if args.stage in ("base", "all"):
+    if "base" in stages:
         for model in args.models:
             cmd = [
                 "--tasks", *args.base_tasks,
@@ -237,7 +245,7 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
             )
 
     # 4. Longdoc (BPB)
-    if args.stage in ("longdoc", "all"):
+    if "longdoc" in stages:
         for model in args.models:
             jobs.append(
                 BenchmarkJob(
@@ -256,7 +264,7 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
             )
 
     # 5. BABILong Adaptation Fine-Tuning Stage
-    if args.stage in ("babilong_finetune", "babilong_pipeline"):
+    if "babilong_finetune" in stages or "babilong_pipeline" in stages:
         for model in args.models:
             jobs.append(
                 BenchmarkJob(
@@ -282,7 +290,7 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
             )
 
     # 6. BABILong Evaluation Stage
-    if args.stage in ("babilong", "babilong_pipeline", "all"):
+    if "babilong" in stages or "babilong_pipeline" in stages:
         for model in args.models:
             cmd = [
                 "--tasks", *args.babilong_tasks,
@@ -295,7 +303,7 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
             ]
             suite_name = (
                 f"{args.babilong_backend}_ft"
-                if (args.use_finetuned or args.stage == "babilong_pipeline")
+                if (args.use_finetuned or "babilong_pipeline" in stages)
                 else args.babilong_backend
             )
             jobs.append(
@@ -309,7 +317,7 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
             )
 
     # 7. Serving Performance (Prefill / Decode tok/s)
-    if args.stage in ("serving", "all"):
+    if "serving" in stages:
         for model in args.models:
             cmd = [
                 "--lengths", *args.serving_lengths,
@@ -367,6 +375,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--stage",
+        nargs="+",
         choices=(
             "smoke",
             "retrieval",
@@ -378,7 +387,7 @@ def main() -> int:
             "serving",
             "all",
         ),
-        default="smoke",
+        default=["smoke"],
         help="smoke, retrieval, base, longdoc, babilong, babilong_finetune, babilong_pipeline, serving, all",
     )
     parser.add_argument(
@@ -547,12 +556,15 @@ def main() -> int:
                 str(out_ckpt),
                 *job.command_args,
             ]
+            if args.rerun:
+                cmd.append("--overwrite")
         else:
+            stages = _resolve_stages(args.stage)
             eval_model_path = (
                 str(args.finetune_output_root / job.model)
                 if (
                     job.benchmark == "babilong"
-                    and (args.use_finetuned or args.stage == "babilong_pipeline")
+                    and (args.use_finetuned or "babilong_pipeline" in stages)
                 )
                 else str(model_path)
             )
