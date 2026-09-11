@@ -164,6 +164,30 @@ def _resolve_stages(stage_args: list[str] | str) -> set[str]:
     return raw
 
 
+def _resolve_gamma_clamp(model_key: str, gamma_clamp_arg: str | None) -> str | None:
+    if not gamma_clamp_arg:
+        return None
+    if str(gamma_clamp_arg).lower() in ("auto", "hl-256", "hl:256", "256"):
+        core = model_key.split("_")[0]
+        clamp_path = (
+            ROOT
+            / "gamma_diagnostics"
+            / "results"
+            / "re_evaluation"
+            / "checkpoints"
+            / "base"
+            / core
+            / "hl-256.gamma-clamp.json"
+        )
+        if not clamp_path.is_file():
+            raise FileNotFoundError(f"Gamma clamp spec not found: {clamp_path}")
+        return str(clamp_path.resolve())
+    path = Path(gamma_clamp_arg).expanduser().resolve()
+    if not path.is_file():
+        raise FileNotFoundError(f"Gamma clamp spec not found: {path}")
+    return str(path)
+
+
 def _job_fingerprint(job: BenchmarkJob) -> str:
     payload = json.dumps(asdict(job), sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:10]
@@ -202,6 +226,8 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
     # 2. Retrieval Stage
     if "retrieval" in stages:
         for model in args.models:
+            clamp_spec = _resolve_gamma_clamp(model, getattr(args, "gamma_clamp", None))
+            clamp_extra = ["--gamma-clamp", clamp_spec] if clamp_spec else []
             for suite in args.suites:
                 extra = []
                 if suite == "real":
@@ -220,6 +246,7 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
                             "--seed", str(args.seed),
                             "--retrieval_value_tokens", str(args.retrieval_value_tokens),
                             *extra,
+                            *clamp_extra,
                         ),
                     )
                 )
@@ -234,6 +261,9 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
             ]
             if args.base_limit:
                 cmd.extend(["--limit", str(args.base_limit)])
+            clamp_spec = _resolve_gamma_clamp(model, getattr(args, "gamma_clamp", None))
+            if clamp_spec:
+                cmd.extend(["--gamma-clamp", clamp_spec])
             jobs.append(
                 BenchmarkJob(
                     stage="base",
@@ -247,6 +277,8 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
     # 4. Longdoc (BPB)
     if "longdoc" in stages:
         for model in args.models:
+            clamp_spec = _resolve_gamma_clamp(model, getattr(args, "gamma_clamp", None))
+            clamp_extra = ["--gamma-clamp", clamp_spec] if clamp_spec else []
             jobs.append(
                 BenchmarkJob(
                     stage="longdoc",
@@ -259,6 +291,7 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
                         "--target_tokens", str(args.target_tokens),
                         "--num_docs", str(args.num_docs),
                         "--max_scan", str(args.max_scan),
+                        *clamp_extra,
                     ),
                 )
             )
@@ -301,6 +334,9 @@ def _build_jobs(args: argparse.Namespace) -> list[BenchmarkJob]:
                 "--babilong_backend", args.babilong_backend,
                 "--max_tokens", str(args.max_tokens),
             ]
+            clamp_spec = _resolve_gamma_clamp(model, getattr(args, "gamma_clamp", None))
+            if clamp_spec:
+                cmd.extend(["--gamma-clamp", clamp_spec])
             suite_name = (
                 f"{args.babilong_backend}_ft"
                 if (args.use_finetuned or "babilong_pipeline" in stages)
@@ -492,6 +528,13 @@ def main() -> int:
     parser.add_argument("--finetune_val_start", type=int, default=80)
     parser.add_argument("--finetune_val_end", type=int, default=90)
 
+    # Gamma clamp args
+    parser.add_argument(
+        "--gamma_clamp",
+        default=None,
+        help="Apply gamma clamp spec to DirectScorer benchmarks ('hl-256' or path to JSON)",
+    )
+
     # Serving args
     parser.add_argument(
         "--serving_lengths",
@@ -504,6 +547,9 @@ def main() -> int:
     parser.add_argument("--serving_backend", choices=("paged", "direct"), default="paged")
 
     args = parser.parse_args()
+
+    if args.gamma_clamp and args.log_dir == DEFAULT_LOG_DIR:
+        args.log_dir = ROOT / "benchmarks" / "logs" / "foveal_cpt_clamped"
 
     # Determine model list
     if args.models is None:
