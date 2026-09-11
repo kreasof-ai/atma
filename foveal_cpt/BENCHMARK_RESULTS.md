@@ -175,7 +175,36 @@ Measured on a single NVIDIA L40S (46,068 MiB VRAM) using the paged KV cache engi
 
 ---
 
-## 7. Conclusions & Strategic Recommendations
+## 7. Titans Memory Gamma Half-Life & Retention Audit
+
+To determine whether continuous pre-training (1B tokens at 32K context) introduced anomalous memory retention behavior, we audited the parameter-only zero-input retention $\gamma_0 = \sigma(b_{\text{learned}} + b_{\text{config}})$ and corresponding half-life $H = \ln(0.5)/\ln(\gamma_0)$ across all 4 memory layers (blocks 2, 6, 10, 14) $\times$ 8 heads = 32 heads per checkpoint (384 layer-heads total across all 12 checkpoints). Full records are serialized in [`benchmarks/logs/foveal_cpt/gamma_parameters.json`](../benchmarks/logs/foveal_cpt/gamma_parameters.json) and [`gamma_parameters.csv`](../benchmarks/logs/foveal_cpt/gamma_parameters.csv).
+
+| Checkpoint | Median HL | Max HL (tokens) | Max Head | Learned Bias | 2nd Max HL (tokens) | 2nd Head | Outlier Status |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---|
+| **Base-RoPE** (Stage II) | 24.0 | 682.2 | L2H1 | +2.9908 | 55.2 | L10H7 | *No outlier* |
+| `rope-local` | 23.9 | 654.9 | L2H1 | +2.9504 | 58.7 | L10H7 | **Healthy** (stable vs base) |
+| `rope-lm_output` | 24.2 | 647.9 | L2H1 | +2.9397 | 58.7 | L10H7 | **Healthy** (stable vs base) |
+| `rope-kl` | 24.2 | 645.4 | L2H1 | +2.9359 | 58.0 | L10H7 | **Healthy** (stable vs base) |
+| `rope-lm_output_kl` | 24.2 | 641.5 | L2H1 | +2.9298 | 57.9 | L10H7 | **Healthy** (stable vs base) |
+| **Base-Polar** (Stage II) | 22.3 | 3,066,839.3 | L2H6 | +11.4013 | 235.0 | L6H6 | *Base outlier* |
+| `polar-local` | 22.4 | 1,621,805.0 | L2H6 | +10.7656 | 258.8 | L6H6 | **Healthy** (inherited base outlier) |
+| `polar-lm_output` | 22.3 | 2,471,839.6 | L2H6 | +11.1870 | 252.3 | L6H6 | **Healthy** (inherited base outlier) |
+| `polar-kl` | 22.4 | 3,685,232.9 | L2H6 | +11.5864 | 247.4 | L6H6 | **Healthy** (inherited base outlier) |
+| `polar-lm_output_kl` | 22.3 | 3,483,283.6 | L2H6 | +11.5300 | 247.2 | L6H6 | **Healthy** (inherited base outlier) |
+| **Base-NoPE** (Stage II) | 25.9 | 21,008,769.9 | L2H5 | +13.3267 | 110.4 | L10H7 | *Base outlier* |
+| `nope-local` | 26.2 | 18,480,366.8 | L2H5 | +13.1987 | 123.4 | L10H7 | **Healthy** (inherited base outlier) |
+| `nope-lm_output` | 26.1 | 18,091,271.5 | L2H5 | +13.1775 | 120.3 | L10H7 | **Healthy** (inherited base outlier) |
+| `nope-kl` | 25.7 | 21,466,180.5 | L2H5 | +13.3485 | 117.7 | L10H7 | **Healthy** (inherited base outlier) |
+| `nope-lm_output_kl` | 25.7 | 19,600,281.8 | L2H5 | +13.2576 | 117.2 | L10H7 | **Healthy** (inherited base outlier) |
+
+### Diagnostic Findings:
+1. **Zero New or Suspicious Outliers:** Continuous pre-training did **not** introduce any new gamma outliers in any head across all 12 checkpoints.
+2. **Strictly Bounded Non-Outlier Heads:** Across all 384 examined layer-heads, 31 out of 32 heads in every checkpoint exhibit short, stable half-lives with medians tightly grouped around **22.3–26.2 tokens**. The second highest half-life in every model remains strictly under 260 tokens (Polar: 247–259 tokens at L6H6; NoPE: 117–123 tokens at L10H7; RoPE: 58–59 tokens at L10H7).
+3. **Preservation of Stage II Base Operating Points:** The pre-existing single-head operating points from the Stage II base models (L2H5 in NoPE at ~18M–21M tokens and L2H6 in Polar at ~1.6M–3.7M tokens) remained stable across all four adaptation modes throughout 1,908 steps of 32K context training, confirming that sparse-attention adaptation does not perturb the Titans memory decay dynamics.
+
+---
+
+## 8. Conclusions & Strategic Recommendations
 
 1. **CPT Adaptation Mode Selection:**
    - **`lm_output_kl` is the optimal adaptation configuration.** It delivers the highest synthetic retrieval retention at 256K (82.7% NoPE, 73.0% Polar), the strongest BPB across long documents, and leaves downstream base LM performance completely unaffected.
