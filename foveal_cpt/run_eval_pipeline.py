@@ -586,6 +586,7 @@ def main() -> int:
     summary = _read_json(summary_path, {"jobs": {}, "updated_at": None})
 
     env = dict(os.environ)
+    env["PYTHONUNBUFFERED"] = "1"
     env["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
 
     failures = 0

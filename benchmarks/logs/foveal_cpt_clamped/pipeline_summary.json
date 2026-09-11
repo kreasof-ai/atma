@@ -1,0 +1,115 @@
+{
+  "jobs": {
+    "13a3f3cf28": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/longdoc_longdoc_fixed_target_nope_lm_output_kl_13a3f3cf28.console.log",
+      "elapsed_s": 195.9,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/longdoc_longdoc_fixed_target_nope_lm_output_kl_13a3f3cf28.log",
+      "model": "nope_lm_output_kl",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    },
+    "13cb70f4ef": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/babilong_babilong_direct_ft_polar_lm_output_kl_13cb70f4ef.console.log",
+      "elapsed_s": 1192.1,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/babilong_babilong_direct_ft_polar_lm_output_kl_13cb70f4ef.log",
+      "model": "polar_lm_output_kl",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
+    },
+    "27ebbc0ec4": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/base_base_zero_shot_polar_lm_output_kl_27ebbc0ec4.console.log",
+      "elapsed_s": 308.5,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/base_base_zero_shot_polar_lm_output_kl_27ebbc0ec4.log",
+      "model": "polar_lm_output_kl",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
+    },
+    "2fed83d22b": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/retrieval_retrieval_real_polar_lm_output_kl_2fed83d22b.console.log",
+      "elapsed_s": 375.1,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/retrieval_retrieval_real_polar_lm_output_kl_2fed83d22b.log",
+      "model": "polar_lm_output_kl",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "real"
+    },
+    "326babc639": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/retrieval_retrieval_synthetic_nope_lm_output_kl_326babc639.console.log",
+      "elapsed_s": 409.6,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/retrieval_retrieval_synthetic_nope_lm_output_kl_326babc639.log",
+      "model": "nope_lm_output_kl",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "563dabe963": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/retrieval_retrieval_real_nope_lm_output_kl_563dabe963.console.log",
+      "elapsed_s": 414.0,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/retrieval_retrieval_real_nope_lm_output_kl_563dabe963.log",
+      "model": "nope_lm_output_kl",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "real"
+    },
+    "93a6a65feb": {
+      "benchmark": "retrieval",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/retrieval_retrieval_synthetic_polar_lm_output_kl_93a6a65feb.console.log",
+      "elapsed_s": 363.3,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/retrieval_retrieval_synthetic_polar_lm_output_kl_93a6a65feb.log",
+      "model": "polar_lm_output_kl",
+      "stage": "retrieval",
+      "success": true,
+      "suite": "synthetic"
+    },
+    "b4fcbf22f3": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/babilong_babilong_direct_ft_nope_lm_output_kl_b4fcbf22f3.console.log",
+      "elapsed_s": 1274.7,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/babilong_babilong_direct_ft_nope_lm_output_kl_b4fcbf22f3.log",
+      "model": "nope_lm_output_kl",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
+    },
+    "bc4c8be274": {
+      "benchmark": "base",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/base_base_zero_shot_nope_lm_output_kl_bc4c8be274.console.log",
+      "elapsed_s": 384.2,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/base_base_zero_shot_nope_lm_output_kl_bc4c8be274.log",
+      "model": "nope_lm_output_kl",
+      "stage": "base",
+      "success": true,
+      "suite": "zero_shot"
+    },
+    "cf561e1363": {
+      "benchmark": "longdoc",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/longdoc_longdoc_fixed_target_polar_lm_output_kl_cf561e1363.console.log",
+      "elapsed_s": 191.3,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt_clamped/longdoc_longdoc_fixed_target_polar_lm_output_kl_cf561e1363.log",
+      "model": "polar_lm_output_kl",
+      "stage": "longdoc",
+      "success": true,
+      "suite": "fixed_target"
+    }
+  },
+  "updated_at": "2026-09-11T04:01:02Z"
+}

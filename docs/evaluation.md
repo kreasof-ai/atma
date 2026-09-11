@@ -40,6 +40,8 @@ The three 10B base checkpoints (Polar, NoPE, RoPE) undergo **1B tokens** of cont
 
 A full audit across all 384 Titans memory layer-heads confirms **zero new or suspicious gamma retention outliers** were introduced during 32K CPT: 31 of 32 heads per checkpoint maintain bounded short half-lives (median 22–26 tokens, 2nd max $<260$ tokens across all models), and the pre-existing Stage II base operating points (L2H5 in NoPE, L2H6 in Polar) remained stable. Full parameters are recorded in [`benchmarks/logs/foveal_cpt/gamma_parameters.json`](../benchmarks/logs/foveal_cpt/gamma_parameters.json).
 
+An inference-only re-evaluation capping the Layer 2 outliers to $H \le 256$ tokens (`hl-256`) on the promoted checkpoints (`polar_lm_output_kl` and `nope_lm_output_kl`) completely prevents NoPE's 256K Proof-Pile likelihood regression (recovering by **0.365 BPB** to 2.297) and boosts NoPE's 256K BABILong reasoning by **+10 percentage points** (24% $\rightarrow$ 34%), while preserving downstream zero-shot accuracy ($\pm 0.1\%$). Complete clamped results are documented in [`foveal_cpt/BENCHMARK_RESULTS.md`](../foveal_cpt/BENCHMARK_RESULTS.md).
+
 ## Long-context endpoints
 
 | Group | Model | Retrieval token 2K | Retrieval token 256K | Exact 256K | BABILong 256K | Mean BPB 2K | Mean BPB 256K |

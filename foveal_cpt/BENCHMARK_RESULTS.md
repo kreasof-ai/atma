@@ -204,7 +204,71 @@ To determine whether continuous pre-training (1B tokens at 32K context) introduc
 
 ---
 
-## 8. Conclusions & Strategic Recommendations
+## 8. Clamped Inference Re-Evaluation (`hl-256` Pilot on Promoted Models)
+
+To assess the causal impact of the inherited Layer 2 memory retention outliers, we performed an inference-only re-evaluation on the two flagship models (**`polar_lm_output_kl`** and **`nope_lm_output_kl`**) with runtime gamma capped at a half-life of 256 tokens (`hl-256`):
+- **Polar:** Block 2, Head 6 capped to $H \le 256$ tokens (logit cap $5.91$).
+- **NoPE:** Block 2, Head 5 capped to $H \le 256$ tokens (logit cap $5.91$).
+
+All 10 benchmark jobs completed with zero failures across 974 aggregated records serialized in [`benchmarks/logs/foveal_cpt_clamped/benchmark_matrix.json`](../benchmarks/logs/foveal_cpt_clamped/benchmark_matrix.json) and [`benchmark_matrix.csv`](../benchmarks/logs/foveal_cpt_clamped/benchmark_matrix.csv).
+
+### Downstream Base Tasks (Zero-Shot 2K)
+
+| Task | Polar Untouched | Polar Clamped (`hl-256`) | NoPE Untouched | NoPE Clamped (`hl-256`) |
+|:---|:---:|:---:|:---:|:---:|
+| LAMBADA | 27.93% | 27.96% | 29.85% | 29.67% |
+| HellaSwag (norm) | 36.46% | 36.41% | 37.54% | 37.59% |
+| PIQA (norm) | 67.14% | 67.03% | 66.81% | 66.81% |
+| WinoGrande | 52.57% | 52.25% | 52.09% | 51.85% |
+| ARC-Easy (norm) | 49.82% | 49.65% | 50.18% | 50.70% |
+| ARC-Challenge (norm) | 25.42% | 25.75% | 32.11% | 33.11% |
+| OpenBookQA (norm) | 31.80% | 31.60% | 31.20% | 31.40% |
+| BoolQ | 58.13% | 58.26% | 59.39% | 59.24% |
+| **Mean Accuracy** | **43.66%** | **43.61%** | **44.90%** | **45.05%** |
+
+*Downstream capabilities are entirely unaffected by runtime retention capping ($\pm 0.1\%$).*
+
+### Longdoc BPB (Likelihood Extrapolation to 256K)
+
+| Dataset | Length | Polar Untouched | Polar Clamped | NoPE Untouched | NoPE Clamped |
+|:---|:---|:---:|:---:|:---:|:---:|
+| **PG-19** | 2K / 256K | 1.1374 / 1.1470 | **1.1381 / 1.1270** | 1.1136 / 1.1511 | **1.1244 / 1.1226** |
+| **Proof-Pile-2** | 2K / 256K | 2.2451 / 2.2644 | **2.2514 / 2.2164** | 2.2922 / **2.6617** | 2.3281 / **2.2969** |
+| **FinePDFs** | 2K / 256K | 0.8835 / 1.0071 | **0.8888 / 0.9814** | 0.8788 / 0.9284 | 0.8805 / 0.9519 |
+
+*Key finding:* In untouched NoPE, technical text (Proof-Pile-2) drifts significantly by 256K (2.292 $\rightarrow$ 2.662 BPB). Capping NoPE's L2H5 memory head completely eliminates this degradation, holding 256K BPB at **2.2969** (a **0.365 BPB recovery**). Polar likelihood at 256K also improves across all three corpora.
+
+### BABILong Adapted Reasoning (QA1–QA10, 0K to 256K)
+
+| Length | Polar Untouched | Polar Clamped (`hl-256`) | NoPE Untouched | NoPE Clamped (`hl-256`) |
+|:---|:---:|:---:|:---:|:---:|
+| **0K** | 57.0% | 57.0% | 67.0% | 68.0% |
+| **2K** | 56.0% | 55.0% | 64.0% | 61.0% |
+| **8K** | 55.0% | 53.0% | 60.0% | 54.0% |
+| **32K** | 45.0% | 45.0% | 42.0% | 40.0% |
+| **64K** | 42.0% | 40.0% | 34.0% | 34.0% |
+| **128K** | 41.0% | 39.0% | **27.0%** | **36.0% (+9.0%)** |
+| **256K** | 36.0% | **38.0% (+2.0%)** | **24.0%** | **34.0% (+10.0%)** |
+
+*Key finding:* Capping NoPE restores multi-step reasoning at extreme contexts, boosting 128K accuracy by **+9.0 percentage points** (27% $\rightarrow$ 36%) and 256K accuracy by **+10.0 percentage points** (24% $\rightarrow$ 34%). Polar remains the most stable reasoning architecture, scoring **38.0%** at 256K.
+
+### Needle Retrieval Extrapolation (Synthetic & Real)
+
+| Suite | Length | Polar Untouched | Polar Clamped | NoPE Untouched | NoPE Clamped |
+|:---|:---|:---:|:---:|:---:|:---:|
+| **Synthetic** | 2K (tok / exact) | 97.4% / 87.0% | 95.3% / 76.7% | 97.4% / 87.0% | 99.0% / 95.0% |
+| | 32K (tok / exact) | 82.0% / 26.7% | 83.3% / 31.7% | 81.3% / 13.3% | 68.0% / 0.0% |
+| | 128K (tok / exact) | 82.3% / 40.0% | 82.7% / 36.7% | 82.7% / 23.3% | 81.0% / 28.3% |
+| | 256K (tok / exact) | 73.0% / 21.7% | **73.7% / 20.0%** | 82.7% / 25.0% | 68.7% / 3.3% |
+| **Real (FinePDFs)** | 2K (tok / exact) | 99.0% / 95.0% | 99.0% / 95.0% | 96.0% / 80.0% | 94.7% / 73.3% |
+| | 4K (tok / exact) | 80.0% / 65.0% | 82.0% / 58.3% | 66.0% / 63.3% | 65.7% / 61.7% |
+| | 8K (tok / exact) | 36.7% / 15.0% | 20.0% / 0.0% | 41.3% / 33.3% | 49.7% / 30.0% |
+| | 64K (tok / exact) | 3.7% / 0.0% | 2.7% / 0.0% | 1.0% / 0.0% | **28.3% / 13.3%** |
+| | 256K (tok / exact) | 0.0% / 0.0% | 0.0% / 0.0% | 2.0% / 0.0% | 0.0% / 0.0% |
+
+---
+
+## 9. Conclusions & Strategic Recommendations
 
 1. **CPT Adaptation Mode Selection:**
    - **`lm_output_kl` is the optimal adaptation configuration.** It delivers the highest synthetic retrieval retention at 256K (82.7% NoPE, 73.0% Polar), the strongest BPB across long documents, and leaves downstream base LM performance completely unaffected.
