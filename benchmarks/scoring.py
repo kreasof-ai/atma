@@ -133,6 +133,12 @@ class DirectScorer:
                         attn._compiled_flex = torch.compile(flex_attention, dynamic=True)
                     except Exception:
                         pass
+            if self.gamma_clamp:
+                from gamma_diagnostics.clamp import apply_gamma_clamp
+
+                self._gamma_clamp_handle = apply_gamma_clamp(model, self.gamma_clamp)
+                targets = self._gamma_clamp_handle.resolved_targets
+                print(f"Applied gamma clamp to {len(targets)} layer-head target(s): {targets}")
             return model
 
         architecture = self.cfg.get("arch_type") or self.cfg.get("attn_type", "polar")
