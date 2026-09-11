@@ -88,6 +88,17 @@
       "success": true,
       "suite": "2k_ft"
     },
+    "129a27c77f": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_kl_129a27c77f.console.log",
+      "elapsed_s": 1291.2,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_kl_129a27c77f.log",
+      "model": "nope_kl",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
+    },
     "16f1a058f6": {
       "benchmark": "base",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/base_base_zero_shot_polar_lm_output_16f1a058f6.console.log",
@@ -726,6 +737,17 @@
       "success": false,
       "suite": "direct_ft"
     },
+    "787c904c25": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_lm_output_787c904c25.console.log",
+      "elapsed_s": 1252.1,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_lm_output_787c904c25.log",
+      "model": "rope_lm_output",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
+    },
     "7eb15cecd8": {
       "benchmark": "longdoc",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/longdoc_longdoc_fixed_target_rope_kl_7eb15cecd8.console.log",
@@ -758,6 +780,17 @@
       "stage": "longdoc",
       "success": true,
       "suite": "fixed_target"
+    },
+    "87b4d4698a": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_lm_output_kl_87b4d4698a.console.log",
+      "elapsed_s": 1231.3,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_lm_output_kl_87b4d4698a.log",
+      "model": "rope_lm_output_kl",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
     },
     "8913eb65e0": {
       "benchmark": "retrieval",
@@ -828,7 +861,7 @@
     "930816bea2": {
       "benchmark": "babilong",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_local_930816bea2.console.log",
-      "elapsed_s": 604.9,
+      "elapsed_s": 1116.1,
       "exit_code": 0,
       "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_local_930816bea2.log",
       "model": "nope_local",
@@ -846,6 +879,17 @@
       "stage": "smoke",
       "success": true,
       "suite": "synthetic"
+    },
+    "9426b69db5": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_local_9426b69db5.console.log",
+      "elapsed_s": 1159.5,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_local_9426b69db5.log",
+      "model": "rope_local",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
     },
     "961eacdfaf": {
       "benchmark": "serving",
@@ -1011,6 +1055,17 @@
       "stage": "retrieval",
       "success": true,
       "suite": "real"
+    },
+    "b9c7bda018": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_lm_output_kl_b9c7bda018.console.log",
+      "elapsed_s": 1468.5,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_lm_output_kl_b9c7bda018.log",
+      "model": "nope_lm_output_kl",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
     },
     "b9f9c23886": {
       "benchmark": "serving",
@@ -1254,6 +1309,17 @@
       "success": true,
       "suite": "zero_shot"
     },
+    "ec167bb174": {
+      "benchmark": "babilong",
+      "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_kl_ec167bb174.console.log",
+      "elapsed_s": 1222.5,
+      "exit_code": 0,
+      "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_rope_kl_ec167bb174.log",
+      "model": "rope_kl",
+      "stage": "babilong",
+      "success": true,
+      "suite": "direct_ft"
+    },
     "ed45828fd7": {
       "benchmark": "finetune_babilong",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_finetune_finetune_babilong_2k_ft_polar_lm_output_kl_ed45828fd7.console.log",
@@ -1400,7 +1466,7 @@
     "fd3355e8ea": {
       "benchmark": "babilong",
       "console_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_lm_output_fd3355e8ea.console.log",
-      "elapsed_s": 624.2,
+      "elapsed_s": 1234.4,
       "exit_code": 0,
       "log_path": "/home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/babilong_babilong_direct_ft_nope_lm_output_fd3355e8ea.log",
       "model": "nope_lm_output",
@@ -1453,5 +1519,5 @@
       "suite": "fixed_target"
     }
   },
-  "updated_at": "2026-09-10T22:34:47Z"
+  "updated_at": "2026-09-11T01:46:24Z"
 }

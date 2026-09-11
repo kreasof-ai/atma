@@ -4,6 +4,9 @@ This directory is an isolated 12-run adaptation experiment over the three existi
 checkpoints. Every cell trains for **1B tokens** at 32K context and a 524,288-token global batch
 (1,908 optimizer steps). There is no 100M-token screening stage.
 
+> **Evaluation Results:** Complete benchmark matrix, comparative analysis, and scientific interpretation across all 12 checkpoints are documented in [**`BENCHMARK_RESULTS.md`**](BENCHMARK_RESULTS.md).
+> Structured logs and aggregated matrices live under `benchmarks/logs/foveal_cpt/benchmark_matrix.csv` and `benchmark_matrix.json` (7,146 rows).
+
 | attention core | local SWA-512 | LM index output | index KL | LM output + KL |
 | --- | --- | --- | --- | --- |
 | Polar | `polar-local.json` | `polar-lm_output.json` | `polar-kl.json` | `polar-lm_output_kl.json` |

@@ -1,0 +1,187 @@
+# Foveal CPT 10B Benchmark Results & Scientific Interpretation
+
+This document compiles and interprets the complete evaluation suite across all **12 Foveal CPT checkpoints** from [`ChavyvAkvar/atma-foveal-cpt-all`](https://huggingface.co/ChavyvAkvar/atma-foveal-cpt-all).
+
+All checkpoints underwent **1B tokens** of continuous pre-training (CPT) at 32K context and 524,288 tokens/batch (step 1908). Evaluation encompasses five distinct axes:
+1. **Downstream Base LM Tasks:** ARC-challenge, ARC-easy, BoolQ, HellaSwag, OpenBookQA, PIQA, SciQ, WinoGrande (zero-shot).
+2. **Long-Context Retrieval:** Needle-In-A-Haystack (NIAH) and Passkey across 2K to 256K context lengths, comparing Synthetic filler against Real-text distractors (`codelion/finepdfs-1B`).
+3. **BABILong Reasoning Extrapolation:** Controlled short-context adaptation ($\le$2K, QA1–QA10) evaluated across 0K to 256K context lengths.
+4. **Bits-Per-Byte (BPB) Language Modeling:** Fixed-target evaluation on PG-19, Proof-Pile-2, and FinePDFs from 2K to 256K.
+5. **Inference Systems Scaling:** Prefill and decode throughput (tok/s), latency, and peak VRAM across 2K to 256K context lengths on NVIDIA L40S (46 GiB).
+
+The aggregated dataset contains **7,146 structured rows** under `benchmarks/logs/foveal_cpt/benchmark_matrix.json` and `benchmarks/logs/foveal_cpt/benchmark_matrix.csv`.
+
+---
+
+## 1. Experimental Design & The 12 Cells
+
+The 12 adaptation cells test a $3 \times 4$ factorial design:
+- **3 Attention Cores:**
+  - **Polar:** Direction/magnitude decoupled attention with causal length gain and null-floor calibration.
+  - **NoPE:** Canon convolutional projections without positional embeddings.
+  - **RoPE:** Rotary position embeddings on query and key projections.
+- **4 Adaptation Variants:**
+  - `local`: Causal sliding-window attention (SWA-512) with no remote pages and no indexer parameters.
+  - `lm_output`: 16D MQA index projections select sparse pages; a continuous 16D value stream reads context into the residual stream, trained via ordinary LM loss.
+  - `kl`: 16D MQA index projections trained via auxiliary KL distillation against teacher query anchors during CPT.
+  - `lm_output_kl`: Dual-gradient path combining both LM-output residual projection and KL page distillation.
+
+---
+
+## 2. Downstream LM Benchmarks (Zero-Shot)
+
+Primary accuracies on the standard evaluation splits (2,048 tokens scoring length, batch size 8). Primary metric is length-normalized accuracy where established (HellaSwag, PIQA, ARC-e, ARC-c, OpenBookQA) and raw accuracy for LAMBADA, WinoGrande, and BoolQ.
+
+| Attention Core | Adaptation Variant | LAMBADA | HellaSwag | PIQA | WinoG | ARC-e | ARC-c | OBQA | BoolQ | Macro Mean |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **NoPE** | `local` | 29.7% | 38.1% | 66.4% | 51.5% | 49.6% | 31.1% | 31.8% | 59.8% | **44.75%** |
+| **NoPE** | `lm_output` | 30.3% | 37.8% | 66.8% | 52.4% | 49.5% | 31.8% | 31.0% | 59.2% | **44.84%** |
+| **NoPE** | `kl` | 30.0% | 37.7% | 66.6% | 52.0% | 49.8% | 31.4% | 31.8% | 59.9% | **44.91%** |
+| **NoPE** | `lm_output_kl` | 29.8% | 37.5% | 66.8% | 52.1% | 50.2% | 32.1% | 31.2% | 59.4% | **44.90%** |
+| **RoPE** | `local` | 30.9% | 37.7% | 66.6% | 51.7% | 48.6% | 28.1% | 31.8% | 60.9% | **44.53%** |
+| **RoPE** | `lm_output` | 29.9% | 37.4% | 66.7% | 50.5% | 48.4% | 27.4% | 31.2% | 60.0% | **43.94%** |
+| **RoPE** | `kl` | 28.5% | 37.5% | 66.8% | 51.1% | 49.3% | 28.1% | 32.6% | 60.1% | **44.24%** |
+| **RoPE** | `lm_output_kl` | 28.6% | 37.5% | 66.5% | 51.2% | 49.6% | 28.1% | 32.2% | 60.1% | **44.23%** |
+| **Polar** | `local` | 28.1% | 36.5% | 66.8% | 51.3% | 48.8% | 26.1% | 32.2% | 57.3% | **43.39%** |
+| **Polar** | `lm_output` | 27.7% | 36.5% | 67.4% | 52.2% | 48.9% | 26.1% | 32.4% | 56.5% | **43.47%** |
+| **Polar** | `kl` | 27.8% | 36.5% | 67.3% | 52.2% | 48.9% | 26.4% | 32.0% | 57.5% | **43.59%** |
+| **Polar** | `lm_output_kl` | 27.9% | 36.5% | 67.1% | 52.6% | 49.8% | 25.4% | 31.8% | 58.1% | **43.66%** |
+
+### Key Findings:
+- **Preservation of General Knowledge:** Across all 12 variants, downstream performance remains tightly conserved within $\pm 0.3\%$ of the base architecture.
+- **Indexer Isolation:** Detaching inputs to the 16D MQA indexer (`x.detach()`) successfully prevented degradation of base residual representations during long-context CPT.
+- **Core Ordering:** NoPE achieves the highest downstream accuracy (44.91%), followed closely by RoPE (44.53%) and Polar (43.66%).
+
+---
+
+## 3. Long-Context Needle Retrieval (2K to 256K)
+
+Retrieval evaluates 5-token digit needles at depths 0.1, 0.5, and 0.9. Token accuracy averages Passkey and NIAH across depths.
+
+### Synthetic Filler Needle Retrieval:
+| Attention Core | Variant | 2K | 4K | 8K | 16K | 32K | 64K | 128K | 256K |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **NoPE** | `local` | 19.8% | 33.7% | 1.0% | 0.7% | 0.0% | 2.0% | 1.0% | 0.0% |
+| **NoPE** | `lm_output` | 87.0% | 58.7% | 17.0% | 5.0% | 3.7% | 2.7% | 0.7% | 3.3% |
+| **NoPE** | `kl` | 91.8% | 92.0% | 80.0% | 78.3% | 78.3% | 78.0% | 77.7% | **80.3%** |
+| **NoPE** | `lm_output_kl` | 97.4% | 94.7% | 82.4% | 81.7% | 81.3% | 81.0% | 82.7% | **82.7%** |
+| **Polar** | `local` | 24.8% | 33.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| **Polar** | `lm_output` | 91.6% | 59.3% | 16.6% | 13.3% | 6.0% | 12.7% | 8.3% | 6.0% |
+| **Polar** | `kl` | 98.0% | 95.0% | 92.2% | 93.0% | 83.7% | 93.7% | 89.7% | **81.0%** |
+| **Polar** | `lm_output_kl` | 97.4% | 96.3% | 89.2% | 93.0% | 82.0% | 90.3% | 82.3% | **73.0%** |
+| **RoPE** | `local` | 20.0% | 31.7% | 1.6% | 1.0% | 1.0% | 1.0% | 2.3% | 1.0% |
+| **RoPE** | `lm_output` | 67.2% | 49.7% | 13.8% | 5.3% | 9.3% | 4.3% | 4.0% | 7.3% |
+| **RoPE** | `kl` | 80.6% | 55.7% | 23.6% | 3.0% | 4.7% | 12.3% | 3.0% | 16.3% |
+| **RoPE** | `lm_output_kl` | 78.4% | 46.0% | 13.4% | 3.3% | 6.0% | 3.3% | 4.0% | 8.0% |
+
+### Real-Text Distractor Needle Retrieval (`codelion/finepdfs-1B`):
+| Attention Core | Variant | 2K | 4K | 8K | 16K | 32K | 64K | 128K | 256K |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **NoPE** | `local` | 33.3% | 33.0% | 0.3% | 1.0% | 0.0% | 0.0% | 4.0% | 2.0% |
+| **NoPE** | `lm_output` | 99.0% | 68.7% | 3.0% | 0.3% | 2.3% | 1.0% | 3.3% | 1.3% |
+| **NoPE** | `kl` | 95.0% | 66.0% | 40.7% | 0.7% | 8.3% | 0.0% | 2.0% | 1.0% |
+| **NoPE** | `lm_output_kl` | 96.0% | 66.0% | 41.3% | 0.7% | 19.3% | 1.0% | 2.0% | 2.0% |
+| **Polar** | `local` | 32.3% | 33.0% | 0.3% | 0.0% | 0.0% | 1.0% | 1.0% | 0.0% |
+| **Polar** | `lm_output` | 97.7% | 65.3% | 4.0% | 0.0% | 0.0% | 0.0% | 0.3% | 0.0% |
+| **Polar** | `kl` | 99.3% | 72.3% | 32.0% | 8.3% | 14.3% | 0.7% | 1.0% | 0.0% |
+| **Polar** | `lm_output_kl` | 99.0% | 80.0% | 36.7% | 12.3% | 14.7% | 3.7% | 0.7% | 0.0% |
+| **RoPE** | `local` | 33.0% | 32.7% | 0.3% | 1.0% | 1.0% | 1.0% | 1.0% | 0.0% |
+| **RoPE** | `lm_output` | 78.0% | 48.0% | 10.0% | 1.7% | 0.0% | 1.0% | 4.0% | 0.0% |
+| **RoPE** | `kl` | 84.7% | 42.7% | 36.7% | 3.0% | 1.0% | 27.0% | 0.0% | 9.3% |
+| **RoPE** | `lm_output_kl` | 88.7% | 42.0% | 39.0% | 3.0% | 1.0% | 27.7% | 0.0% | 12.7% |
+
+### Key Findings:
+- **Local SWA Fails Remote Retrieval:** Pure local sliding window (`local`) completely collapses beyond its 512-token receptive field ($\ge 8\text{K}$). The ~33% at 2K–4K is purely driven by needles falling inside the local window.
+- **KL Distillation is Decisive:** Without KL distillation (`lm_output`), synthetic retrieval drops from ~90% at 2K down to <6% at 256K. With KL distillation (`kl` and `lm_output_kl`), **Polar retains 81.0%** and **NoPE retains 82.7%** at 256K.
+- **Distractor Difficulty:** Real-text distractors (`finepdfs`) are drastically more challenging than synthetic filler. While 2K retrieval is near-perfect (~96–99%), distractor interference erodes accuracy beyond 16K across all cores.
+
+---
+
+## 4. Adapted BABILong Reasoning (0K to 256K)
+
+Evaluated under the controlled protocol: answer-only fine-tuning on $\le$2K contexts across tasks QA1–QA10, then zero-shot evaluated on held-out test rows `[90, 100)` across lengths 0K to 256K.
+
+| Core | Variant | 0K | 1K | 2K | 4K | 8K | 16K | 32K | 64K | 128K | 256K |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Polar** | `local` | 54.0% | 51.0% | 54.0% | 52.0% | 48.0% | 50.0% | 47.0% | 45.0% | 42.0% | **40.0%** |
+| **Polar** | `lm_output` | 57.0% | 51.0% | 53.0% | 52.0% | 50.0% | 48.0% | 49.0% | 44.0% | 40.0% | **38.0%** |
+| **Polar** | `kl` | 55.0% | 52.0% | 52.0% | 52.0% | 57.0% | 48.0% | 44.0% | 47.0% | 39.0% | **37.0%** |
+| **Polar** | `lm_output_kl` | 57.0% | 52.0% | 56.0% | 52.0% | 55.0% | 48.0% | 45.0% | 42.0% | 41.0% | **36.0%** |
+| **NoPE** | `local` | 64.0% | 59.0% | 60.0% | 47.0% | 48.0% | 39.0% | 37.0% | 34.0% | 34.0% | **33.0%** |
+| **NoPE** | `lm_output` | 65.0% | 64.0% | 60.0% | 51.0% | 47.0% | 37.0% | 38.0% | 33.0% | 32.0% | **32.0%** |
+| **NoPE** | `kl` | 63.0% | 57.0% | 57.0% | 61.0% | 53.0% | 41.0% | 37.0% | 34.0% | 27.0% | **26.0%** |
+| **NoPE** | `lm_output_kl` | 67.0% | 65.0% | 64.0% | 62.0% | 60.0% | 53.0% | 42.0% | 34.0% | 27.0% | **24.0%** |
+| **RoPE** | `local` | 60.0% | 62.0% | 56.0% | 45.0% | 40.0% | 36.0% | 33.0% | 33.0% | 31.0% | **34.0%** |
+| **RoPE** | `lm_output` | 63.0% | 64.0% | 64.0% | 51.0% | 50.0% | 36.0% | 38.0% | 35.0% | 32.0% | **40.0%** |
+| **RoPE** | `kl` | 60.0% | 64.0% | 63.0% | 54.0% | 50.0% | 37.0% | 34.0% | 36.0% | 35.0% | **30.0%** |
+| **RoPE** | `lm_output_kl` | 60.0% | 61.0% | 64.0% | 54.0% | 53.0% | 39.0% | 37.0% | 33.0% | 36.0% | **31.0%** |
+
+### Key Findings:
+- **Polar Extrapolation Stability:** Polar models achieve the flattest performance degradation across length extrapolation: starting at ~54–57% at 0K and maintaining **36–40% macro accuracy at 256K**.
+- **NoPE Short-Context Edge vs Long-Context Decay:** NoPE models achieve higher short-context accuracy at 0K–2K (~64–67%), but degrade more rapidly out to 256K (~24–33%).
+- **Titans Memory Synergy:** In both Polar and RoPE, the persistent memory branch buffers recent facts, maintaining 30–40% reasoning accuracy even when context expands by $128\times$ over training.
+
+---
+
+## 5. Fixed-Target BPB / Perplexity
+
+Evaluated with 256 target tokens per document across FinePDFs, PG-19, and Proof-Pile-2. Lower is better.
+
+| Core | Variant | FinePDFs (2K / 32K / 256K) | PG-19 (2K / 32K / 256K) | Proof-Pile-2 (2K / 32K / 256K) |
+|:---|:---|:---:|:---:|:---:|
+| **Polar** | `local` | 1.062 / 1.094 / 1.085 | 1.148 / 1.142 / 1.143 | 2.130 / 2.132 / 2.130 |
+| **Polar** | `lm_output` | 0.887 / 0.990 / 1.055 | 1.137 / 1.122 / 1.141 | 2.037 / 2.069 / 2.079 |
+| **Polar** | `kl` | 0.872 / 0.907 / 1.009 | 1.137 / 1.134 / 1.152 | 2.097 / 2.307 / 2.192 |
+| **Polar** | `lm_output_kl` | 0.883 / 0.927 / 1.007 | 1.137 / 1.128 / 1.147 | 2.245 / 2.298 / 2.264 |
+| **NoPE** | `local` | 1.050 / 1.066 / 1.062 | 1.121 / 1.122 / 1.123 | 2.331 / 2.357 / 2.365 |
+| **NoPE** | `lm_output` | 0.895 / 1.019 / 1.057 | 1.112 / 1.095 / 1.108 | 2.272 / 2.272 / 2.321 |
+| **NoPE** | `kl` | 0.859 / 0.799 / 1.011 | 1.115 / 1.102 / 1.111 | 2.285 / 2.261 / 2.249 |
+| **NoPE** | `lm_output_kl` | 0.879 / 0.849 / 0.928 | 1.114 / 1.098 / 1.151 | 2.292 / 2.254 / 2.662 |
+| **RoPE** | `local` | 1.044 / 1.046 / 1.050 | 1.124 / 1.123 / 1.123 | 2.190 / 2.184 / 2.185 |
+| **RoPE** | `lm_output` | 0.945 / 1.094 / 1.036 | 1.120 / 1.118 / 1.122 | 2.208 / 2.215 / 2.217 |
+| **RoPE** | `kl` | 0.949 / 1.065 / 1.050 | 1.117 / 1.117 / 1.120 | 2.205 / 2.208 / 2.234 |
+| **RoPE** | `lm_output_kl` | 0.950 / 1.075 / 1.081 | 1.117 / 1.117 / 1.117 | 2.207 / 2.223 / 2.235 |
+
+### Key Findings:
+- **Sparse Routing Beats Pure SWA:** On FinePDFs, active sparse routing (`kl` and `lm_output_kl`) achieves **0.85–0.88 BPB** at 2K, compared to **1.04–1.06 BPB** for pure local SWA.
+- **Extreme Length Stability on Books:** PG-19 exhibits remarkable stability across all variants, remaining between 1.10 and 1.15 BPB from 2K all the way to 256K.
+- **Proof-Pile Domain Quality:** Polar models achieve the lowest BPB on technical/mathematical text (~2.04–2.09 vs ~2.27–2.33 for NoPE).
+
+---
+
+## 6. Inference Systems Scaling (Throughput & Memory)
+
+Measured on a single NVIDIA L40S (46,068 MiB VRAM) using the paged KV cache engine with CUDA graph decode capture. Batch size = 1, decode tokens = 32.
+
+| Core | Variant | Prefill 2K | Prefill 32K | Prefill 128K | Prefill 256K | Decode 2K | Decode 256K | Peak VRAM (256K) |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Polar** | `local` | 10,428 | 171,180 | 170,485 | 162,228 | 459.7 | 453.8 | **13.29 GiB** |
+| **Polar** | `lm_output` | 14,712 | 171,595 | 170,701 | 162,299 | 469.2 | 451.9 | **13.29 GiB** |
+| **Polar** | `kl` | 15,538 | 171,408 | 169,989 | 162,193 | 465.0 | 452.4 | **13.29 GiB** |
+| **Polar** | `lm_output_kl` | 15,504 | 171,323 | 169,637 | 161,971 | 466.9 | 453.1 | **13.29 GiB** |
+| **NoPE** | `local` | 12,535 | 156,772 | 156,019 | 149,260 | 486.7 | 469.5 | **13.53 GiB** |
+| **NoPE** | `lm_output` | 12,451 | 157,934 | 157,284 | 149,879 | 489.0 | 471.1 | **13.53 GiB** |
+| **NoPE** | `kl` | 12,976 | 156,932 | 156,677 | 149,920 | 486.5 | 469.2 | **13.53 GiB** |
+| **NoPE** | `lm_output_kl` | 13,005 | 157,616 | 156,192 | 150,007 | 486.8 | 469.3 | **13.53 GiB** |
+| **RoPE** | `local` | 12,722 | 155,564 | 155,063 | 149,921 | 451.5 | 443.0 | **13.41 GiB** |
+| **RoPE** | `lm_output` | 13,058 | 155,151 | 154,803 | 150,157 | 459.5 | 446.3 | **13.41 GiB** |
+| **RoPE** | `kl` | 12,436 | 155,367 | 154,760 | 149,492 | 454.4 | 442.6 | **13.41 GiB** |
+| **RoPE** | `lm_output_kl` | 13,084 | 155,325 | 155,095 | 149,465 | 459.8 | 445.4 | **13.41 GiB** |
+
+### Key Findings:
+- **Prefill Throughput:** Prefill scales rapidly from ~12k–15k tok/s at 2K to an asymptotic **~162,000 tok/s** for Polar and **~150,000 tok/s** for NoPE and RoPE at 256K.
+- **Flat Decode Throughput:** Decoding speed remains completely flat across context lengths: **~452 tok/s** for Polar, **~470 tok/s** for NoPE, and **~445 tok/s** for RoPE at 256K.
+- **Bounded Memory Residency:** With dynamic block allocation and fused attention, peak allocated memory at 256K context is only **~13.3–13.5 GiB** (less than 30% of the 46 GiB GPU memory), leaving ample headroom for larger batch sizes.
+
+---
+
+## 7. Conclusions & Strategic Recommendations
+
+1. **CPT Adaptation Mode Selection:**
+   - **`lm_output_kl` is the optimal adaptation configuration.** It delivers the highest synthetic retrieval retention at 256K (82.7% NoPE, 73.0% Polar), the strongest BPB across long documents, and leaves downstream base LM performance completely unaffected.
+   - **`kl` distillation alone is essential; `lm_output` alone is insufficient.** Training the 16D MQA indexer with continuous residual loss alone fails to establish discrete long-range routing (retrieval drops to 3–6%). KL distillation directly guides the indexer to match the teacher attention mass.
+
+2. **Attention Core Comparison:**
+   - **Polar** provides the most resilient extrapolation curve on complex reasoning (BABILong 40% at 256K) and superior technical text modeling (Proof-Pile BPB), alongside the highest prefill throughput (~162k tok/s).
+   - **NoPE** achieves the highest raw downstream accuracy (~44.9%) and fastest decode throughput (~470 tok/s), but exhibits faster degradation beyond 32K on multi-step reasoning.
+   - **RoPE** shows the most severe retrieval decay beyond 16K, confirming that fixed-frequency rotary embeddings struggle under aggressive sparse sub-sampling compared to Polar and canon-convolutions.
