@@ -1,5 +1,7 @@
 # Foveal serving on NVIDIA L40S: corrected fast decoder
 
+> **OBSOLETE NOTICE:** This intermediate 4-checkpoint report is superseded by the complete 12-checkpoint, 2K–512K serving sweep and context scaling analysis documented in [**`BENCHMARK_RESULTS.md` Section 6**](BENCHMARK_RESULTS.md#6-foveal-serving-performance--context-scaling-verified-fast-decoder).
+
 **Active Foveal routing now decodes at 589–590 tokens/s at 2K and 571–572 tokens/s at 256K** for Polar KL and NoPE LM-output+KL. Fresh dense source-checkpoint baselines measured 442 and 466 tokens/s at 2K. These are new measurements with routing enabled; they independently establish 400+ token/s serving for the measured variants.
 
 The earlier 50–70 token/s measurements used an eager reference decoder. Comparing that implementation against its equally slow local control hid a major serving regression. Those timings are retained in the [eager experiment archive](../benchmarks/logs/foveal_serving_l40s), but they should not be used as evidence that optimized serving had been achieved.
