@@ -6,11 +6,14 @@ cache reports and document numerical acceptance before invoking --phase serving.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import os
 import subprocess
 import sys
+import tempfile
+import time
 from pathlib import Path
 
 CORES = ('polar', 'nope', 'rope')
@@ -35,7 +38,7 @@ def main(argv=None):
     parser.add_argument('--out_dir', type=Path, required=True)
     parser.add_argument('--cores', nargs='+', choices=CORES, default=CORES)
     parser.add_argument('--modes', nargs='+', choices=MODES, default=MODES)
-    parser.add_argument('--phase', choices=('cache', 'serving'), default='cache')
+    parser.add_argument('--phase', choices=('cache', 'serving', 'compile'), default='cache')
     parser.add_argument('--cases', nargs='+', choices=CACHE_CASES, default=list(CACHE_CASES))
     parser.add_argument('--lengths', nargs='+', type=int,
                         default=[2048,4096,8192,16384,32768,65536,131072,262144,524288,1048576])
@@ -46,7 +49,7 @@ def main(argv=None):
     env = dict(os.environ, OMP_NUM_THREADS='4', HF_HUB_DISABLE_PROGRESS_BARS='1')
     decoder_hash = hashlib.sha256(Path('baseline_inference/foveal_engine.py').read_bytes()).hexdigest()
     acceptance = None
-    if args.phase == 'serving':
+    if args.phase in ('serving', 'compile'):
         summary_path = args.out_dir / 'cache_summary.json'
         if not summary_path.exists():
             parser.error('serving requires cache_summary.json from summarize_foveal_audit')
@@ -66,9 +69,9 @@ def main(argv=None):
                 for name in args.cases:
                     jobs.append((f'{core}_{mode}_{name}', 'benchmarks.verify_foveal_cache', CACHE_CASES[name]))
             else:
-                for length in args.lengths:
+                for length in ([2048] if args.phase == 'compile' else args.lengths):
                     for budget in args.decode_tokens:
-                        jobs.append((f'serving_{core}_{mode}_{length}_{budget}', 'benchmarks.audit_foveal_serving',
+                        jobs.append((f'{args.phase}_{core}_{mode}_{length}_{budget}', 'benchmarks.audit_foveal_serving',
                                      ['--context_tokens', str(length), '--decode_tokens', str(budget)]))
             for name, module, extra in jobs:
                 out = args.out_dir / (name + '.json')
@@ -79,9 +82,16 @@ def main(argv=None):
                         continue
                 command = [sys.executable,'-m',module,'--model',str(model),*extra,'--out',str(out)]
                 print('START',name,flush=True)
-                with (args.out_dir/(name+'.console.log')).open('w') as log:
+                job_started = time.perf_counter()
+                isolated = (tempfile.TemporaryDirectory(prefix='foveal_compile_')
+                            if args.phase == 'compile' else contextlib.nullcontext(None))
+                with isolated as cache_dir, (args.out_dir/(name+'.console.log')).open('w') as log:
+                    job_env = dict(env)
+                    if cache_dir is not None:
+                        job_env.update(TORCHINDUCTOR_CACHE_DIR=str(Path(cache_dir)/'inductor'),
+                                       TRITON_CACHE_DIR=str(Path(cache_dir)/'triton'))
                     try:
-                        result = subprocess.run(command,env=env,stdout=log,stderr=subprocess.STDOUT,
+                        result = subprocess.run(command,env=job_env,stdout=log,stderr=subprocess.STDOUT,
                                                 timeout=args.timeout_s)
                         code = result.returncode
                     except subprocess.TimeoutExpired:
@@ -90,7 +100,11 @@ def main(argv=None):
                     data = json.loads(out.read_text())
                 else:
                     data = {'error': f'subprocess exit {code}', 'model':str(model)}
-                data.update(command=command, subprocess_returncode=code, decoder_sha256=decoder_hash)
+                data.update(command=command, subprocess_returncode=code, decoder_sha256=decoder_hash,
+                            subprocess_wall_time_s=time.perf_counter()-job_started)
+                if args.phase == 'compile':
+                    data['compiler_cache_policy'] = (
+                        'isolated empty TorchInductor/Triton caches per process; prebuilt dependencies reused')
                 out.write_text(json.dumps(data,indent=2)+'\n')
                 print('DONE',name,'exit',code,flush=True)
 
