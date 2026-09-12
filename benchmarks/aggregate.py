@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import re
 import time
@@ -17,6 +18,11 @@ MARKERS = {
     "longdoc": "===LONGDOC_RESULTS_JSON===",
     "serving": "===SERVING_RESULTS_JSON===",
 }
+
+
+def source_hash(path: Path) -> str:
+    """Audit identity survives Git's Windows CRLF/Linux LF checkout conversion."""
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def _extract(path: Path):
@@ -129,8 +135,17 @@ def _flatten(benchmark, result, source):
                         samples=metrics.get("documents"),
                     ))
     elif benchmark == "serving":
-        serving_suite = ("direct_full_recompute" if result.get("backend") == "direct-full-recompute"
-                         else "generation")
+        backend = result.get("backend")
+        if backend == "direct-full-recompute":
+            serving_suite = "direct_full_recompute"
+        elif backend == "FovealLLM":
+            serving_suite = "foveal_cached_generation"
+        elif backend == "ordinary-engine-index-disabled":
+            serving_suite = "ordinary_engine_index_disabled"
+        elif (result.get("model_config") or {}).get("is_foveal"):
+            serving_suite = "unverified_generation"
+        else:
+            serving_suite = "generation"
         for length, metrics in result.get("results", {}).items():
             for source_key, metric in (
                 ("prefill_tokens_per_s", "prefill_tokens_per_s"),
@@ -183,6 +198,9 @@ def _flatten(benchmark, result, source):
                 metric="oom", value=True,
                 samples=result.get("counts", {}).get(task, {}).get(length),
             ))
+    for row in rows:
+        row["protocol"] = result.get("protocol")
+        row["backend"] = result.get("backend") or result.get("generation_backend")
     return rows
 
 
@@ -190,10 +208,36 @@ def aggregate(log_dir: Path):
     rows = []
     sources = []
     latest = {}
-    for path in sorted(log_dir.rglob("*.log")):
+    manifest_path = log_dir / "aggregation_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.is_file() else None
+    selections = {}
+    if manifest is not None:
+        for entry in manifest["sources"]:
+            path = (log_dir / entry["path"]).resolve()
+            if not path.is_relative_to(log_dir.resolve()):
+                raise ValueError("aggregation source must be inside log_dir")
+            if path in selections:
+                raise ValueError(f"duplicate selected source: {path}")
+            if source_hash(path) != entry["sha256"]:
+                raise ValueError(f"selected source changed since audit: {path}")
+            selections[path] = entry
+        paths = sorted(selections)
+    else:
+        paths = sorted(log_dir.rglob("*.log"))
+    for path in paths:
         if path.name.endswith(".console.log"):
             continue
+        if path.name.startswith("smoke_"):
+            continue
         extracted = _extract(path)
+        selection = selections.get(path.resolve())
+        if selection:
+            extracted = [(b, r) for b, r in extracted if b == selection["benchmark"]]
+            if not extracted:
+                raise ValueError(f"selected source has no complete result: {path}")
+            for _, result in extracted:
+                if selection.get("backend_override"):
+                    result["backend"] = selection["backend_override"]
         if not extracted:
             continue
         logical_stem = re.sub(r"\.attempt-\d+$", "", path.stem)
@@ -214,10 +258,17 @@ def aggregate(log_dir: Path):
         row["model"], row["benchmark"], str(row.get("suite")), str(row.get("task")),
         str(row.get("dataset")), str(row.get("length")), str(row.get("depth")), row["metric"],
     ))
+    if manifest is not None:
+        keys = [tuple(str(row.get(k)) for k in (
+            "model", "benchmark", "suite", "task", "dataset", "length", "depth", "metric"
+        )) for row in rows]
+        if len(keys) != len(set(keys)):
+            raise ValueError("selected experiments contain duplicate result cells")
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at_unix": int(time.time()),
         "log_dir": str(log_dir),
+        "selection_manifest": str(manifest_path) if manifest is not None else None,
         "sources": sources,
         "rows": rows,
     }
@@ -228,10 +279,10 @@ def write_outputs(result, json_path: Path, csv_path: Path):
     json_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
     fields = [
         "model", "benchmark", "suite", "task", "dataset", "length", "depth",
-        "metric", "value", "samples", "source_log",
+        "metric", "value", "samples", "source_log", "protocol", "backend",
     ]
     with csv_path.open("w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=fields, extrasaction="ignore")
+        writer = csv.DictWriter(fh, fieldnames=fields, extrasaction="ignore", lineterminator="\n")
         writer.writeheader()
         writer.writerows(result["rows"])
 

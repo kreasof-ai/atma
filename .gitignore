@@ -9,7 +9,7 @@ ablation/shards
 scaled_ablation/eval_manifests
 scaled_ablation/cross_eval_*.json
 gamma_diagnostics/manifests/
-/tmp/training_artifact_diag/
+/tmp/
 /checkpoints/babilong_2k_ft/
 /checkpoints/foveal_babilong_2k_ft/
 /checkpoints/**/weights.pt

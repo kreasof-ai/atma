@@ -64,6 +64,8 @@ def main():
                     help="retrieval only: needle depth fractions")
     ap.add_argument("--samples", type=int, default=100, help="samples per cell")
     ap.add_argument("--serving_samples", type=int, default=1)
+    ap.add_argument("--serving_warmup_samples", type=int, default=0,
+                    help="unmeasured cached-serving requests per context length before timing")
     ap.add_argument("--serving_backend", choices=("paged", "direct"), default="paged",
                     help="direct measures full-prefix recomputation, not cached decoding (supports TDA)")
     ap.add_argument("--seed", type=int, default=1234,
@@ -254,6 +256,7 @@ def main():
                 res = run_serving(
                     args.model, args.lengths, decode_tokens=args.decode_tokens,
                     samples=args.serving_samples, max_num_seqs=args.max_num_seqs,
+                    warmup_samples=args.serving_warmup_samples,
                     max_num_batched_tokens=args.max_num_batched_tokens,
                     strict=args.strict, log_fn=log,
                 )

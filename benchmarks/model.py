@@ -250,7 +250,11 @@ class EvalModel:
         if self._llm is not None:
             return self
         architecture = getattr(self.hf_config, "attn_type", "polar")
-        if architecture == "polar":
+        if self.cfg.get("is_foveal"):
+            from baseline_inference import FovealLLM
+
+            cls = FovealLLM
+        elif architecture == "polar":
             from inference import LLM
 
             if LLM is None:
@@ -264,6 +268,11 @@ class EvalModel:
             cls = BaselineLLM
         self._llm = cls(self.weights_path, **self._llm_kwargs)
         return self
+
+    @property
+    def backend(self):
+        self.load()
+        return type(self._llm).__name__
 
     @property
     def last_metrics(self):
@@ -294,7 +303,7 @@ class EvalModel:
             self._llm.engine.exit()
         self._llm = None
 
-    def generate(self, prompts, max_tokens=None, temperature=None, use_tqdm=False):
+    def generate(self, prompts, max_tokens=None, temperature=None, use_tqdm=False, ignore_eos=False):
         """Generate continuations for a list of string or token-id prompts."""
         self.load()
         from inference import SamplingParams
@@ -302,6 +311,7 @@ class EvalModel:
         sp = SamplingParams(
             temperature=self.temperature if temperature is None else temperature,
             max_tokens=self.max_tokens if max_tokens is None else max_tokens,
+            ignore_eos=ignore_eos,
         )
         outs = self._llm.generate(list(prompts), sp, use_tqdm=use_tqdm)
         metrics = getattr(self._llm, "last_metrics", None) or {}

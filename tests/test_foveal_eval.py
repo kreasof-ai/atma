@@ -3,6 +3,7 @@
 import json
 import os
 import unittest
+import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -33,7 +34,7 @@ class FovealEvalTest(unittest.TestCase):
             self.assertTrue(spec.subfolder.endswith("/cpt"))
 
     def test_resolve_checkpoint_with_latest_json(self):
-        tmp_dir = Path("/tmp/opencode/test_resolve_ckpt")
+        tmp_dir = Path(self.enterContext(tempfile.TemporaryDirectory()))
         tmp_dir.mkdir(parents=True, exist_ok=True)
         (tmp_dir / "latest.json").write_text(
             json.dumps({"checkpoint": "cpt-step-001908.pt"}), encoding="utf-8"
@@ -45,10 +46,14 @@ class FovealEvalTest(unittest.TestCase):
         self.assertEqual(ckpt_dir, str(tmp_dir))
 
     def test_read_checkpoint_config_foveal_merge(self):
-        tmp_dir = Path("/tmp/opencode/test_foveal_cfg")
+        tmp_dir = Path(self.enterContext(tempfile.TemporaryDirectory()))
         tmp_dir.mkdir(parents=True, exist_ok=True)
+        base_dir = tmp_dir / "base"
+        base_dir.mkdir()
+        (base_dir / "config.json").write_text(json.dumps({"attn_type": "polar"}), encoding="utf-8")
+        (base_dir / "weights.pt").write_text("unused", encoding="utf-8")
         foveal_cfg = {
-            "checkpoint": "ChavyvAkvar/atma-10b-L40S-mbs16-polar__reg-baseline__distr-0__mem-1__win-0",
+            "checkpoint": str(base_dir),
             "adaptation_mode": "lm_output_kl",
             "sequence_length": 32768,
             "local_window": 512,

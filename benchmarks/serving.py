@@ -33,6 +33,7 @@ def run_serving(
     *,
     decode_tokens=32,
     samples=1,
+    warmup_samples=0,
     max_num_seqs=1,
     max_num_batched_tokens=None,
     strict=True,
@@ -44,12 +45,16 @@ def run_serving(
     from benchmarks.model import EvalModel
     from benchmarks.model import read_checkpoint_config
 
+    if samples < 1 or decode_tokens < 1 or warmup_samples < 0:
+        raise ValueError("samples/decode_tokens must be positive; warmup_samples must be nonnegative")
+
     try:
         tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
     except Exception:
         tokenizer = AutoTokenizer.from_pretrained("gpt2", use_fast=True)
 
     results = {}
+    backend = None
     max_success = None
     t0 = time.perf_counter()
     for label in lengths:
@@ -71,9 +76,17 @@ def run_serving(
                 max_num_batched_tokens=max(max_num_batched_tokens or 0, budget, 16384),
             )
             prompt = _prompt_ids(tokenizer, context_tokens)
+            if warmup_samples:
+                engine.generate([prompt for _ in range(warmup_samples)],
+                                max_tokens=decode_tokens, use_tqdm=False, ignore_eos=True)
+                if torch.cuda.is_available():
+                    torch.cuda.synchronize()
+                    torch.cuda.reset_peak_memory_stats()
             outputs = engine.generate(
-                [prompt for _ in range(samples)], max_tokens=decode_tokens, use_tqdm=False
+                [prompt for _ in range(samples)], max_tokens=decode_tokens, use_tqdm=False,
+                ignore_eos=True,
             )
+            backend = engine.backend
             metrics = engine.last_call_metrics or {}
             peak_allocated = (
                 torch.cuda.max_memory_allocated() if torch.cuda.is_available() else 0
@@ -86,6 +99,7 @@ def run_serving(
                 "samples": samples,
                 "requested_decode_tokens": decode_tokens,
                 "generated_texts": len(outputs),
+                "backend": backend,
                 "prefill_tokens": metrics.get("prefill_tokens", 0),
                 "decode_tokens": metrics.get("decode_tokens", 0),
                 "prefill_time_s": metrics.get("prefill_time", 0.0),
@@ -123,7 +137,10 @@ def run_serving(
 
     return {
         "benchmark": "serving",
-        "protocol": "exact-token-prefill-v1",
+        "protocol": "exact-token-prefill-v2",
+        "backend": backend,
+        "warmup_samples": warmup_samples,
+        "ignore_eos": True,
         "lengths": list(lengths),
         "decode_tokens": decode_tokens,
         "samples": samples,

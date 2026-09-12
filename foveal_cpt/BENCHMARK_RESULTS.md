@@ -3,13 +3,16 @@
 This document compiles and interprets the complete evaluation suite across all **12 Foveal CPT checkpoints** from [`ChavyvAkvar/atma-foveal-cpt-all`](https://huggingface.co/ChavyvAkvar/atma-foveal-cpt-all).
 
 All checkpoints underwent **1B tokens** of continuous pre-training (CPT) at 32K context and 524,288 tokens/batch (step 1908). Evaluation encompasses five distinct axes:
-1. **Downstream Base LM Tasks:** ARC-challenge, ARC-easy, BoolQ, HellaSwag, OpenBookQA, PIQA, SciQ, WinoGrande (zero-shot).
+1. **Downstream Base LM Tasks:** ARC-challenge, ARC-easy, BoolQ, HellaSwag, OpenBookQA, PIQA, LAMBADA, WinoGrande (zero-shot).
 2. **Long-Context Retrieval:** Needle-In-A-Haystack (NIAH) and Passkey across 2K to 256K context lengths, comparing Synthetic filler against Real-text distractors (`codelion/finepdfs-1B`).
 3. **BABILong Reasoning Extrapolation:** Controlled short-context adaptation ($\le$2K, QA1–QA10) evaluated across 0K to 256K context lengths.
 4. **Bits-Per-Byte (BPB) Language Modeling:** Fixed-target evaluation on PG-19, Proof-Pile-2, and FinePDFs from 2K to 256K.
-5. **Inference Systems Scaling:** Prefill and decode throughput (tok/s), latency, and peak VRAM across 2K to 256K context lengths on NVIDIA L40S (46 GiB).
+5. **Historical ordinary-engine serving:** Prefill/decode timing and peak VRAM on NVIDIA L40S, with Foveal index/route parameters omitted. These are not faithful Foveal serving measurements; see Section 6.
 
-The aggregated dataset contains **7,146 structured rows** under `benchmarks/logs/foveal_cpt/benchmark_matrix.json` and `benchmarks/logs/foveal_cpt/benchmark_matrix.csv`.
+The corrected aggregated dataset contains **6,336 structured rows from 72 full experiments** under `benchmarks/logs/foveal_cpt/benchmark_matrix.json` and `benchmarks/logs/foveal_cpt/benchmark_matrix.csv`.
+
+
+The [aggregation manifest](../benchmarks/logs/foveal_cpt/aggregation_manifest.json) selects one full run per model/suite, excludes 24 smoke runs and 13 superseded shorter runs, and records source checksums. Raw logs are unchanged. This supersedes the earlier 7,146-row matrix that mixed those experiments. Full-forward retrieval, base-task, long-document and BABILong quality results remain distinct from the historical serving path. Local fixes and remaining GPU verification are tracked in [AUDIT_FOLLOWUP.md](AUDIT_FOLLOWUP.md).
 
 ---
 
@@ -21,7 +24,7 @@ The 12 adaptation cells test a $3 \times 4$ factorial design:
   - **NoPE:** Canon convolutional projections without positional embeddings.
   - **RoPE:** Rotary position embeddings on query and key projections.
 - **4 Adaptation Variants:**
-  - `local`: Causal sliding-window attention (SWA-512) with no remote pages and no indexer parameters.
+  - `local`: Causal sliding-window attention (SWA-512) with no remote-page reads or index-output residual.
   - `lm_output`: 16D MQA index projections select sparse pages; a continuous 16D value stream reads context into the residual stream, trained via ordinary LM loss.
   - `kl`: 16D MQA index projections trained via auxiliary KL distillation against teacher query anchors during CPT.
   - `lm_output_kl`: Dual-gradient path combining both LM-output residual projection and KL page distillation.
@@ -48,8 +51,8 @@ Primary accuracies on the standard evaluation splits (2,048 tokens scoring lengt
 | **Polar** | `lm_output_kl` | 27.9% | 36.5% | 67.1% | 52.6% | 49.8% | 25.4% | 31.8% | 58.1% | **43.66%** |
 
 ### Key Findings:
-- **Preservation of General Knowledge:** Across all 12 variants, downstream performance remains tightly conserved within $\pm 0.3\%$ of the base architecture.
-- **Indexer Isolation:** Detaching inputs to the 16D MQA indexer (`x.detach()`) successfully prevented degradation of base residual representations during long-context CPT.
+- **Preservation of General Knowledge:** Within each core, the reported macro means differ by at most about 0.6 percentage points from its local CPT control. This table does not itself measure a dense-baseline comparison.
+- **Indexer Isolation:** The indexer uses detached inputs (`x.detach()`). The observed task scores alone do not isolate the causal effect of that design choice.
 - **Core Ordering:** NoPE achieves the highest downstream accuracy (44.91%), followed closely by RoPE (44.53%) and Polar (43.66%).
 
 ---
@@ -61,18 +64,18 @@ Retrieval evaluates 5-token digit needles at depths 0.1, 0.5, and 0.9. Token acc
 ### Synthetic Filler Needle Retrieval:
 | Attention Core | Variant | 2K | 4K | 8K | 16K | 32K | 64K | 128K | 256K |
 |:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **NoPE** | `local` | 19.8% | 33.7% | 1.0% | 0.7% | 0.0% | 2.0% | 1.0% | 0.0% |
-| **NoPE** | `lm_output` | 87.0% | 58.7% | 17.0% | 5.0% | 3.7% | 2.7% | 0.7% | 3.3% |
-| **NoPE** | `kl` | 91.8% | 92.0% | 80.0% | 78.3% | 78.3% | 78.0% | 77.7% | **80.3%** |
-| **NoPE** | `lm_output_kl` | 97.4% | 94.7% | 82.4% | 81.7% | 81.3% | 81.0% | 82.7% | **82.7%** |
-| **Polar** | `local` | 24.8% | 33.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
-| **Polar** | `lm_output` | 91.6% | 59.3% | 16.6% | 13.3% | 6.0% | 12.7% | 8.3% | 6.0% |
-| **Polar** | `kl` | 98.0% | 95.0% | 92.2% | 93.0% | 83.7% | 93.7% | 89.7% | **81.0%** |
-| **Polar** | `lm_output_kl` | 97.4% | 96.3% | 89.2% | 93.0% | 82.0% | 90.3% | 82.3% | **73.0%** |
-| **RoPE** | `local` | 20.0% | 31.7% | 1.6% | 1.0% | 1.0% | 1.0% | 2.3% | 1.0% |
-| **RoPE** | `lm_output` | 67.2% | 49.7% | 13.8% | 5.3% | 9.3% | 4.3% | 4.0% | 7.3% |
-| **RoPE** | `kl` | 80.6% | 55.7% | 23.6% | 3.0% | 4.7% | 12.3% | 3.0% | 16.3% |
-| **RoPE** | `lm_output_kl` | 78.4% | 46.0% | 13.4% | 3.3% | 6.0% | 3.3% | 4.0% | 8.0% |
+| **NoPE** | `local` | 33.0% | 33.7% | 1.0% | 0.7% | 0.0% | 2.0% | 1.0% | 0.0% |
+| **NoPE** | `lm_output` | 81.7% | 58.7% | 15.7% | 5.0% | 3.7% | 2.7% | 0.7% | 3.3% |
+| **NoPE** | `kl` | 94.3% | 92.0% | 80.0% | 78.3% | 78.3% | 78.0% | 77.7% | 80.3% |
+| **NoPE** | `lm_output_kl` | 98.0% | 94.7% | 84.7% | 81.7% | 81.3% | 81.0% | 82.7% | 82.7% |
+| **Polar** | `local` | 33.0% | 33.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| **Polar** | `lm_output` | 92.7% | 59.3% | 27.0% | 13.3% | 6.0% | 12.7% | 8.3% | 6.0% |
+| **Polar** | `kl` | 96.7% | 95.0% | 93.0% | 93.0% | 83.7% | 93.7% | 89.7% | 81.0% |
+| **Polar** | `lm_output_kl` | 95.7% | 96.3% | 91.0% | 93.0% | 82.0% | 90.3% | 82.3% | 73.0% |
+| **RoPE** | `local` | 32.7% | 31.7% | 2.0% | 1.0% | 1.0% | 1.0% | 2.3% | 1.0% |
+| **RoPE** | `lm_output` | 66.3% | 49.7% | 11.0% | 5.3% | 9.3% | 4.3% | 4.0% | 7.3% |
+| **RoPE** | `kl` | 78.7% | 55.7% | 28.3% | 3.0% | 4.7% | 12.3% | 3.0% | 16.3% |
+| **RoPE** | `lm_output_kl` | 77.3% | 46.0% | 11.0% | 3.3% | 6.0% | 3.3% | 4.0% | 8.0% |
 
 ### Real-Text Distractor Needle Retrieval (`codelion/finepdfs-1B`):
 | Attention Core | Variant | 2K | 4K | 8K | 16K | 32K | 64K | 128K | 256K |
@@ -149,29 +152,39 @@ Evaluated with 256 target tokens per document across FinePDFs, PG-19, and Proof-
 
 ---
 
-## 6. Inference Systems Scaling (Throughput & Memory)
+## 6. Historical Serving Measurements (Foveal Index Disabled)
 
-Measured on a single NVIDIA L40S (46,068 MiB VRAM) using the paged KV cache engine with CUDA graph decode capture. Batch size = 1, decode tokens = 32.
+These historical runs used the ordinary Polar/NoPE/RoPE paged engines with a 512-token window and CUDA graph decode capture on an NVIDIA L40S (46,068 MiB). The loader unwrapped CPT backbone weights and discarded the Foveal index/route parameters, including the LM-output residual. Variant labels below identify the checkpoint origin, not active sparse routing. Batch size = 1, requested output tokens = 32. These measurements cannot establish Foveal cached-generation latency or memory capacity. Peak memory below is allocated memory, not reserved memory.
 
 | Core | Variant | Prefill 2K | Prefill 32K | Prefill 128K | Prefill 256K | Decode 2K | Decode 256K | Peak VRAM (256K) |
 |:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Polar** | `local` | 10,428 | 171,180 | 170,485 | 162,228 | 459.7 | 453.8 | **13.29 GiB** |
-| **Polar** | `lm_output` | 14,712 | 171,595 | 170,701 | 162,299 | 469.2 | 451.9 | **13.29 GiB** |
-| **Polar** | `kl` | 15,538 | 171,408 | 169,989 | 162,193 | 465.0 | 452.4 | **13.29 GiB** |
-| **Polar** | `lm_output_kl` | 15,504 | 171,323 | 169,637 | 161,971 | 466.9 | 453.1 | **13.29 GiB** |
-| **NoPE** | `local` | 12,535 | 156,772 | 156,019 | 149,260 | 486.7 | 469.5 | **13.53 GiB** |
-| **NoPE** | `lm_output` | 12,451 | 157,934 | 157,284 | 149,879 | 489.0 | 471.1 | **13.53 GiB** |
-| **NoPE** | `kl` | 12,976 | 156,932 | 156,677 | 149,920 | 486.5 | 469.2 | **13.53 GiB** |
-| **NoPE** | `lm_output_kl` | 13,005 | 157,616 | 156,192 | 150,007 | 486.8 | 469.3 | **13.53 GiB** |
-| **RoPE** | `local` | 12,722 | 155,564 | 155,063 | 149,921 | 451.5 | 443.0 | **13.41 GiB** |
-| **RoPE** | `lm_output` | 13,058 | 155,151 | 154,803 | 150,157 | 459.5 | 446.3 | **13.41 GiB** |
-| **RoPE** | `kl` | 12,436 | 155,367 | 154,760 | 149,492 | 454.4 | 442.6 | **13.41 GiB** |
-| **RoPE** | `lm_output_kl` | 13,084 | 155,325 | 155,095 | 149,465 | 459.8 | 445.4 | **13.41 GiB** |
+| **Polar** | `local` | 10,428 | 171,180 | 170,485 | 162,228 | 459.7 | 453.8 | 13.29 GiB |
+| **Polar** | `lm_output` | 14,364 | 171,297 | 170,607 | 162,299 | 449.4 | 451.9 | 13.29 GiB |
+| **Polar** | `kl` | 15,538 | 171,408 | 169,989 | 162,193 | 465.0 | 452.4 | 13.29 GiB |
+| **Polar** | `lm_output_kl` | 15,504 | 171,323 | 169,637 | 161,971 | 466.9 | 453.1 | 13.29 GiB |
+| **NoPE** | `local` | 12,535 | 156,772 | 156,019 | 149,260 | 486.7 | 469.5 | 13.53 GiB |
+| **NoPE** | `lm_output` | 12,905 | 157,005 | 156,142 | 149,879 | 485.3 | 471.1 | 13.53 GiB |
+| **NoPE** | `kl` | 12,976 | 156,932 | 156,677 | 149,920 | 486.5 | 469.2 | 13.53 GiB |
+| **NoPE** | `lm_output_kl` | 13,005 | 157,616 | 156,192 | 150,007 | 486.8 | 469.3 | 13.53 GiB |
+| **RoPE** | `local` | 12,446 | 155,232 | 154,036 | 149,921 | 462.1 | 443.0 | 13.41 GiB |
+| **RoPE** | `lm_output` | 13,058 | 155,151 | 154,803 | 150,157 | 459.5 | 446.3 | 13.41 GiB |
+| **RoPE** | `kl` | 12,433 | 154,649 | 154,318 | 149,492 | 453.6 | 442.6 | 13.41 GiB |
+| **RoPE** | `lm_output_kl` | 12,940 | 155,123 | 154,485 | 149,465 | 456.9 | 445.4 | 13.41 GiB |
 
-### Key Findings:
-- **Prefill Throughput:** Prefill scales rapidly from ~12k–15k tok/s at 2K to an asymptotic **~162,000 tok/s** for Polar and **~150,000 tok/s** for NoPE and RoPE at 256K.
-- **Flat Decode Throughput:** Decoding speed remains completely flat across context lengths: **~452 tok/s** for Polar, **~470 tok/s** for NoPE, and **~445 tok/s** for RoPE at 256K.
-- **Bounded Memory Residency:** With dynamic block allocation and fused attention, peak allocated memory at 256K context is only **~13.3–13.5 GiB** (less than 30% of the 46 GiB GPU memory), leaving ample headroom for larger batch sizes.
+The roughly flat decode rates describe these ordinary engines. Faithful Foveal serving requires the corrected `FovealLLM`, checkpoint parity verification, and a fresh benchmark. There is no verified 512K/1M capacity claim from this table.
+
+### Runtime Evidence from Actual Foveal Retrieval
+
+The full-forward retrieval path uses the actual sparse model for both quality and elapsed-time measurement. Every matched run below has 480 scoring calls across two tasks, eight lengths (2K-256K), three depths, and ten samples; none has an OOM cell. Total elapsed time includes sample construction, full-sequence teacher-forced scoring, compilation where incurred, and per-sample cleanup. It excludes checkpoint loading and real-haystack loading. These totals support near-SWA retrieval-evaluation runtime, but do not measure cached per-token decode latency or isolate attention-kernel overhead.
+
+| Suite | Core | Local elapsed | KL elapsed | Change | LM-output-KL elapsed |
+|:---|:---|---:|---:|---:|---:|
+| synthetic | polar | 309.4 s | 327.0 s | +5.7% | 328.8 s |
+| synthetic | nope | 375.4 s | 365.9 s | -2.5% | 368.2 s |
+| synthetic | rope | 353.4 s | 373.6 s | +5.7% | 374.6 s |
+| real | polar | 320.3 s | 337.5 s | +5.4% | 337.4 s |
+| real | nope | 343.6 s | 374.3 s | +8.9% | 375.4 s |
+| real | rope | 345.7 s | 377.5 s | +9.2% | 380.3 s |
 
 ---
 
@@ -256,7 +269,7 @@ All 10 benchmark jobs completed with zero failures across 974 aggregated records
 
 | Suite | Length | Polar Untouched | Polar Clamped | NoPE Untouched | NoPE Clamped |
 |:---|:---|:---:|:---:|:---:|:---:|
-| **Synthetic** | 2K (tok / exact) | 97.4% / 87.0% | 95.3% / 76.7% | 97.4% / 87.0% | 99.0% / 95.0% |
+| **Synthetic** | 2K (tok / exact) | 95.7% / 78.3% | 95.3% / 76.7% | 98.0% / 90.0% | 99.0% / 95.0% |
 | | 32K (tok / exact) | 82.0% / 26.7% | 83.3% / 31.7% | 81.3% / 13.3% | 68.0% / 0.0% |
 | | 128K (tok / exact) | 82.3% / 40.0% | 82.7% / 36.7% | 82.7% / 23.3% | 81.0% / 28.3% |
 | | 256K (tok / exact) | 73.0% / 21.7% | **73.7% / 20.0%** | 82.7% / 25.0% | 68.7% / 3.3% |
@@ -265,16 +278,15 @@ All 10 benchmark jobs completed with zero failures across 974 aggregated records
 | | 8K (tok / exact) | 36.7% / 15.0% | 20.0% / 0.0% | 41.3% / 33.3% | 49.7% / 30.0% |
 | | 64K (tok / exact) | 3.7% / 0.0% | 2.7% / 0.0% | 1.0% / 0.0% | **28.3% / 13.3%** |
 | | 256K (tok / exact) | 0.0% / 0.0% | 0.0% / 0.0% | 2.0% / 0.0% | 0.0% / 0.0% |
-
 ---
 
 ## 9. Conclusions & Strategic Recommendations
 
 1. **CPT Adaptation Mode Selection:**
-   - **`lm_output_kl` is the optimal adaptation configuration.** It delivers the highest synthetic retrieval retention at 256K (82.7% NoPE, 73.0% Polar), the strongest BPB across long documents, and leaves downstream base LM performance completely unaffected.
+   - **Adaptation choice depends on the task and core.** NoPE `lm_output_kl` reaches 82.7% synthetic retrieval at 256K; Polar `kl` reaches 81.0%, versus 73.0% for Polar `lm_output_kl`. Downstream macro scores remain close across modes; the table does not establish a universally optimal variant.
    - **`kl` distillation alone is essential; `lm_output` alone is insufficient.** Training the 16D MQA indexer with continuous residual loss alone fails to establish discrete long-range routing (retrieval drops to 3–6%). KL distillation directly guides the indexer to match the teacher attention mass.
 
 2. **Attention Core Comparison:**
-   - **Polar** provides the most resilient extrapolation curve on complex reasoning (BABILong 40% at 256K) and superior technical text modeling (Proof-Pile BPB), alongside the highest prefill throughput (~162k tok/s).
-   - **NoPE** achieves the highest raw downstream accuracy (~44.9%) and fastest decode throughput (~470 tok/s), but exhibits faster degradation beyond 32K on multi-step reasoning.
+   - **Polar** provides the most resilient extrapolation curve on complex reasoning (BABILong 40% at 256K) and superior technical text modeling (Proof-Pile BPB). Its historical ordinary-engine prefill throughput is not a Foveal serving result.
+   - **NoPE** achieves the highest raw downstream accuracy (~44.9%) while its historical ordinary engine decodes at about 470 tok/s; its quality results exhibit faster degradation beyond 32K on multi-step reasoning.
    - **RoPE** shows the most severe retrieval decay beyond 16K, confirming that fixed-frequency rotary embeddings struggle under aggressive sparse sub-sampling compared to Polar and canon-convolutions.
