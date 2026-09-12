@@ -239,6 +239,7 @@ def main(argv=None):
     parser.add_argument("--atol", type=float, default=1e-4)
     parser.add_argument("--rtol", type=float, default=1e-4)
     parser.add_argument("--controls", action="store_true")
+    parser.add_argument("--cuda_graph", action="store_true", help="verify the optimized graph decoder")
     parser.add_argument("--float32_oracle", action="store_true",
                         help="diagnostic eager FP32 attention/memory, not serving kernels")
     parser.add_argument("--workload", choices=("records", "prose"), default="records")
@@ -258,11 +259,19 @@ def main(argv=None):
               "passed": False, "workload": args.workload, "controls": args.controls,
               "float32_oracle": args.float32_oracle, "decode_steps": args.decode_steps,
               "compare_every": args.compare_every,
+              "decode_backend": "cuda_graph" if args.cuda_graph else "eager",
+              "decoder_sources_sha256": {name: hashlib.sha256(Path(name).read_bytes()).hexdigest()
+                  for name in ("baseline_inference/foveal_engine.py", "baseline_inference/foveal_decode.py",
+                               "baseline_inference/foveal_triton.py")},
               "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
               "decoder_sha256": hashlib.sha256(Path("baseline_inference/foveal_engine.py").read_bytes()).hexdigest()}
     started = time.perf_counter()
     try:
         engine = FovealLLM(args.model, device=args.device)
+        if args.cuda_graph:
+            if not args.device.startswith("cuda"):
+                raise ValueError("graph decode requires CUDA")
+            engine._decode_step = engine._decode_step_graph
         if args.float32_oracle:
             if args.controls:
                 raise ValueError("BF16 controls and the FP32 oracle are separate experiments")

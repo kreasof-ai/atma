@@ -86,6 +86,9 @@ def main(argv=None):
                   requested_decode_tokens=args.decode_tokens, max_num_seqs=1,
                   samples=args.samples, warmup_samples=args.warmup_samples,
                   git_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+                  decoder_sources_sha256={name: hashlib.sha256(Path(name).read_bytes()).hexdigest()
+                      for name in ('baseline_inference/foveal_engine.py', 'baseline_inference/foveal_decode.py',
+                                   'baseline_inference/foveal_triton.py')},
                   gpu=torch.cuda.get_device_name(), torch_version=torch.__version__,
                   compiler_cache_policy='reuse persistent caches; first request excluded from warm statistics',
                   warmups=[], repetitions=[], oom=False, completed=False)

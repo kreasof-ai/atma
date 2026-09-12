@@ -1,4 +1,4 @@
-"""Serial cached generation for Foveal CPT checkpoints.
+"""Cached generation for Foveal CPT checkpoints.
 
 Decode gathers local tokens and selected remote pages. KV storage still grows
 with the full prefix; no 512K/1M VRAM or flat-latency guarantee is established.
@@ -34,6 +34,8 @@ class FovealLLM:
         self.model_path = model_path
         self.device = torch.device(kwargs.pop("device", None) or ("cuda" if torch.cuda.is_available() else "cpu"))
         self.max_model_len = kwargs.get("max_model_len")
+        self.enforce_eager = kwargs.get("enforce_eager", False)
+        self._graph_decoder = None
 
         # Resolve weights and config
         from benchmarks.model import read_checkpoint_config, resolve_checkpoint
@@ -85,6 +87,7 @@ class FovealLLM:
         return self._last_metrics
 
     def exit(self) -> None:
+        self._graph_decoder = None
         if getattr(self, "model", None) is not None:
             del self.model
             self.model = None
@@ -367,6 +370,21 @@ class FovealLLM:
         cache["logits"] = self._logits(x)
         return self._sample(cache["logits"], temperature)
 
+    def _decode_step_graph(self, tok, cache, temperature=0.0):
+        """Auditable single graph step; generation batches host transfers separately."""
+        from baseline_inference.foveal_decode import FovealGraphDecoder
+
+        graph = cache.get("_graph_decoder")
+        if graph is None:
+            graph = FovealGraphDecoder(self, cache["seq_len"] + 2048, 2049)
+            graph.reset(cache, tok)
+            cache["_graph_decoder"] = graph
+        graph.token.fill_(tok)
+        graph.replay()
+        graph.export_cache(cache)
+        cache["logits"] = graph.logits.unsqueeze(1)
+        return self._sample(cache["logits"], temperature)
+
     def generate(self, prompts, sampling_params=None, use_tqdm=False):
         del use_tqdm
         params = sampling_params if sampling_params is not None else SamplingParams()
@@ -401,11 +419,47 @@ class FovealLLM:
             sync()
             start = time.perf_counter()
             token, cache = self._prefill(tokens, sp.temperature)
+            use_graph = (self.device.type == "cuda" and not getattr(self, "enforce_eager", False)
+                         and self.model.embed.weight.dtype in (torch.bfloat16, torch.float16)
+                         and sp.max_tokens > 1)
+            if use_graph:
+                from baseline_inference.foveal_decode import FovealGraphDecoder
+
+                graph = getattr(self, "_graph_decoder", None)
+                capacity = len(tokens) + sp.max_tokens - 1
+                if graph is None or graph.capacity < capacity or graph.output_capacity < sp.max_tokens:
+                    self._graph_decoder = None
+                    graph = FovealGraphDecoder(self, capacity, sp.max_tokens)
+                    self._graph_decoder = graph
+                graph.reset(cache, token)
+                # Release the old prefix tensors after copying to fixed storage.
+                graph.export_cache(cache)
             sync()
             metrics["prefill_time"] += time.perf_counter() - start
             metrics["prefill_tokens"] += len(tokens)
             generated = [token]
-            while len(generated) < sp.max_tokens and (sp.ignore_eos or token != eos):
+            if use_graph and (sp.ignore_eos or token != eos):
+                start = time.perf_counter()
+                steps = 0
+                for _ in range(sp.max_tokens - 1):
+                    graph.replay()
+                    steps += 1
+                    if sp.temperature:
+                        token = self._sample(graph.logits, sp.temperature)
+                        graph.token.fill_(token)
+                        graph.generated[steps] = token
+                    elif not sp.ignore_eos:
+                        token = int(graph.token.item())
+                    if not sp.ignore_eos and token == eos:
+                        break
+                sync()
+                metrics["decode_time"] += time.perf_counter() - start
+                metrics["decode_tokens"] += steps
+                generated = graph.generated[:steps+1].tolist()
+                graph.export_cache(cache)
+                metrics["decode_backend"] = "cuda_graph"
+                metrics["kv_capacity_tokens"] = graph.capacity
+            while not use_graph and len(generated) < sp.max_tokens and (sp.ignore_eos or token != eos):
                 sync()
                 start = time.perf_counter()
                 token = self._decode_step(token, cache, sp.temperature)
