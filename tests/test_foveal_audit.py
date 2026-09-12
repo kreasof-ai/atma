@@ -41,6 +41,22 @@ def test_numerical_acceptance_preserves_strict_bf16_failure(evidence):
     assert result['bf16']['greedy_disagreements'] == 1
 
 
+def test_fp32_outlier_requires_same_tolerance_sequential_control(evidence):
+    path = evidence / 'polar_kl_fp32.json'
+    report = json.loads(path.read_text())
+    report['passed'] = False
+    row = report['cases'][0]['comparisons'][1]
+    row.update(within_tolerance=False, max_abs_logit_error=.0002,
+               cached_vs_fp32_sequential={'within_tolerance': True, 'greedy_agreement': True})
+    path.write_text(json.dumps(report))
+    result = audit.summarize(evidence)['models']['polar_kl']
+    assert result['serving_eligible']
+    assert result['fp32']['strict_failures'] == 1
+    row['cached_vs_fp32_sequential']['within_tolerance'] = False
+    path.write_text(json.dumps(report))
+    assert not audit.summarize(evidence)['models']['polar_kl']['serving_eligible']
+
+
 @pytest.mark.parametrize('failure', ['stale', 'nonfinite', 'fp32', 'envelope', 'generated_pages'])
 def test_bad_evidence_never_allows_serving(evidence, failure):
     path = evidence / ('polar_kl_fp32.json' if failure == 'fp32' else 'polar_kl_generated_pages.json')

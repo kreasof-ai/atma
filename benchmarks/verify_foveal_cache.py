@@ -50,6 +50,21 @@ def recurrent_reference():
         blocks._fla_gated_delta = previous
 
 
+@contextlib.contextmanager
+def sequential_torch_reference(engine):
+    """Same FP32 full forward with sequential, rather than chunked, memory."""
+    memories = [block.attn.base.mem for block in engine.model.blocks
+                if hasattr(block.attn, "base") and block.attn.base.mem is not None]
+    previous = [mem.chunk for mem in memories]
+    try:
+        for mem in memories:
+            mem.chunk = 1
+        yield
+    finally:
+        for mem, chunk in zip(memories, previous):
+            mem.chunk = chunk
+
+
 def comparison(actual, expected, *, atol, rtol):
     finite = bool(torch.isfinite(actual).all() and torch.isfinite(expected).all())
     difference = actual - expected
@@ -67,7 +82,7 @@ def comparison(actual, expected, *, atol, rtol):
 
 
 def verify(engine, lengths, decode_steps, *, atol, rtol, controls=False,
-           workload="records", compare_every=1):
+           workload="records", compare_every=1, fp32_controls=False):
     text = "\n".join(
         f"Record {i}: the parcel marked {i * 71 + 19} is in room {i % 17}. "
         f"The earlier record names a different room. Remember record {i}."
@@ -116,6 +131,11 @@ def verify(engine, lengths, decode_steps, *, atol, rtol, controls=False,
                       **comparison(actual, expected, atol=atol, rtol=rtol)}
             for name, logits in control_logits.items():
                 record[name] = comparison(logits[:, step:step+1], expected, atol=atol, rtol=rtol)
+            if fp32_controls and not record["within_tolerance"]:
+                with sequential_torch_reference(engine):
+                    sequential = reference_logits(engine, tokens)
+                record["fp32_sequential_control"] = comparison(sequential, expected, atol=atol, rtol=rtol)
+                record["cached_vs_fp32_sequential"] = comparison(actual, sequential, atol=atol, rtol=rtol)
             comparisons.append(record)
         # Compare state and routes to a fresh prefill after the whole continuation.
         _, fresh = engine._prefill(tokens)
@@ -133,6 +153,28 @@ def verify(engine, lengths, decode_steps, *, atol, rtol, controls=False,
             # At an exact page boundary fresh prefill routes on the next token.
             if i in fresh["selected_remote"]
         }
+        for i, value in cache["selected_remote"].items():
+            if str(i) not in routes:
+                continue
+            actual_scores = cache["cached_scores"][i].flatten().float()
+            expected_scores = fresh["cached_scores"][i].flatten().float()
+            first_local = max(0, (len(tokens)-1) // engine.foveal_config.page_size
+                              - engine.foveal_config.local_window // engine.foveal_config.page_size)
+            selected = fresh["selected_remote"][i].long()
+            unselected_mask = torch.ones(first_local, dtype=torch.bool, device=engine.device)
+            unselected_mask[selected] = False
+            unselected = expected_scores[:first_local][unselected_mask]
+            margin = (float(expected_scores[selected].min() - unselected.max())
+                      if selected.numel() and unselected.numel() else None)
+            changed = sorted(set(value.tolist()) ^ set(selected.tolist()))
+            routes[str(i)].update(
+                max_abs_score_error=float((actual_scores - expected_scores).abs().max())
+                if actual_scores.numel() else 0.0,
+                reference_remote_cutoff_margin=margin,
+                changed_pages=[{"page": page, "cached_score": float(actual_scores[page]),
+                                "reference_score": float(expected_scores[page])}
+                               for page in changed],
+            )
         cases.append({"prompt_tokens": length, "comparisons": comparisons,
                       "final_state_relative_l2_errors": states, "final_routes": routes})
         print(f"checked {workload} prompt={length} steps={decode_steps} "
@@ -229,7 +271,7 @@ def main(argv=None):
         report["gpu"] = torch.cuda.get_device_name(engine.device) if engine.device.type == "cuda" else None
         report["cases"] = verify(engine, args.lengths, args.decode_steps, atol=args.atol, rtol=args.rtol,
                                  controls=args.controls, workload=args.workload,
-                                 compare_every=args.compare_every)
+                                 compare_every=args.compare_every, fp32_controls=args.float32_oracle)
         report["passed"] = all(c["within_tolerance"] and c["greedy_agreement"]
                                for case in report["cases"] for c in case["comparisons"])
         if args.greedy_steps:
