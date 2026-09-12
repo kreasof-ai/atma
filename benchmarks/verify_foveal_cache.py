@@ -207,6 +207,14 @@ def verify_greedy(engine, lengths, steps):
             if cached_token != reference_token and first_divergence is None:
                 first_divergence = {"step": step, **comparison(
                     cache["logits"], expected, atol=1e-4, rtol=1e-4)}
+                shaped = reference_logits(engine, reference_tokens, extra_pages=1)
+                first_divergence["full_forward_shape_control"] = comparison(
+                    shaped, expected, atol=1e-4, rtol=1e-4)
+                if engine.device.type == "cuda" and engine.model.embed.weight.dtype == torch.bfloat16:
+                    with recurrent_reference():
+                        recurrent = reference_logits(engine, reference_tokens, extra_pages=1)
+                    first_divergence["full_forward_recurrent_control"] = comparison(
+                        recurrent, expected, atol=1e-4, rtol=1e-4)
             cached_output.append(cached_token)
             reference_output.append(reference_token)
             reference_tokens.append(reference_token)
