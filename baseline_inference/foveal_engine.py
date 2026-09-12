@@ -122,6 +122,15 @@ class FovealLLM:
         return 15.0 * logits * (logits.square() + 225.0).rsqrt()
 
     @staticmethod
+    def _conv_step(full: torch.Tensor, weight: torch.Tensor) -> torch.Tensor:
+        # The prefill CUDA convolution accumulates products in FP32 and rounds
+        # once. BF16 multiply followed by sum rounds every product first.
+        dtype = full.dtype
+        compute = torch.float32 if dtype in (torch.bfloat16, torch.float16) else dtype
+        return (full.to(compute) * weight.to(compute)[None]).sum(
+            -1, keepdim=True).to(dtype)
+
+    @staticmethod
     def _set_route(attn, qi, qb, cache, idx):
         """Route once from the block's first query, over earlier complete pages."""
         pages = cache["k_pages"][idx][:, :qb]
@@ -244,7 +253,7 @@ class FovealLLM:
                 b, c, value = attn.in_proj(normed).chunk(3, -1)
                 full = torch.cat((cache["conv_states"][idx], (b * value).transpose(1, 2)), -1)
                 weight = attn.conv.weight.squeeze(1).to(full.dtype)
-                conv = (full * weight[None]).sum(-1, keepdim=True).transpose(1, 2)
+                conv = self._conv_step(full, weight).transpose(1, 2)
                 cache["conv_states"][idx] = full[:, :, 1:]
                 out = attn.out_proj(c * conv)
             else:
@@ -274,7 +283,7 @@ class FovealLLM:
                         raw = value.flatten(2).transpose(1, 2)
                         full = torch.cat((cache["canon_" + name][idx], raw), -1)
                         weight = getattr(attn.base, "canon_" + name).weight.squeeze(1).to(value.dtype)
-                        conv = (full * weight[None]).sum(-1, keepdim=True)
+                        conv = self._conv_step(full, weight)
                         projected.append((raw + conv).transpose(1, 2).reshape_as(value))
                         cache["canon_" + name][idx] = full[:, :, 1:]
                     q, k, v = projected
@@ -290,7 +299,9 @@ class FovealLLM:
                 vt = cache["v_cache"][idx][:, active].repeat_interleave(groups, 2).transpose(1, 2)
                 qt = q.transpose(1, 2)
                 if attn.is_polar:
-                    scores = (qt @ kt.transpose(-2, -1)) / math.sqrt(dim)
+                    # Match Triton's FP32 score accumulator; a BF16 matmul
+                    # result would round scores before temperature/softmax.
+                    scores = (qt.float() @ kt.float().transpose(-2, -1)) / math.sqrt(dim)
                     direction, mag = polar_reduce(
                         scores, vt, torch.tensor([pos + 1.0], device=self.device),
                         v_null=attn.base.v_null, null_base=attn.base.null_base,
@@ -312,17 +323,32 @@ class FovealLLM:
 
                 if attn.base.mem is not None:
                     mem = attn.base.mem
-                    gamma = torch.sigmoid(mem.w_gamma(normed).float() + mem.gamma_bias)[0, 0]
-                    beta = torch.sigmoid(mem.w_beta(normed).float() + mem.beta_bias)[0, 0]
-                    qn = F.normalize(qm[0, 0].float(), dim=-1)
-                    kn = F.normalize(km[0, 0].repeat_interleave(groups, 0).float(), dim=-1)
-                    vn = vm[0, 0].repeat_interleave(groups, 0).float()
-                    state = gamma[:, None, None] * cache["mem_states"][idx][0]
-                    prediction = torch.einsum("hkv,hk->hv", state, kn)
-                    update = beta[:, None] * (vn - prediction)
-                    state = state + kn[:, :, None] * update[:, None, :]
-                    cache["mem_states"][idx] = state.unsqueeze(0)
-                    read = torch.einsum("hkv,hk->hv", state, qn)
+                    g_logit = mem.w_gamma(normed).float() + mem.gamma_bias
+                    beta = torch.sigmoid(mem.w_beta(normed).float() + mem.beta_bias)
+                    from model import blocks as memory_ops
+
+                    if x.is_cuda and mem.kernel in ("auto", "fla") and memory_ops._HAS_FLA:
+                        from fla.ops.gated_delta_rule import fused_recurrent_gated_delta_rule
+
+                        read, state = fused_recurrent_gated_delta_rule(
+                            q=qm.contiguous(), k=km.repeat_interleave(groups, 2).contiguous(),
+                            v=vm.repeat_interleave(groups, 2).contiguous(),
+                            g=F.logsigmoid(g_logit).contiguous(), beta=beta.contiguous(),
+                            initial_state=cache["mem_states"][idx], output_final_state=True,
+                            scale=1.0, use_qk_l2norm_in_kernel=True,
+                        )
+                        cache["mem_states"][idx] = state
+                    else:
+                        gamma = torch.sigmoid(g_logit)[0, 0]
+                        qn = F.normalize(qm[0, 0].float(), dim=-1)
+                        kn = F.normalize(km[0, 0].repeat_interleave(groups, 0).float(), dim=-1)
+                        vn = vm[0, 0].repeat_interleave(groups, 0).float()
+                        state = gamma[:, None, None] * cache["mem_states"][idx][0]
+                        prediction = torch.einsum("hkv,hk->hv", state, kn)
+                        update = beta[0, 0, :, None] * (vn - prediction)
+                        state = state + kn[:, :, None] * update[:, None, :]
+                        cache["mem_states"][idx] = state.unsqueeze(0)
+                        read = torch.einsum("hkv,hk->hv", state, qn)
                     read = F.rms_norm(read, (dim,)).reshape(1, 1, -1).to(x.dtype)
                     out = out + mem.proj(read * torch.sigmoid(mem.gate(normed)))
 

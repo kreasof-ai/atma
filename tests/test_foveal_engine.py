@@ -152,13 +152,47 @@ def test_foveal_dispatch_and_loader_refuses_parameter_loss():
 
 
 def test_checkpoint_verifier_on_cpu_fixture():
-    from benchmarks.verify_foveal_cache import verify
+    from benchmarks.verify_foveal_cache import verify, verify_greedy
 
     engine = make_engine("rope", layers=3)
     engine.tokenizer.encode = lambda text, **kwargs: list(range(1, 64))
     cases = verify(engine, [5, 8, 9], 20, atol=2e-5, rtol=2e-5)
     assert all(c["within_tolerance"] and c["greedy_agreement"]
                for case in cases for c in case["comparisons"])
+    assert all(case["identical"] for case in verify_greedy(engine, [5, 9], 4))
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA required")
+@pytest.mark.parametrize("width", [3, 4])
+def test_bf16_cached_convolution_matches_cuda_prefill(width):
+    from train.model import causal_conv1d_fn
+
+    torch.manual_seed(81)
+    full = torch.randn(1, 1024, width, device="cuda", dtype=torch.bfloat16)
+    weight = torch.randn(1024, width, device="cuda", dtype=torch.bfloat16)
+    expected = causal_conv1d_fn(full, weight)[..., -1:]
+    actual = FovealLLM._conv_step(full, weight)
+    torch.testing.assert_close(actual, expected, atol=0, rtol=0)
+    # Ensure the fixture detects the old per-product BF16 rounding.
+    assert not torch.equal((full * weight[None]).sum(-1, keepdim=True), expected)
+
+
+def test_serving_audit_retains_actual_cache_and_token_counts(monkeypatch):
+    from benchmarks.audit_foveal_serving import measure
+
+    engine = make_engine(layers=3)
+    for name in ("synchronize", "reset_peak_memory_stats"):
+        monkeypatch.setattr(torch.cuda, name, lambda: None)
+    monkeypatch.setattr(torch.cuda, "max_memory_allocated", lambda: 1000)
+    monkeypatch.setattr(torch.cuda, "max_memory_reserved", lambda: 2000)
+    result = measure(engine, [1, 2], 3)
+    assert result["prefill_tokens"] == 2
+    assert result["generated_tokens"] == 3
+    assert result["decode_tokens"] == 2
+    assert result["cache_sequence_tokens"] == 4
+    assert result["full_prefix_kv_bytes"] == 2 * 4 * 8 * 4
+    assert result["peak_allocated_bytes"] == 1000
+    assert result["peak_reserved_bytes"] == 2000
 
 
 def test_serving_records_backend_and_excludes_warmup(monkeypatch):
