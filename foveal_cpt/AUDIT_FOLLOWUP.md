@@ -2,7 +2,7 @@
 
 Updated 2026-09-12 after checking the real checkpoints on this machine's NVIDIA L40S.
 
-**The supported headline is substantial synthetic retrieval gains at roughly SWA evaluation runtime.** In this sweep, KL-trained Polar and NoPE variants improve synthetic needle retrieval over their local CPT controls, while active KL routing takes about 0.97–1.10× the matched local elapsed time. This is teacher-forced answer-token accuracy under the recorded flat-stream training protocol. It does not establish reliable free-running retrieval or general long-context reasoning gains. The [focused serving measurements](SERVING_L40S.md) separately corroborate speed potential with modest overhead over matched local controls.
+**The supported headline is substantial synthetic retrieval gains at roughly SWA evaluation runtime.** In this sweep, KL-trained Polar and NoPE variants improve synthetic needle retrieval over their local CPT controls, while active KL routing takes about 0.97–1.10× the matched local elapsed time. This is teacher-forced answer-token accuracy under the recorded flat-stream training protocol. It does not establish reliable free-running retrieval or general long-context reasoning gains. The [corrected fast serving measurements](SERVING_L40S.md) independently demonstrate 400+ token/s decoding with routing active.
 
 ## Claim assessment
 
@@ -15,7 +15,7 @@ Updated 2026-09-12 after checking the real checkpoints on this machine's NVIDIA 
 | Historical ~450–480 token/s results measure Foveal serving | Unsupported: the historical loader dropped the Foveal index/route parameters and LM-output residual. Replacement serving measurements for four selected checkpoints at 2K–256K are now reported in [SERVING_L40S.md](SERVING_L40S.md). Isolated cold-compilation and 512K/1M capacity remain unmeasured. |
 | This completes the prescribed scientific training protocol | No. The unresolved [data protocol gate](README.md#run-gates) concerns flat streams without document-boundary attention/memory resets. The results must be described under the actual protocol. |
 
-## Completed L40S checks
+## Earlier eager-cache L40S checks
 
 All twelve CPT checkpoints came from `ChavyvAkvar/atma-foveal-cpt-all` at revision `e4cf2558793646c26d9e5a6c6eeadb4e1011cad3`. The machine used PyTorch 2.14.0+cu130, Triton 3.8.0 and FLA 0.5.2. Exact dependency, base-checkpoint and weight-hash records accompany the [evidence summary](../benchmarks/logs/foveal_verified/claim_evidence.json) and [compressed raw reports](../benchmarks/logs/foveal_verified/l40s_cache_evidence.tar.gz).
 
@@ -28,11 +28,13 @@ The GPU checks found and corrected three cached-inference numerical issues: conv
 
 The twelve extra 8K FP32 routing attempts exceeded the eager reference's 4,096-token limit and produced no comparisons. They are excluded from the completed counts. The original broad serving/capacity sweep was stopped; the subsequent focused serving comparison is complete below. The diagnostic runner and its conservative serving gate remain experimental; no gate result is a quality certification. See the [artifact notes](../benchmarks/logs/foveal_verified/README.md) for scope and reproduction.
 
-## Focused serving result
+## Corrected fast serving result
 
-**Serving measurements also support speed potential:** Polar KL and NoPE LM-output+KL add only **0.3–6.2% decode time per token** and **3.9–14.4% prefill time** relative to the same core's local CPT control across 2K, 32K and 256K. All twelve selected model/length cells completed, each with one warmup and three measured 130-token requests. [SERVING_L40S.md](SERVING_L40S.md) and [the raw records](../benchmarks/logs/foveal_serving_l40s) report the timings, ranges and memory usage.
+**The active Foveal graph decoder achieves 589–590 token/s at 2K and 571–572 token/s at 256K** for Polar KL and NoPE LM-output+KL. Fresh dense source baselines measure 442 and 466 token/s at 2K. All twelve selected model/length cells completed, with one warmup and three fresh-state 130-token requests per cell. See [SERVING_L40S.md](SERVING_L40S.md) and [the new raw evidence](../benchmarks/logs/foveal_graph_l40s).
 
-Bitwise equality is not a prerequisite for interpreting these timings. For the four measured checkpoints, all 220 sampled FP32 comparisons passed the strict tolerance with matching greedy tokens and final route sets, and all eight audited free-running continuations matched. Average BF16 logit RMS differences (0.038–0.047) are comparable to the separate full-forward recurrent-memory controls (0.039–0.049). This supports a practical speed-potential assessment with the numerical differences disclosed; it does not define a universal BF16 tolerance. The separate RoPE divergence remains recorded, and cache diagnostics reached 32K rather than 256K.
+The earlier 50–70 token/s decoder was a slow reference implementation. Matching it against equally slow local controls hid the regression. The correction retains inference weights on the GPU, writes to fixed KV storage, uses fused selected-page attention and captures decode in CUDA graphs, including routing changes and the LM-output residual. The historical ordinary-engine rows still omitted routing; the new measurements independently establish the 400+ token/s result.
+
+All 124 regressions passed. For the two adapted checkpoints, all 24 sampled real-weight FP32 comparisons passed the strict tolerance with matching routes, including selection with the remote-page cap active. All 36 sampled BF16 greedy tokens and four 130-token free-running continuations matched full recomputation. Average BF16 logit RMS differences (0.0346 / 0.0283) are below the recurrent full-forward controls (0.0447 / 0.0428); strict BF16 failures remain recorded. These checks establish practical agreement for the measured cases without requiring bitwise equality. They do not certify every checkpoint or 256K full-forward parity.
 
 ## Earlier correctness and reporting fixes
 
@@ -50,7 +52,7 @@ The archived quality runs remain usable under their recorded protocols. Fixing t
 
 ## Status
 
-The claim review and focused serving comparison are complete. Highlight the substantial synthetic retrieval gains at roughly SWA evaluation runtime and the measured serving overhead on the selected variants. The broader twelve-variant serving/capacity audit remains incomplete; preserve the scope, numerical evidence, and training-protocol limitation when extending these claims.
+The claim review and corrected fast serving comparison are complete. Highlight the substantial synthetic retrieval gains at roughly SWA evaluation runtime and the newly measured 400+ token/s decode performance with routing active. The broader twelve-variant serving/capacity audit remains incomplete; preserve the scope, numerical evidence, and training-protocol limitation when extending these claims.
 
 The historical quality snapshot remains frozen. Rebuild its checksum-validated aggregation with:
 

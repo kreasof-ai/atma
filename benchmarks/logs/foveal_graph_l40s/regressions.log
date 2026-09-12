@@ -1,0 +1,22 @@
+............................................................................................................................                      [100%]
+=================================================================== warnings summary ====================================================================
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+tests/test_foveal_graph.py::test_graph_generation_reset_and_page_boundaries[nope]
+  /opt/conda/lib/python3.12/site-packages/torch/nn/attention/flex_attention.py:2596: UserWarning: flex_attention called without torch.compile() - this will use an unfused implementation that materializes the full scores matrix instead of generating a fused kernel.
+  
+  SOLUTION: Use torch.compile(flex_attention)(...)
+  
+  If you want to debug your score_mod/mask_mod, you can set:
+  torch.nn.attention.flex_attention._FLEX_ATTENTION_DISABLE_COMPILE_DEBUG = True
+  
+  This will allow you to use print statements or breakpoints. Note: This doesn't work with the backwards pass and may produce incorrect results.
+    _warn_once(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+124 passed, 3 warnings in 27.43s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

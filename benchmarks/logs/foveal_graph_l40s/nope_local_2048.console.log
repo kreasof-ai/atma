@@ -1,0 +1,7 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+warmup 0: prefill=2.108s decode=0.192s peak=1.964GiB
+measurement 1: prefill=0.065s decode=0.195s peak=2.095GiB
+measurement 2: prefill=0.067s decode=0.195s peak=2.095GiB
+measurement 3: prefill=0.065s decode=0.195s peak=2.095GiB
+OK -> benchmarks/logs/foveal_graph_l40s/nope_local_2048.json

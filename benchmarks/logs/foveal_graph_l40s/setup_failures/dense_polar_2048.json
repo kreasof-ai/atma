@@ -1,0 +1,17 @@
+{
+  "error": "subprocess exit 1",
+  "command": [
+    "/opt/conda/bin/python",
+    "-u",
+    "tmp/measure_dense_baseline.py",
+    "polar",
+    "benchmarks/logs/foveal_graph_l40s/dense_polar_2048.json"
+  ],
+  "subprocess_returncode": 1,
+  "git_commit": "36373b7ec2a9ff5c69881737381204f592480df4",
+  "decoder_sources_sha256": {
+    "baseline_inference/foveal_engine.py": "680508078ea5b64f9682196704737dc2f9d059ab7a9dc02a098fee9f16054d18",
+    "baseline_inference/foveal_decode.py": "3d5fe59eb83e2d988ba313e5143fdeb492745d8eb35c70334e81bab5288b712d",
+    "baseline_inference/foveal_triton.py": "57ffd529dc9b946d83a2141e45ed8805c2edba78d9d7ef497df12c2ab112bfe8"
+  }
+}

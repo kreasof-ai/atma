@@ -1,0 +1,68 @@
+{
+  "core": "polar",
+  "model": {
+    "core": "polar",
+    "repo": "ChavyvAkvar/atma-10b-L40S-mbs16-polar__reg-baseline__distr-0__mem-1__win-0",
+    "revision": "faa10ea68590d57c0869c9dd6d38f40c476cff5d",
+    "path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-10b-L40S-mbs16-polar__reg-baseline__distr-0__mem-1__win-0/snapshots/faa10ea68590d57c0869c9dd6d38f40c476cff5d"
+  },
+  "backend": "LLM",
+  "context_tokens": 2048,
+  "attn_window": null,
+  "generated_tokens": 130,
+  "ignore_eos": true,
+  "repetitions": [
+    {
+      "prefill_throughput": 79323.86108721835,
+      "decode_throughput": 441.6297711850355,
+      "prefill_tokens": 2048,
+      "decode_tokens": 129,
+      "prefill_time": 0.025818208694458007,
+      "decode_time": 0.2920998728275299,
+      "peak_allocated_bytes": 889994240
+    },
+    {
+      "prefill_throughput": 83441.33118592502,
+      "decode_throughput": 443.23083046776685,
+      "prefill_tokens": 2048,
+      "decode_tokens": 129,
+      "prefill_time": 0.024544191360473634,
+      "decode_time": 0.29104473590850827,
+      "peak_allocated_bytes": 889994240
+    },
+    {
+      "prefill_throughput": 85530.27934342196,
+      "decode_throughput": 441.2864852764088,
+      "prefill_tokens": 2048,
+      "decode_tokens": 129,
+      "prefill_time": 0.02394473648071289,
+      "decode_time": 0.29232710337638873,
+      "peak_allocated_bytes": 889994240
+    }
+  ],
+  "warmups": [
+    {
+      "prefill_throughput": 3171.561158526488,
+      "decode_throughput": 441.11453350181523,
+      "prefill_tokens": 2048,
+      "decode_tokens": 129,
+      "prefill_time": 0.64573876953125,
+      "decode_time": 0.2924410560131072,
+      "peak_allocated_bytes": 889994240
+    }
+  ],
+  "command": [
+    "/opt/conda/bin/python",
+    "-u",
+    "benchmarks/logs/foveal_graph_l40s/measure_dense_baseline.py",
+    "polar",
+    "benchmarks/logs/foveal_graph_l40s/dense_polar_2048.json"
+  ],
+  "subprocess_returncode": 0,
+  "git_commit": "36373b7ec2a9ff5c69881737381204f592480df4",
+  "decoder_sources_sha256": {
+    "baseline_inference/foveal_engine.py": "680508078ea5b64f9682196704737dc2f9d059ab7a9dc02a098fee9f16054d18",
+    "baseline_inference/foveal_decode.py": "3d5fe59eb83e2d988ba313e5143fdeb492745d8eb35c70334e81bab5288b712d",
+    "baseline_inference/foveal_triton.py": "57ffd529dc9b946d83a2141e45ed8805c2edba78d9d7ef497df12c2ab112bfe8"
+  }
+}

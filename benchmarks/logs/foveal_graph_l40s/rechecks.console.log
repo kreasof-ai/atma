@@ -1,0 +1,9 @@
+START dense_polar_2048
+DONE dense_polar_2048 0 21.9 
+START dense_nope_2048
+DONE dense_nope_2048 0 18.8 
+START validation_polar_kl
+DONE validation_polar_kl 0 25.0 
+START validation_nope_lm_output_kl
+DONE validation_nope_lm_output_kl 0 28.3 
+COMPLETE

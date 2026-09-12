@@ -1,4 +1,6 @@
-# Focused Foveal serving measurements
+# Archived eager Foveal serving measurements
+
+These 50–70 token/s results describe the superseded eager reference implementation. Its similarly slow local control hid the absolute serving regression. The [corrected graph-decoder measurements](../foveal_graph_l40s/README.md) establish active Foveal decoding above 400 token/s. To reproduce these eager timings, use source commit `ec24bfa`; the current default serving harness uses the graph decoder.
 
 See [SERVING_L40S.md](../../../foveal_cpt/SERVING_L40S.md) for the results and limitations. `protocol.json` fixes the selected checkpoints and request counts; `environment.json` records the stack; `summary.json` contains medians, ranges, matched overhead and source checksums. Each model/length JSON retains its exact command, loading/first-request costs and all three measured requests. Console logs preserve errors and completion status.
 
