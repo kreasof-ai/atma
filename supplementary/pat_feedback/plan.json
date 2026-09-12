@@ -1,0 +1,416 @@
+{
+  "schema_version": 1,
+  "protocol_id": "pat_feedback_v1",
+  "created_on": "2026-09-12",
+  "status": "specified_not_executed",
+  "inspected_repository_revision": "71056b429a232bc83b0ebe0f74b5efd7e86b10e1",
+  "manifest_kind": "planning_only_not_runner_configuration",
+  "documents": [
+    "README.md",
+    "EXPERIMENTS.md",
+    "RIGOR.md",
+    "EXECUTION.md"
+  ],
+  "deadlines": {
+    "abstract_aoe": "2026-09-18T23:59:00-12:00",
+    "abstract_wib": "2026-09-19T18:59:00+07:00",
+    "paper_aoe": "2026-09-25T23:59:00-12:00",
+    "paper_wib": "2026-09-26T18:59:00+07:00",
+    "source": "https://iclr.cc/Conferences/2027/CallForPapers"
+  },
+  "experiments": [
+    {
+      "id": "E0",
+      "required": true,
+      "new_training": false,
+      "depends_on": [],
+      "protocol": "EXPERIMENTS.md#e0---numerical-semantics-and-checkpoint-path-audit"
+    },
+    {
+      "id": "E1",
+      "required": true,
+      "new_training": true,
+      "depends_on": [
+        "E0"
+      ],
+      "protocol": "EXPERIMENTS.md#e1---temperature-matched-component-attribution"
+    },
+    {
+      "id": "E2",
+      "required": true,
+      "new_training": false,
+      "depends_on": [
+        "E0"
+      ],
+      "protocol": "EXPERIMENTS.md#e2---adaptation-changes-the-effect-of-retention-capping"
+    },
+    {
+      "id": "E3",
+      "required": true,
+      "new_training": false,
+      "depends_on": [
+        "E0",
+        "E2"
+      ],
+      "protocol": "EXPERIMENTS.md#e3---runtime-retention-and-use-of-the-outlier-head"
+    },
+    {
+      "id": "E4",
+      "required": true,
+      "new_training": false,
+      "depends_on": [
+        "E0"
+      ],
+      "protocol": "EXPERIMENTS.md#e4---independent-document-retrieval-and-replication"
+    },
+    {
+      "id": "E5",
+      "required": false,
+      "new_training": false,
+      "depends_on": [
+        "E2",
+        "E3"
+      ],
+      "protocol": "EXPERIMENTS.md#e5---conditional-sensitivity-and-specificity"
+    },
+    {
+      "id": "E6",
+      "required": false,
+      "new_training": false,
+      "depends_on": [
+        "E0"
+      ],
+      "protocol": "EXPERIMENTS.md#e6---conditional-serving-repeatability"
+    }
+  ],
+  "training": {
+    "arms": [
+      "nope_memory",
+      "temperature_softmax_memory",
+      "polar_memory"
+    ],
+    "initialization_seeds": [
+      20270912,
+      20270913,
+      20270914
+    ],
+    "data_order": "identical_frozen_sorted_shard_stream_for_all_arms_and_initializations",
+    "data_order_seed_is_effective": false,
+    "common_tensor_initialization": "identical_by_name_mapping_and_hash_after_all_zero_initialization",
+    "train_context_tokens": 2048,
+    "global_batch_tokens": 524288,
+    "microbatch_sequences": 4,
+    "gradient_accumulation_steps": 64,
+    "optimizer_updates": 1900,
+    "training_tokens_per_run": 996147200,
+    "successful_training_tokens_total": 8965324800,
+    "selection": "final_update_checkpoint",
+    "temperature": {
+      "formula": "1 + softplus(alpha) * log(visible_causal_keys)",
+      "alpha_raw_initial_value": -1,
+      "query_heads": 8,
+      "global_layers": 4
+    },
+    "recipe_reference": "supplementary/robustness/configs/polar_components/polar_component_full.json",
+    "runs": [
+      {
+        "run_id": "pat_e1_s1_nope_memory",
+        "arm": "nope_memory",
+        "init_seed": 20270912,
+        "status": "planned"
+      },
+      {
+        "run_id": "pat_e1_s1_temperature_softmax_memory",
+        "arm": "temperature_softmax_memory",
+        "init_seed": 20270912,
+        "status": "planned"
+      },
+      {
+        "run_id": "pat_e1_s1_polar_memory",
+        "arm": "polar_memory",
+        "init_seed": 20270912,
+        "status": "planned"
+      },
+      {
+        "run_id": "pat_e1_s2_nope_memory",
+        "arm": "nope_memory",
+        "init_seed": 20270913,
+        "status": "planned"
+      },
+      {
+        "run_id": "pat_e1_s2_temperature_softmax_memory",
+        "arm": "temperature_softmax_memory",
+        "init_seed": 20270913,
+        "status": "planned"
+      },
+      {
+        "run_id": "pat_e1_s2_polar_memory",
+        "arm": "polar_memory",
+        "init_seed": 20270913,
+        "status": "planned"
+      },
+      {
+        "run_id": "pat_e1_s3_nope_memory",
+        "arm": "nope_memory",
+        "init_seed": 20270914,
+        "status": "planned"
+      },
+      {
+        "run_id": "pat_e1_s3_temperature_softmax_memory",
+        "arm": "temperature_softmax_memory",
+        "init_seed": 20270914,
+        "status": "planned"
+      },
+      {
+        "run_id": "pat_e1_s3_polar_memory",
+        "arm": "polar_memory",
+        "init_seed": 20270914,
+        "status": "planned"
+      }
+    ]
+  },
+  "evaluation": {
+    "tokenizer": "gpt2_pending_immutable_revision_and_file_hashes",
+    "fixture_seed": 20270916,
+    "tasks": [
+      "passkey",
+      "niah"
+    ],
+    "suites": [
+      "synthetic",
+      "real"
+    ],
+    "depths": [
+      0.1,
+      0.5,
+      0.9
+    ],
+    "real_documents": 30,
+    "synthetic_cases": 30,
+    "target_tokens": 5,
+    "lengths": [
+      2048,
+      8192,
+      16384,
+      32768,
+      65536,
+      262144
+    ],
+    "e1_lengths": [
+      2048,
+      8192,
+      16384,
+      32768,
+      65536
+    ],
+    "primary_retrieval_lengths": [
+      8192,
+      16384,
+      32768,
+      65536
+    ],
+    "primary_retrieval_metric": "teacher_forced_exact_five_token_accuracy",
+    "primary_retrieval_suite": "real",
+    "e1_primary_contrast": [
+      "polar_memory",
+      "temperature_softmax_memory"
+    ],
+    "e4_primary_contrast": [
+      "polar",
+      "nope"
+    ],
+    "retrieval_prompts_per_e1_model": 1800,
+    "retrieval_prompts_per_e2_e4_condition": 2160,
+    "core_distinct_retrieval_prompts": 42120,
+    "bpb_documents": {
+      "finepdfs": 8,
+      "pg19": 5,
+      "proof_pile": 5
+    },
+    "bpb_target_start_token": 262144,
+    "bpb_target_tokens_per_document": 256,
+    "bpb_target_tokens_per_model_length": 4608,
+    "bpb_dataset_aggregation": "sum_target_nll_bits / sum_target_utf8_bytes",
+    "bpb_cross_dataset_aggregation": "equal_weight_dataset_bpb",
+    "e2_primary_endpoint": "mean_bpb_at_262144",
+    "e2_cap_benefit_definition": "bpb_uncapped - bpb_capped",
+    "e2_adaptation_contrast": "cap_benefit_original - cap_benefit_foveal",
+    "e2_checkpoints": [
+      "primary_nope",
+      "primary_polar",
+      "foveal_nope_lm_output_kl",
+      "foveal_polar_lm_output_kl"
+    ],
+    "e2_cap_conditions": [
+      "uncapped",
+      "inherited_head_hl256"
+    ],
+    "e2_condition_count": 8,
+    "e4_checkpoints": [
+      "primary_nope",
+      "primary_polar",
+      "repl_seed1_nope",
+      "repl_seed1_polar",
+      "repl_seed2_nope",
+      "repl_seed2_polar"
+    ],
+    "e4_condition": "uncapped",
+    "e2_e4_shared_conditions": 2,
+    "gamma": {
+      "selection": "largest_total_zero_input_logit_in_original_then_track_same_head_after_cpt",
+      "tie_break": "lowest_zero_based_block_then_head",
+      "target_count": 1,
+      "half_life_ceiling_tokens": 256,
+      "includes_fixed_config_bias": true,
+      "zero_based_indices": true
+    },
+    "telemetry": {
+      "documents_per_corpus": 2,
+      "lengths": [
+        2048,
+        65536,
+        262144
+      ],
+      "conditions": 8
+    },
+    "statistics": {
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 20270915,
+      "confidence_level": 0.95,
+      "real_sampling_unit": "document_cluster_paired_across_conditions",
+      "synthetic_sampling_unit": "case_target_conditional_on_filler",
+      "training_seed_summary": "all_individual_effects_mean_and_range_no_population_significance"
+    }
+  },
+  "conditional": {
+    "E5": {
+      "half_life_grid_tokens": [
+        128,
+        256,
+        512,
+        1024
+      ],
+      "alternative_head_seed": 20270917,
+      "alternative_heads": 2,
+      "lengths": [
+        2048,
+        65536,
+        262144
+      ]
+    },
+    "E6": {
+      "models": [
+        "nope",
+        "polar",
+        "rope",
+        "raven_native",
+        "atma_raven_titans",
+        "tda_hybrid"
+      ],
+      "lengths": [
+        2048,
+        32768,
+        131072
+      ],
+      "batch_sequences": 1,
+      "decode_tokens": 32,
+      "min_timed_repetitions": 10
+    }
+  },
+  "resources": {
+    "historical_training_seconds_per_polar_run": 17677,
+    "estimated_nine_run_training_gpu_hours": 44.2,
+    "estimate_excludes": [
+      "evaluation",
+      "compilation",
+      "engineering",
+      "telemetry",
+      "failed_attempts",
+      "storage"
+    ],
+    "allocated_gpu_hours": null,
+    "training_retry_token_reserve": null,
+    "checkpoint_storage_bytes": null
+  },
+  "readiness": [
+    {
+      "id": "operator_semantics",
+      "status": "unresolved",
+      "requirement": "E0 operator decision, path parity and historical-checkpoint impact",
+      "evidence": []
+    },
+    {
+      "id": "temperature_control",
+      "status": "unresolved",
+      "requirement": "Train-time temperature arm and t=1 output/shared-gradient checks",
+      "evidence": []
+    },
+    {
+      "id": "matched_initialization_and_recipe",
+      "status": "unresolved",
+      "requirement": "Nine resolved configurations and post-initialization common-tensor hashes",
+      "evidence": []
+    },
+    {
+      "id": "immutable_inputs",
+      "status": "unresolved",
+      "requirement": "Full input/runtime/dependency revisions, hashes and executed-backend evidence",
+      "evidence": []
+    },
+    {
+      "id": "evaluation_fixtures",
+      "status": "unresolved",
+      "requirement": "Frozen 18-document BPB panel and 30-document retrieval fixtures",
+      "evidence": []
+    },
+    {
+      "id": "runner_integrity",
+      "status": "unresolved",
+      "requirement": "Expected-cell validation, fingerprinted artifacts and resume/failure checks",
+      "evidence": []
+    },
+    {
+      "id": "capacity_and_storage",
+      "status": "unresolved",
+      "requirement": "Measured training/evaluation allocation, finite retry reserve and checkpoint storage",
+      "evidence": []
+    },
+    {
+      "id": "instrumentation_parity",
+      "status": "unresolved",
+      "requirement": "Normal/instrumented E3 equivalence and declared trace coverage",
+      "evidence": []
+    }
+  ],
+  "out_of_scope": [
+    "bounded_gamma_retraining",
+    "larger_model_training",
+    "new_external_architectures",
+    "new_babilong_adaptation",
+    "full_factorial_repeat",
+    "9_816B_temperature_comparison_without_separate_protocol"
+  ],
+  "source_files": [
+    "paper/iclr2027/iclr2027_conference.tex",
+    "paper/iclr2027/appendix.tex",
+    "supplementary/robustness/README.md",
+    "supplementary/robustness/dependencies.json",
+    "supplementary/robustness/replication_benchmark_manifest.json",
+    "supplementary/robustness/configs/polar_components/polar_component_full.json",
+    "supplementary/robustness/work/logs/polar_components/polar_component_full.log",
+    "train/reproducibility.py",
+    "ablation/train.py",
+    "model/blocks.py",
+    "kernel/polar_triton.py",
+    "gamma_diagnostics/clamp.py",
+    "benchmarks/scoring.py",
+    "foveal_cpt/README.md",
+    "foveal_cpt/BENCHMARK_RESULTS.md",
+    "foveal_cpt/model.py",
+    "foveal_cpt/data.py",
+    "benchmarks/logs/foveal_cpt/benchmark_matrix.json",
+    "benchmarks/logs/foveal_cpt_clamped/benchmark_matrix.json",
+    "benchmarks/logs/foveal_cpt/gamma_parameters.json"
+  ]
+}
+
