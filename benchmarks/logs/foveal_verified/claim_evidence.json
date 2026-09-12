@@ -1,0 +1,664 @@
+{
+  "date_utc": "2026-09-12",
+  "purpose": "Completed numerical evidence for the bounded claim review; not a serving certification or quality rerun.",
+  "decoder_sha256": "08c4ad535ee2a01df009eef9f997534daaba85cb38685d43c6ca3f7450a8ef4a",
+  "checkpoint_revision": "e4cf2558793646c26d9e5a6c6eeadb4e1011cad3",
+  "bf16_cases": [
+    "boundaries",
+    "long",
+    "continuation",
+    "prose",
+    "generated_pages",
+    "routing"
+  ],
+  "fp32_cases": [
+    "fp32",
+    "fp32_continuation",
+    "fp32_generated_pages"
+  ],
+  "models": {
+    "polar_local": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 1,
+        "max_abs_logit_error": 0.8592886924743652,
+        "mean_rms_logit_error": 0.04679049204267767
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 0,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 5.841255187988281e-05,
+        "mean_rms_logit_error": 2.9488117661458093e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "polar_local_boundaries.json",
+        "polar_local_long.json",
+        "polar_local_continuation.json",
+        "polar_local_prose.json",
+        "polar_local_generated_pages.json",
+        "polar_local_routing.json",
+        "polar_local_fp32.json",
+        "polar_local_fp32_continuation.json",
+        "polar_local_fp32_generated_pages.json",
+        "polar_local_greedy.json"
+      ]
+    },
+    "polar_lm_output": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 2,
+        "max_abs_logit_error": 0.5989670753479004,
+        "mean_rms_logit_error": 0.04255957813288882
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 0,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 0.00010347366333007812,
+        "mean_rms_logit_error": 3.7382700053388943e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "polar_lm_output_boundaries.json",
+        "polar_lm_output_long.json",
+        "polar_lm_output_continuation.json",
+        "polar_lm_output_prose.json",
+        "polar_lm_output_generated_pages.json",
+        "polar_lm_output_routing.json",
+        "polar_lm_output_fp32.json",
+        "polar_lm_output_fp32_continuation.json",
+        "polar_lm_output_fp32_generated_pages.json",
+        "polar_lm_output_greedy.json"
+      ]
+    },
+    "polar_kl": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 4,
+        "max_abs_logit_error": 0.7013287544250488,
+        "mean_rms_logit_error": 0.04288800793745399
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 0,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 3.933906555175781e-05,
+        "mean_rms_logit_error": 2.301986536291555e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "polar_kl_boundaries.json",
+        "polar_kl_long.json",
+        "polar_kl_continuation.json",
+        "polar_kl_prose.json",
+        "polar_kl_generated_pages.json",
+        "polar_kl_routing.json",
+        "polar_kl_fp32.json",
+        "polar_kl_fp32_continuation.json",
+        "polar_kl_fp32_generated_pages.json",
+        "polar_kl_greedy.json"
+      ]
+    },
+    "polar_lm_output_kl": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 7,
+        "max_abs_logit_error": 1.3447532653808594,
+        "mean_rms_logit_error": 0.05303223490562113
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 2,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 0.00022304058074951172,
+        "mean_rms_logit_error": 4.323475001332223e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [
+        {
+          "source": "polar_lm_output_kl_fp32_continuation.json",
+          "prompt_tokens": 65,
+          "position": 320,
+          "max_abs_logit_error": 0.00022304058074951172,
+          "rms_logit_error": 4.139898737776093e-05,
+          "relative_l2_logit_error": 5.502325166162336e-06,
+          "within_tolerance": false,
+          "greedy_agreement": true,
+          "cached_greedy_token": 257,
+          "reference_greedy_token": 257,
+          "reference_greedy_margin": 5.495089054107666,
+          "fp32_sequential_control": {
+            "max_abs_logit_error": 0.00022423267364501953,
+            "rms_logit_error": 4.1212460928363726e-05,
+            "relative_l2_logit_error": 5.47753415958141e-06,
+            "within_tolerance": false,
+            "greedy_agreement": true,
+            "cached_greedy_token": 257,
+            "reference_greedy_token": 257,
+            "reference_greedy_margin": 5.495089054107666
+          },
+          "cached_vs_fp32_sequential": {
+            "max_abs_logit_error": 2.3484230041503906e-05,
+            "rms_logit_error": 6.576267878699582e-06,
+            "relative_l2_logit_error": 8.740495331949205e-07,
+            "within_tolerance": true,
+            "greedy_agreement": true,
+            "cached_greedy_token": 257,
+            "reference_greedy_token": 257,
+            "reference_greedy_margin": 5.495123386383057
+          }
+        },
+        {
+          "source": "polar_lm_output_kl_fp32_generated_pages.json",
+          "prompt_tokens": 1,
+          "position": 320,
+          "max_abs_logit_error": 0.00021910667419433594,
+          "rms_logit_error": 4.13465932069812e-05,
+          "relative_l2_logit_error": 5.495361165230861e-06,
+          "within_tolerance": false,
+          "greedy_agreement": true,
+          "cached_greedy_token": 257,
+          "reference_greedy_token": 257,
+          "reference_greedy_margin": 5.495089054107666,
+          "fp32_sequential_control": {
+            "max_abs_logit_error": 0.00022423267364501953,
+            "rms_logit_error": 4.1212460928363726e-05,
+            "relative_l2_logit_error": 5.47753415958141e-06,
+            "within_tolerance": false,
+            "greedy_agreement": true,
+            "cached_greedy_token": 257,
+            "reference_greedy_token": 257,
+            "reference_greedy_margin": 5.495089054107666
+          },
+          "cached_vs_fp32_sequential": {
+            "max_abs_logit_error": 3.0279159545898438e-05,
+            "rms_logit_error": 5.446024260891136e-06,
+            "relative_l2_logit_error": 7.238292596412066e-07,
+            "within_tolerance": true,
+            "greedy_agreement": true,
+            "cached_greedy_token": 257,
+            "reference_greedy_token": 257,
+            "reference_greedy_margin": 5.495123386383057
+          }
+        }
+      ],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "polar_lm_output_kl_boundaries.json",
+        "polar_lm_output_kl_long.json",
+        "polar_lm_output_kl_continuation.json",
+        "polar_lm_output_kl_prose.json",
+        "polar_lm_output_kl_generated_pages.json",
+        "polar_lm_output_kl_routing.json",
+        "polar_lm_output_kl_fp32.json",
+        "polar_lm_output_kl_fp32_continuation.json",
+        "polar_lm_output_kl_fp32_generated_pages.json",
+        "polar_lm_output_kl_greedy.json"
+      ]
+    },
+    "nope_local": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 5,
+        "max_abs_logit_error": 0.6223804950714111,
+        "mean_rms_logit_error": 0.037569491343634694
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 0,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 2.3365020751953125e-05,
+        "mean_rms_logit_error": 2.0170000673467506e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "nope_local_boundaries.json",
+        "nope_local_long.json",
+        "nope_local_continuation.json",
+        "nope_local_prose.json",
+        "nope_local_generated_pages.json",
+        "nope_local_routing.json",
+        "nope_local_fp32.json",
+        "nope_local_fp32_continuation.json",
+        "nope_local_fp32_generated_pages.json",
+        "nope_local_greedy.json"
+      ]
+    },
+    "nope_lm_output": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 3,
+        "max_abs_logit_error": 1.3656977415084839,
+        "mean_rms_logit_error": 0.03853011516668298
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 0,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 3.6597251892089844e-05,
+        "mean_rms_logit_error": 2.2476330348746903e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "nope_lm_output_boundaries.json",
+        "nope_lm_output_long.json",
+        "nope_lm_output_continuation.json",
+        "nope_lm_output_prose.json",
+        "nope_lm_output_generated_pages.json",
+        "nope_lm_output_routing.json",
+        "nope_lm_output_fp32.json",
+        "nope_lm_output_fp32_continuation.json",
+        "nope_lm_output_fp32_generated_pages.json",
+        "nope_lm_output_greedy.json"
+      ]
+    },
+    "nope_kl": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 9,
+        "max_abs_logit_error": 0.7452405691146851,
+        "mean_rms_logit_error": 0.037557128828707015
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 0,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 3.063678741455078e-05,
+        "mean_rms_logit_error": 2.4444327312845748e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "nope_kl_boundaries.json",
+        "nope_kl_long.json",
+        "nope_kl_continuation.json",
+        "nope_kl_prose.json",
+        "nope_kl_generated_pages.json",
+        "nope_kl_routing.json",
+        "nope_kl_fp32.json",
+        "nope_kl_fp32_continuation.json",
+        "nope_kl_fp32_generated_pages.json",
+        "nope_kl_greedy.json"
+      ]
+    },
+    "nope_lm_output_kl": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 4,
+        "max_abs_logit_error": 0.9266535043716431,
+        "mean_rms_logit_error": 0.03937544881696407
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 0,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 2.384185791015625e-05,
+        "mean_rms_logit_error": 2.3095578750475068e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "nope_lm_output_kl_boundaries.json",
+        "nope_lm_output_kl_long.json",
+        "nope_lm_output_kl_continuation.json",
+        "nope_lm_output_kl_prose.json",
+        "nope_lm_output_kl_generated_pages.json",
+        "nope_lm_output_kl_routing.json",
+        "nope_lm_output_kl_fp32.json",
+        "nope_lm_output_kl_fp32_continuation.json",
+        "nope_lm_output_kl_fp32_generated_pages.json",
+        "nope_lm_output_kl_greedy.json"
+      ]
+    },
+    "rope_local": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 1,
+        "max_abs_logit_error": 0.43292903900146484,
+        "mean_rms_logit_error": 0.034087241264106276
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 0,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 2.09808349609375e-05,
+        "mean_rms_logit_error": 1.8595411140929422e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "rope_local_boundaries.json",
+        "rope_local_long.json",
+        "rope_local_continuation.json",
+        "rope_local_prose.json",
+        "rope_local_generated_pages.json",
+        "rope_local_routing.json",
+        "rope_local_fp32.json",
+        "rope_local_fp32_continuation.json",
+        "rope_local_fp32_generated_pages.json",
+        "rope_local_greedy.json"
+      ]
+    },
+    "rope_lm_output": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 3,
+        "max_abs_logit_error": 0.5167026519775391,
+        "mean_rms_logit_error": 0.03450495643397531
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 0,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 1.9550323486328125e-05,
+        "mean_rms_logit_error": 1.707577759837229e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "rope_lm_output_boundaries.json",
+        "rope_lm_output_long.json",
+        "rope_lm_output_continuation.json",
+        "rope_lm_output_prose.json",
+        "rope_lm_output_generated_pages.json",
+        "rope_lm_output_routing.json",
+        "rope_lm_output_fp32.json",
+        "rope_lm_output_fp32_continuation.json",
+        "rope_lm_output_fp32_generated_pages.json",
+        "rope_lm_output_greedy.json"
+      ]
+    },
+    "rope_kl": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 2,
+        "max_abs_logit_error": 0.9689216613769531,
+        "mean_rms_logit_error": 0.03241033128265658
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 0,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 1.8596649169921875e-05,
+        "mean_rms_logit_error": 1.8521075720524425e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "rope_kl_boundaries.json",
+        "rope_kl_long.json",
+        "rope_kl_continuation.json",
+        "rope_kl_prose.json",
+        "rope_kl_generated_pages.json",
+        "rope_kl_routing.json",
+        "rope_kl_fp32.json",
+        "rope_kl_fp32_continuation.json",
+        "rope_kl_fp32_generated_pages.json",
+        "rope_kl_greedy.json"
+      ]
+    },
+    "rope_lm_output_kl": {
+      "bf16": {
+        "comparisons": 1413,
+        "strict_failures": 1393,
+        "greedy_disagreements": 7,
+        "max_abs_logit_error": 0.8010374307632446,
+        "mean_rms_logit_error": 0.03275928218168143
+      },
+      "fp32": {
+        "comparisons": 55,
+        "strict_failures": 0,
+        "greedy_disagreements": 0,
+        "max_abs_logit_error": 3.0040740966796875e-05,
+        "mean_rms_logit_error": 1.8286217027707607e-06
+      },
+      "fp32_final_route_sets_equal": true,
+      "fp32_strict_failures": [],
+      "greedy_continuations": [
+        {
+          "prompt_tokens": 65,
+          "generated_tokens": 130,
+          "identical": false,
+          "first_divergence": {
+            "step": 15,
+            "max_abs_logit_error": 0.2274179458618164,
+            "rms_logit_error": 0.05849529430270195,
+            "relative_l2_logit_error": 0.009077935479581356,
+            "within_tolerance": false,
+            "greedy_agreement": false,
+            "cached_greedy_token": 1375,
+            "reference_greedy_token": 198,
+            "reference_greedy_margin": 0.023302078247070312,
+            "full_forward_shape_control": {
+              "max_abs_logit_error": 0.2521679401397705,
+              "rms_logit_error": 0.081147201359272,
+              "relative_l2_logit_error": 0.012593304738402367,
+              "within_tolerance": false,
+              "greedy_agreement": true,
+              "cached_greedy_token": 198,
+              "reference_greedy_token": 198,
+              "reference_greedy_margin": 0.023302078247070312
+            },
+            "full_forward_recurrent_control": {
+              "max_abs_logit_error": 0.1723172664642334,
+              "rms_logit_error": 0.04542527347803116,
+              "relative_l2_logit_error": 0.0070495884865522385,
+              "within_tolerance": false,
+              "greedy_agreement": true,
+              "cached_greedy_token": 198,
+              "reference_greedy_token": 198,
+              "reference_greedy_margin": 0.023302078247070312
+            }
+          }
+        },
+        {
+          "prompt_tokens": 641,
+          "generated_tokens": 130,
+          "identical": true,
+          "first_divergence": null
+        }
+      ],
+      "sources": [
+        "rope_lm_output_kl_boundaries.json",
+        "rope_lm_output_kl_long.json",
+        "rope_lm_output_kl_continuation.json",
+        "rope_lm_output_kl_prose.json",
+        "rope_lm_output_kl_generated_pages.json",
+        "rope_lm_output_kl_routing.json",
+        "rope_lm_output_kl_fp32.json",
+        "rope_lm_output_kl_fp32_continuation.json",
+        "rope_lm_output_kl_fp32_generated_pages.json",
+        "rope_lm_output_kl_greedy.json"
+      ]
+    }
+  },
+  "serving_measurements": 0,
+  "capacity_measurements": 0,
+  "unsupported_attempt": "fp32_routing: 8192-token eager reference exceeds its 4096-token limit; no comparisons, excluded from counts.",
+  "totals": {
+    "bf16_comparisons": 16956,
+    "bf16_strict_failures": 16716,
+    "bf16_greedy_disagreements": 48,
+    "fp32_comparisons": 660,
+    "fp32_strict_failures": 2,
+    "fp32_greedy_disagreements": 0,
+    "identical_free_running_continuations": 23,
+    "free_running_continuations": 24
+  },
+  "raw_archive": {
+    "file": "l40s_cache_evidence.tar.gz",
+    "sha256": "ae3f35f569084becc3a213599963e5dbe261bcf086686f3e56ab28c2ce7a8d72",
+    "files": 303
+  }
+}

@@ -12,7 +12,9 @@ All checkpoints underwent **1B tokens** of continuous pre-training (CPT) at 32K 
 The corrected aggregated dataset contains **6,336 structured rows from 72 full experiments** under `benchmarks/logs/foveal_cpt/benchmark_matrix.json` and `benchmarks/logs/foveal_cpt/benchmark_matrix.csv`.
 
 
-The [aggregation manifest](../benchmarks/logs/foveal_cpt/aggregation_manifest.json) selects one full run per model/suite, excludes 24 smoke runs and 13 superseded shorter runs, and records source checksums. Raw logs are unchanged. This supersedes the earlier 7,146-row matrix that mixed those experiments. Full-forward retrieval, base-task, long-document and BABILong quality results remain distinct from the historical serving path. Local fixes and remaining GPU verification are tracked in [AUDIT_FOLLOWUP.md](AUDIT_FOLLOWUP.md).
+The [aggregation manifest](../benchmarks/logs/foveal_cpt/aggregation_manifest.json) selects one full run per model/suite, excludes 24 smoke runs and 13 superseded shorter runs, and records source checksums. Raw logs are unchanged. This supersedes the earlier 7,146-row matrix that mixed those experiments. Full-forward retrieval, base-task, long-document and BABILong quality results remain distinct from the historical serving path. The L40S checks and limits on interpretation are recorded in [AUDIT_FOLLOWUP.md](AUDIT_FOLLOWUP.md).
+
+**Scope of the claim:** this is an empirical comparison under flat-stream 32K CPT, with no document-boundary attention or memory resets; the [training protocol gate](README.md#run-gates) remains open. The strongest result is improved synthetic needle **token accuracy** for KL-trained Polar/NoPE variants over local CPT controls. Real-text retrieval and reasoning results are mixed. One trained checkpoint per cell and the KL cells' additional 20M-token calibration do not establish universal architectural or causal claims. Historical serving numbers do not measure active Foveal routing.
 
 ---
 
@@ -51,7 +53,7 @@ Primary accuracies on the standard evaluation splits (2,048 tokens scoring lengt
 | **Polar** | `lm_output_kl` | 27.9% | 36.5% | 67.1% | 52.6% | 49.8% | 25.4% | 31.8% | 58.1% | **43.66%** |
 
 ### Key Findings:
-- **Preservation of General Knowledge:** Within each core, the reported macro means differ by at most about 0.6 percentage points from its local CPT control. This table does not itself measure a dense-baseline comparison.
+- **Small Differences from Local CPT Controls:** Within each core, the reported macro means differ by at most about 0.6 percentage points from its local CPT control. This table does not itself measure a dense-baseline comparison.
 - **Indexer Isolation:** The indexer uses detached inputs (`x.detach()`). The observed task scores alone do not isolate the causal effect of that design choice.
 - **Core Ordering:** NoPE achieves the highest downstream accuracy (44.91%), followed closely by RoPE (44.53%) and Polar (43.66%).
 
@@ -94,9 +96,9 @@ Retrieval evaluates 5-token digit needles at depths 0.1, 0.5, and 0.9. Token acc
 | **RoPE** | `lm_output_kl` | 88.7% | 42.0% | 39.0% | 3.0% | 1.0% | 27.7% | 0.0% | 12.7% |
 
 ### Key Findings:
-- **Local SWA Fails Remote Retrieval:** Pure local sliding window (`local`) completely collapses beyond its 512-token receptive field ($\ge 8\text{K}$). The ~33% at 2K–4K is purely driven by needles falling inside the local window.
-- **KL Distillation is Decisive:** Without KL distillation (`lm_output`), synthetic retrieval drops from ~90% at 2K down to <6% at 256K. With KL distillation (`kl` and `lm_output_kl`), **Polar retains 81.0%** and **NoPE retains 82.7%** at 256K.
-- **Distractor Difficulty:** Real-text distractors (`finepdfs`) are drastically more challenging than synthetic filler. While 2K retrieval is near-perfect (~96–99%), distractor interference erodes accuracy beyond 16K across all cores.
+- **Local Controls Score Poorly at Long Lengths:** Local variants score 0–4% from 8K onward in these retrieval tables. Near-window needle placement is a plausible contributor to their roughly 33% scores at 2K–4K; these aggregate scores alone do not isolate the contribution of the local window and Titans memory.
+- **KL-Trained Polar/NoPE Variants Improve Synthetic Retrieval:** At 256K, LM-output-only scores are 6.0% for Polar and 3.3% for NoPE, versus **81.0% for Polar KL** and **82.7% for NoPE LM-output+KL**. RoPE does not show comparable gains. These are teacher-forced token accuracies, not exact-answer generation rates; KL variants also receive the separate calibration stage.
+- **Distractor Difficulty:** The high synthetic scores do not transfer to real-text distractors. At 256K, Polar/NoPE KL variants score only 0–2% token accuracy on FinePDFs.
 
 ---
 
@@ -122,7 +124,7 @@ Evaluated under the controlled protocol: answer-only fine-tuning on $\le$2K cont
 ### Key Findings:
 - **Polar Extrapolation Stability:** Polar models achieve the flattest performance degradation across length extrapolation: starting at ~54–57% at 0K and maintaining **36–40% macro accuracy at 256K**.
 - **NoPE Short-Context Edge vs Long-Context Decay:** NoPE models achieve higher short-context accuracy at 0K–2K (~64–67%), but degrade more rapidly out to 256K (~24–33%).
-- **Titans Memory Synergy:** In both Polar and RoPE, the persistent memory branch buffers recent facts, maintaining 30–40% reasoning accuracy even when context expands by $128\times$ over training.
+- **Mechanism Remains Unisolated:** Persistent memory is a possible contributor to these scores, but there is no memory-disabled control here. The 128× length ratio is relative to the 2K answer-adaptation limit; CPT itself used 32K contexts.
 
 ---
 
@@ -146,9 +148,9 @@ Evaluated with 256 target tokens per document across FinePDFs, PG-19, and Proof-
 | **RoPE** | `lm_output_kl` | 0.950 / 1.075 / 1.081 | 1.117 / 1.117 / 1.117 | 2.207 / 2.223 / 2.235 |
 
 ### Key Findings:
-- **Sparse Routing Beats Pure SWA:** On FinePDFs, active sparse routing (`kl` and `lm_output_kl`) achieves **0.85–0.88 BPB** at 2K, compared to **1.04–1.06 BPB** for pure local SWA.
+- **FinePDFs Improvement Depends on Core:** At 2K, Polar/NoPE KL variants score **0.859–0.883 BPB**, versus **1.050–1.062** for their local CPT controls. RoPE KL variants score **0.949–0.950**, versus **1.044** locally. These trained-checkpoint comparisons do not isolate routing from calibration, backbone adaptation, or the LM-output residual.
 - **Extreme Length Stability on Books:** PG-19 exhibits remarkable stability across all variants, remaining between 1.10 and 1.15 BPB from 2K all the way to 256K.
-- **Proof-Pile Domain Quality:** Polar models achieve the lowest BPB on technical/mathematical text (~2.04–2.09 vs ~2.27–2.33 for NoPE).
+- **Proof-Pile Domain Quality:** Polar LM-output has the lowest reported 2K/256K BPB (2.037/2.079); the ordering depends on adaptation mode and length.
 
 ---
 
@@ -211,9 +213,9 @@ To determine whether continuous pre-training (1B tokens at 32K context) introduc
 | `nope-lm_output_kl` | 25.7 | 19,600,281.8 | L2H5 | +13.2576 | 117.2 | L10H7 | **Healthy** (inherited base outlier) |
 
 ### Diagnostic Findings:
-1. **Zero New or Suspicious Outliers:** Continuous pre-training did **not** introduce any new gamma outliers in any head across all 12 checkpoints.
+1. **No New Extreme Parameter Outliers at the Endpoints:** The final checkpoints retain the extreme-head locations already present in the source checkpoints. This parameter-only check does not measure input-dependent memory behavior.
 2. **Strictly Bounded Non-Outlier Heads:** Across all 384 examined layer-heads, 31 out of 32 heads in every checkpoint exhibit short, stable half-lives with medians tightly grouped around **22.3–26.2 tokens**. The second highest half-life in every model remains strictly under 260 tokens (Polar: 247–259 tokens at L6H6; NoPE: 117–123 tokens at L10H7; RoPE: 58–59 tokens at L10H7).
-3. **Preservation of Stage II Base Operating Points:** The pre-existing single-head operating points from the Stage II base models (L2H5 in NoPE at ~18M–21M tokens and L2H6 in Polar at ~1.6M–3.7M tokens) remained stable across all four adaptation modes throughout 1,908 steps of 32K context training, confirming that sparse-attention adaptation does not perturb the Titans memory decay dynamics.
+3. **Preservation of Stage II Base Operating Points:** The pre-existing single-head operating points from the Stage II base models (L2H5 in NoPE at ~18M–21M tokens and L2H6 in Polar at ~1.6M–3.7M tokens) remain at the same head locations in the four final adaptation checkpoints. Endpoint zero-input half-lives do not establish unchanged memory dynamics throughout training or on actual input sequences.
 
 ---
 
@@ -263,7 +265,7 @@ All 10 benchmark jobs completed with zero failures across 974 aggregated records
 | **128K** | 41.0% | 39.0% | **27.0%** | **36.0% (+9.0%)** |
 | **256K** | 36.0% | **38.0% (+2.0%)** | **24.0%** | **34.0% (+10.0%)** |
 
-*Key finding:* Capping NoPE restores multi-step reasoning at extreme contexts, boosting 128K accuracy by **+9.0 percentage points** (27% $\rightarrow$ 36%) and 256K accuracy by **+10.0 percentage points** (24% $\rightarrow$ 34%). Polar remains the most stable reasoning architecture, scoring **38.0%** at 256K.
+*Key finding:* In this two-checkpoint intervention, capping NoPE improves 128K accuracy by **9.0 percentage points** (27% $\rightarrow$ 36%) and 256K accuracy by **10.0 percentage points** (24% $\rightarrow$ 34%). Clamped Polar scores **38.0%** at 256K. Shorter-context scores and retrieval effects are mixed, so this does not establish a universally beneficial clamp or an architectural ranking.
 
 ### Needle Retrieval Extrapolation (Synthetic & Real)
 
@@ -280,13 +282,9 @@ All 10 benchmark jobs completed with zero failures across 974 aggregated records
 | | 256K (tok / exact) | 0.0% / 0.0% | 0.0% / 0.0% | 2.0% / 0.0% | 0.0% / 0.0% |
 ---
 
-## 9. Conclusions & Strategic Recommendations
+## 9. Conclusions
 
-1. **CPT Adaptation Mode Selection:**
-   - **Adaptation choice depends on the task and core.** NoPE `lm_output_kl` reaches 82.7% synthetic retrieval at 256K; Polar `kl` reaches 81.0%, versus 73.0% for Polar `lm_output_kl`. Downstream macro scores remain close across modes; the table does not establish a universally optimal variant.
-   - **`kl` distillation alone is essential; `lm_output` alone is insufficient.** Training the 16D MQA indexer with continuous residual loss alone fails to establish discrete long-range routing (retrieval drops to 3–6%). KL distillation directly guides the indexer to match the teacher attention mass.
-
-2. **Attention Core Comparison:**
-   - **Polar** provides the most resilient extrapolation curve on complex reasoning (BABILong 40% at 256K) and superior technical text modeling (Proof-Pile BPB). Its historical ordinary-engine prefill throughput is not a Foveal serving result.
-   - **NoPE** achieves the highest raw downstream accuracy (~44.9%) while its historical ordinary engine decodes at about 470 tok/s; its quality results exhibit faster degradation beyond 32K on multi-step reasoning.
-   - **RoPE** shows the most severe retrieval decay beyond 16K, confirming that fixed-frequency rotary embeddings struggle under aggressive sparse sub-sampling compared to Polar and canon-convolutions.
+1. **A bounded adaptation result is supported.** Under this flat-stream CPT and teacher-forced retrieval protocol, KL-trained Polar/NoPE variants substantially outperform local CPT on synthetic needles through 256K. The matched retrieval runs have similar total evaluation runtime; this does not establish cached-serving performance.
+2. **The benefit is task-dependent.** Real-text distractors largely defeat long-range retrieval. BABILong does not show a consistent gain from adding an index: at 256K, Polar local reaches 40%, versus 36–38% for its index variants; RoPE LM-output also reaches 40%. Base-task macro scores remain close to local CPT controls.
+3. **Mechanism and universal rankings remain hypotheses.** KL cells include extra calibration, only one trained checkpoint per cell is reported, and source checkpoints differ across cores. These results do not prove KL universally necessary, establish why RoPE degrades, or isolate a Titans-memory contribution.
+4. **The serving and training-protocol limits remain explicit.** Historical decode rates omit Foveal routing. The L40S follow-up supplies decoder fixes and numerical diagnostics, with strict failures and one free-running divergence retained; no fresh serving/capacity claim follows. The document-coherent training gate also remains open. See [AUDIT_FOLLOWUP.md](AUDIT_FOLLOWUP.md).

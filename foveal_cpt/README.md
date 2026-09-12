@@ -5,7 +5,7 @@ checkpoints. Every cell trains for **1B tokens** at 32K context and a 524,288-to
 (1,908 optimizer steps). There is no 100M-token screening stage.
 
 > **Evaluation Results:** Complete benchmark matrix, comparative analysis, and scientific interpretation across all 12 checkpoints are documented in [**`BENCHMARK_RESULTS.md`**](BENCHMARK_RESULTS.md).
-> Structured logs and aggregated matrices live under `benchmarks/logs/foveal_cpt/benchmark_matrix.csv` and `benchmark_matrix.json` (6,336 audited rows from 72 full runs). The manifest excludes smoke/superseded runs and labels historical serving measurements as index-disabled ordinary-engine execution. See [AUDIT_FOLLOWUP.md](AUDIT_FOLLOWUP.md) for completed CPU fixes and the remaining CUDA/checkpoint verification commands.
+> Structured logs and aggregated matrices live under `benchmarks/logs/foveal_cpt/benchmark_matrix.csv` and `benchmark_matrix.json` (6,336 audited rows from 72 full runs). See [AUDIT_FOLLOWUP.md](AUDIT_FOLLOWUP.md) for the L40S checks and claim assessment: synthetic retrieval gains are supported under the recorded protocol; general reasoning gains, faithful Foveal serving speed/capacity, and exact BF16 cached equivalence are not established. The data protocol gate below remains open.
 
 | attention core | local SWA-512 | LM index output | index KL | LM output + KL |
 | --- | --- | --- | --- | --- |

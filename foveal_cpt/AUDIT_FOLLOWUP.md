@@ -1,8 +1,34 @@
-# Foveal correctness audit: changes and remaining validation
+# Foveal audit follow-up: what the evidence supports
 
-Updated 2026-09-12. This follow-up covers the stored `benchmarks/logs/foveal_cpt` evaluation snapshot and `baseline_inference/foveal_engine.py`. It does not certify the training-data protocol or replace other research gates in [README.md](README.md).
+Updated 2026-09-12 after checking the real checkpoints on this machine's NVIDIA L40S.
 
-## Completed locally
+**The adaptation claim is defensible as a limited empirical result:** in this sweep, KL-trained Polar and NoPE variants improve synthetic needle retrieval over their local CPT controls, with similar total retrieval-evaluation runtime. This is teacher-forced answer-token accuracy under the recorded flat-stream training protocol. It does not establish reliable free-running retrieval, general long-context reasoning gains, or Foveal serving speed/capacity.
+
+## Claim assessment
+
+| Claim | Assessment |
+| --- | --- |
+| KL-trained adaptation improves synthetic retrieval over local CPT | Supported for the recorded checkpoints and workloads. At 256K, Polar `kl` scores 81.0% and NoPE `lm_output_kl` 82.7% token accuracy; both local controls score 0.0%. These are token scores, not exact-answer or free-generation success rates. |
+| Retrieval gains come at near-SWA runtime | Supported only for the matched full-forward retrieval evaluations in Section 6 of [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md). End-to-end totals include work beyond attention; no isolated kernel or cached-decode speedup follows. |
+| Adaptation generally improves long-context reasoning or real-text retrieval | Not established. Real-text distractors sharply reduce retrieval. At 256K BABILong, Polar local scores 40% versus 36–38% for its index variants; RoPE LM-output also scores 40%. |
+| KL is universally necessary, or core rankings prove an architectural mechanism | Not established by one trained checkpoint per cell. KL cells also receive 20M-token calibration outside the 1B CPT budget. Core comparisons include differences inherited from source checkpoints; no multi-seed uncertainty estimate or isolated mechanism ablation is provided. |
+| Historical ~450–480 token/s results measure Foveal serving | Unsupported: the historical loader dropped the Foveal index/route parameters and LM-output residual. No replacement serving, cold-compilation, or 512K/1M capacity measurements were collected in this follow-up. |
+| This completes the prescribed scientific training protocol | No. The unresolved [data protocol gate](README.md#run-gates) concerns flat streams without document-boundary attention/memory resets. The results must be described under the actual protocol. |
+
+## Completed L40S checks
+
+All twelve CPT checkpoints came from `ChavyvAkvar/atma-foveal-cpt-all` at revision `e4cf2558793646c26d9e5a6c6eeadb4e1011cad3`. The machine used PyTorch 2.14.0+cu130, Triton 3.8.0 and FLA 0.5.2. Exact dependency, base-checkpoint and weight-hash records accompany the [evidence summary](../benchmarks/logs/foveal_verified/claim_evidence.json) and [compressed raw reports](../benchmarks/logs/foveal_verified/l40s_cache_evidence.tar.gz).
+
+The GPU checks found and corrected three cached-inference numerical issues: convolution products now accumulate in FP32 before rounding, Polar decode scores accumulate in FP32, and CUDA memory decode uses FLA recurrent state/output conventions. These changes did not modify training, `FovealAttention`, or `DirectScorer`. The historical full-forward quality results therefore do not depend on the defective ordinary serving path, and these decoder fixes alone do not require rerunning that quality matrix.
+
+- **Regression evidence:** 96 combined tests and 7 additional audit tests passed (103 distinct tests). Sparse Polar forward/backward, NoPE/RoPE CUDA backward, and FLA state-layout checks also completed successfully.
+- **BF16 diagnostics:** 16,956 teacher-fed comparisons covered page/window boundaries, prefixes through 32K, and continuations through 642 tokens, including remote pages created during generation. There were 16,716 strict `atol=rtol=1e-4` failures and 48 greedy-token disagreements. This strict diagnostic is not an established BF16 acceptance threshold. Full-forward shape/reduction and recurrent-memory controls also show numerical differences; these do not erase the failures or establish universal equivalence.
+- **FP32 diagnostics:** 660 sampled comparisons had identical greedy tokens and final route sets. Two Polar LM-output+KL comparisons failed the unchanged strict tolerance, with maximum logit errors 0.00022304 and 0.00021911. Both matched a separate sequential-memory full forward at that same tolerance. The raw failures remain recorded.
+- **Free-running check:** 23 of 24 130-token continuations matched exactly. RoPE LM-output+KL with a 65-token prompt diverged at the 16th generated token. Its full-forward numerical controls did not reproduce the token flip. Exact BF16 greedy equivalence remains unresolved.
+
+The twelve extra 8K FP32 routing attempts exceeded the eager reference's 4,096-token limit and produced no comparisons. They are excluded from the completed counts. The planned serving/capacity sweeps were stopped before measurement and are outside this claim review. The diagnostic runner and its conservative serving gate remain experimental; no gate result is a quality certification. See the [artifact notes](../benchmarks/logs/foveal_verified/README.md) for scope and reproduction.
+
+## Earlier correctness and reporting fixes
 
 - Corrected cached generation: preserve Titans prompt memory in the decoder's `[K,V]` layout; exclude right padding from state; rotate index keys before page pooling; keep unrotated RoPE memory Q/K; retain the current block's routing anchor; finish index pages during generation; zero-pad short convolution histories; enforce minimum remote pages; honor temperature, EOS and token budgets; use configured dimensions, page size and local window.
 - `EvalModel` now dispatches Foveal checkpoints to `FovealLLM`. The ordinary weight loader rejects Foveal weights instead of silently discarding index/route parameters, even in non-strict mode.
@@ -16,65 +42,14 @@ Updated 2026-09-12. This follow-up covers the stored `benchmarks/logs/foveal_cpt
 
 The archived quality runs remain usable under their recorded protocols. Fixing this separate decoder did not modify `FovealAttention`, training, or `DirectScorer`; no complete quality-suite rerun is indicated by these fixes alone. If subsequent GPU fixes touch the shared forward/scoring code, rerun the affected quality experiments.
 
-## Local environment and test evidence
+## Status
 
-This Windows machine reports an **AMD Radeon RX 6700 XT**, with no NVIDIA CUDA runtime. The isolated test environment uses Python 3.12 and **PyTorch 2.14.0+cpu**. The trained CPT weights are not present locally; the recorded checkpoints are about 3 GB each. CUDA Triton and FLA inference paths cannot be exercised here.
+The claim review is complete with the qualifications above; the broader serving audit is not complete. Preserve the observed retrieval result, distinguish token scoring from generation, and retain the training-protocol limitation. Any future serving or capacity claim needs its own successful validation and fresh measurements with `FovealLLM`.
 
-Run the CPU suite from the repository root:
-
-```powershell
-$env:HF_HUB_OFFLINE = '1'
-$env:PYTHONPATH = (Get-Location).Path
-uv run --python 3.12 --with torch --with pytest --with transformers --with kernels --with datasets python -m pytest tests/test_foveal_engine.py tests/test_foveal_aggregation.py tests/test_foveal_eval.py tests/test_benchmark_pipeline.py -q
-```
-
-Local result on 2026-09-12: **78 passed** in 21.74 seconds. The only warning was the expected Hugging Face offline-mode trust-check warning. All 192 retrieval table values were also checked against the corrected matrix, and regenerating the matrix verified all 72 selected source checksums.
-
-The additional `tests/test_baseline_inference.py` run reached five dependency failures: two Softmax layout tests require Triton and three Raven layout tests require FLA. Its CUDA kernel test was skipped. These are still required checks on the CUDA machine because the shared weight loader changed; they have not been marked as passing.
-
-## Remaining GPU and checkpoint audit
-
-Use the original Linux/CUDA environment with the same PyTorch, Triton, causal-conv and FLA versions used for the L40S runs. Record the GPU, dependency versions, repository commit, checkpoint revision and weights path with each result. The original snapshot revision recorded in the logs is `e4cf2558793646c26d9e5a6c6eeadb4e1011cad3` of `ChavyvAkvar/atma-foveal-cpt-all`.
-
-1. **Run the local regressions plus CUDA dependencies.** Run the four CPU suites above, `tests/test_baseline_inference.py`, and the project's relevant sparse-attention/FLA tests on the GPU environment. The new GPU prefill-state extraction follows the existing inference FLA `[K,V]` convention, but is not locally GPU-verified.
-
-2. **Verify every real checkpoint before timing it.** [verify_foveal_cache.py](../benchmarks/verify_foveal_cache.py) compares prefill and cached-step logits with full recomputation on the same checkpoint and identical input tokens. Default cases include prompts of 1, 2, 63, 64, 65, 511, 512, 513, 639, 640 and 641 tokens, followed by 66 teacher-fed decode steps. This exercises short histories, partial pages, new pages and remote eligibility. It records maximum logit errors, tolerance results and greedy-token agreement for every position, and exits nonzero on failure. Repeat on representative natural-language and retrieval token streams if extending the verifier; the built-in varied records are a diagnostic workload, not a quality benchmark.
-
-```bash
-# Run from the repository root on Linux; replace this with the pinned snapshot directory.
-CPT_ROOT=/path/to/atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3
-python -m benchmarks.verify_foveal_cache \
-  --model "$CPT_ROOT/polar/lm_output_kl/cpt" --device cuda \
-  --decode_steps 66 --out benchmarks/logs/foveal_verified/parity_polar_lm_output_kl.json
-```
-
-Repeat for `polar`, `nope`, `rope` crossed with `local`, `lm_output`, `kl`, `lm_output_kl`, and then with longer prefixes (for example `--lengths 2048 8192 32768 --decode_steps 2`). Also test longer continuations exceeding 512 generated tokens so generated pages become remote candidates. Real-checkpoint free-running greedy generation should be compared after teacher-fed parity passes.
-
-The default `atol=rtol=1e-4` is a strict diagnostic starting point, **not an established BF16 acceptance threshold**. GPU kernels and BF16 matmul shapes can introduce legitimate differences. If it fails, quantify those against a matched numerical control and inspect routing/state differences before setting an explicit tolerance; record the rationale and all greedy disagreements. Do not loosen tolerances solely to obtain PASS. CPU float32 parity does not justify a blanket tolerance for all CUDA backends.
-
-3. **Collect actual Foveal serving measurements after parity passes.** Use a fresh output directory so the pipeline cannot resume the historical ordinary-engine results. Run on an otherwise idle L40S for comparability. The engine is currently serial and uses full-prefix KV storage with tensor concatenation; there is no CUDA-graph, constant-time cache-append, batching-throughput or flat-latency guarantee.
-
-```bash
-python -m benchmarks.run --benchmark serving \
-  --model "$CPT_ROOT/polar/lm_output_kl/cpt" \
-  --lengths 2k 4k 8k 16k 32k 64k 128k 256k \
-  --decode_tokens 130 --serving_samples 3 --serving_warmup_samples 1 \
-  --max_num_seqs 1 --strict \
-  --out benchmarks/logs/foveal_verified/serving_polar_lm_output_kl.log
-```
-
-Repeat for all twelve variants. Check `backend=FovealLLM`, `protocol=exact-token-prefill-v2`, `ignore_eos=true`, and measured decode-token counts. With 130 output tokens, each request performs 129 timed cached decode steps. Report cold-start/compile cost separately from warm timings, per-length distributions across independent repetitions, prefill time, decode time and both allocated/reserved peak memory. Differences from the old 32-token protocol must be stated. Run a second matched 32-token sweep if comparing those budgets specifically; never relabel the historical index-disabled numbers as new Foveal results.
-
-4. **Test 512K/1M capacity only as a new experiment.** After shorter parity and serving checks, repeat a bounded sweep at `--lengths 512k 1m` on the 48 GB target. Record OOM outcomes, full-prefix cache size and allocated/reserved peaks. The former docstring claim that these lengths fit in 48 GB has been removed; it is unsupported until measured. Full-forward prefill, index scores, memory-state extraction and KV append traffic can dominate these lengths even though attention gathers a bounded active set.
-
-None of steps 1–4 is marked complete for the real CUDA checkpoints by this local work.
-
-## Rebuilding the audited historical report
+The historical quality snapshot remains frozen. Rebuild its checksum-validated aggregation with:
 
 ```bash
 python -m benchmarks.aggregate --log_dir benchmarks/logs/foveal_cpt
 ```
 
-The manifest makes this directory a frozen historical snapshot. A changed selected log fails its checksum; duplicate selected result cells fail aggregation. New logs in this directory are not automatically included while the manifest exists. Place new experiments in a new directory and select their intended repetitions explicitly before making summary tables. Retain repetition-level data when reporting variability rather than averaging conflicting experiments by accident.
-
-Raw retrieval/base/longdoc/BABILong quality measurements and gamma parameter records were not rerun or altered. The corrected aggregate, historical backend annotations and documentation can be used now. Publish new Foveal cached-serving conclusions only after the remaining verification above.
+The earlier Windows CPU run passed 78 tests but could not exercise CUDA. Its missing CUDA dependencies are addressed by the L40S checks above. Raw historical quality logs and gamma records were not rerun or changed.
