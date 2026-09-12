@@ -29,6 +29,7 @@ CACHE_CASES = {
     'fp32_generated_pages': ['--float32_oracle', '--lengths', '1', '--decode_steps', '642', '--compare_every', '64'],
     'greedy': ['--controls', '--workload', 'prose', '--lengths', '65', '641', '--decode_steps', '2', '--greedy_steps', '130'],
     'routing': ['--controls', '--lengths', '8192', '32768', '--decode_steps', '2'],
+    'fp32_routing': ['--float32_oracle', '--lengths', '8192', '--decode_steps', '2'],
 }
 
 

@@ -12,7 +12,8 @@ from benchmarks.run_foveal_audit import CORES, MODES
 
 BF16_CASES = {'boundaries': 737, 'long': 9, 'continuation': 515, 'prose': 134,
               'generated_pages': 12, 'routing': 6}
-FP32_CASES = {'fp32': 33, 'fp32_continuation': 10, 'fp32_generated_pages': 12}
+FP32_CASES = {'fp32': 33, 'fp32_continuation': 10, 'fp32_generated_pages': 12,
+              'fp32_routing': 3}
 CONTROLS = ('full_forward_shape_control', 'full_forward_recurrent_control')
 
 
@@ -98,6 +99,7 @@ def summarize(root):
                 greedy = json.loads(greedy_path.read_text())
                 if greedy.get('decoder_sha256') == decoder_hash and 'greedy_cases' in greedy:
                     model['greedy'] = greedy['greedy_cases']
+                    model['sources'].append(greedy_path.name)
             result['models'][name] = model
     return result
 
