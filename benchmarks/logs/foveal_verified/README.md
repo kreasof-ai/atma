@@ -1,6 +1,6 @@
 # L40S claim-review evidence (2026-09-12)
 
-[claim_evidence.json](claim_evidence.json) summarizes the completed comparisons for all twelve pinned CPT checkpoints. [AUDIT_FOLLOWUP.md](../../../foveal_cpt/AUDIT_FOLLOWUP.md) states what they do and do not support. No serving, cold-compilation, or 512K/1M capacity measurement was collected.
+[claim_evidence.json](claim_evidence.json) summarizes the completed comparisons for all twelve pinned CPT checkpoints. [AUDIT_FOLLOWUP.md](../../../foveal_cpt/AUDIT_FOLLOWUP.md) states what they do and do not support. This archived numerical stage collected no serving, cold-compilation, or 512K/1M capacity measurements. The subsequent [focused serving measurements](../foveal_serving_l40s/README.md) are stored separately.
 
 [l40s_cache_evidence.tar.gz](l40s_cache_evidence.tar.gz) preserves the raw JSON reports, console logs, environment, checkpoint hashes, and diagnostic controls without adding hundreds of thousands of generated text lines to Git. Its checksum is in the summary. Extract it into a fresh directory:
 

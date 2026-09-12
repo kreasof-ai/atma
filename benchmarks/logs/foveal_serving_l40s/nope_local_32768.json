@@ -1,0 +1,133 @@
+{
+  "backend": "FovealLLM",
+  "suite": "foveal_cached_generation",
+  "protocol": "exact-token-prefill-v2",
+  "ignore_eos": true,
+  "model": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt",
+  "context_tokens": 32768,
+  "requested_decode_tokens": 130,
+  "max_num_seqs": 1,
+  "samples": 3,
+  "warmup_samples": 1,
+  "git_commit": "04c00c999f4bde26a06d00307f15154434d1be8d",
+  "gpu": "NVIDIA L40S",
+  "torch_version": "2.14.0+cu130",
+  "compiler_cache_policy": "reuse persistent caches; first request excluded from warm statistics",
+  "warmups": [
+    {
+      "prefill_tokens": 32768,
+      "decode_tokens": 129,
+      "prefill_time": 2.311184788000901,
+      "decode_time": 1.9903472529949795,
+      "prefill_throughput": 14178.009551691124,
+      "decode_throughput": 64.81281083282677,
+      "wall_time_s": 4.303305663001083,
+      "generated_tokens": 130,
+      "output_tokens_sha256": "9021fd17a7f60352df7462b215f76fc362e16d7ce1d123fb394e974c073b7c97",
+      "cache_sequence_tokens": 32897,
+      "full_prefix_kv_bytes": 134746112,
+      "remote_pages_per_layer": {
+        "2": 0,
+        "6": 0,
+        "10": 0,
+        "14": 0
+      },
+      "peak_allocated_bytes": 3480056320,
+      "peak_reserved_bytes": 3934257152
+    }
+  ],
+  "repetitions": [
+    {
+      "prefill_tokens": 32768,
+      "decode_tokens": 129,
+      "prefill_time": 0.2566989260012633,
+      "decode_time": 1.8747675719951076,
+      "prefill_throughput": 127651.48849839262,
+      "decode_throughput": 68.80852961560434,
+      "wall_time_s": 2.1331283200015605,
+      "generated_tokens": 130,
+      "output_tokens_sha256": "9021fd17a7f60352df7462b215f76fc362e16d7ce1d123fb394e974c073b7c97",
+      "cache_sequence_tokens": 32897,
+      "full_prefix_kv_bytes": 134746112,
+      "remote_pages_per_layer": {
+        "2": 0,
+        "6": 0,
+        "10": 0,
+        "14": 0
+      },
+      "peak_allocated_bytes": 3480058368,
+      "peak_reserved_bytes": 3934257152
+    },
+    {
+      "prefill_tokens": 32768,
+      "decode_tokens": 129,
+      "prefill_time": 0.25629889300034847,
+      "decode_time": 1.8836591449980915,
+      "prefill_throughput": 127850.72778271987,
+      "decode_throughput": 68.4837277182283,
+      "wall_time_s": 2.1415826190004736,
+      "generated_tokens": 130,
+      "output_tokens_sha256": "9021fd17a7f60352df7462b215f76fc362e16d7ce1d123fb394e974c073b7c97",
+      "cache_sequence_tokens": 32897,
+      "full_prefix_kv_bytes": 134746112,
+      "remote_pages_per_layer": {
+        "2": 0,
+        "6": 0,
+        "10": 0,
+        "14": 0
+      },
+      "peak_allocated_bytes": 3480058368,
+      "peak_reserved_bytes": 3934257152
+    },
+    {
+      "prefill_tokens": 32768,
+      "decode_tokens": 129,
+      "prefill_time": 0.2564721950002422,
+      "decode_time": 1.87017785599528,
+      "prefill_throughput": 127764.33718270728,
+      "decode_throughput": 68.97739676815293,
+      "wall_time_s": 2.128276958999777,
+      "generated_tokens": 130,
+      "output_tokens_sha256": "9021fd17a7f60352df7462b215f76fc362e16d7ce1d123fb394e974c073b7c97",
+      "cache_sequence_tokens": 32897,
+      "full_prefix_kv_bytes": 134746112,
+      "remote_pages_per_layer": {
+        "2": 0,
+        "6": 0,
+        "10": 0,
+        "14": 0
+      },
+      "peak_allocated_bytes": 3480058368,
+      "peak_reserved_bytes": 3934257152
+    }
+  ],
+  "oom": false,
+  "completed": true,
+  "load_time_s": 26.19961791499918,
+  "load_peak_allocated_bytes": 1410757120,
+  "load_peak_reserved_bytes": 1415577600,
+  "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt/cpt-step-001908.pt",
+  "target_full_prefix_kv_bytes": 134746112,
+  "elapsed_s": 37.416913328999726,
+  "command": [
+    "/opt/conda/bin/python",
+    "-u",
+    "-m",
+    "benchmarks.audit_foveal_serving",
+    "--model",
+    "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt",
+    "--context_tokens",
+    "32768",
+    "--decode_tokens",
+    "130",
+    "--samples",
+    "3",
+    "--warmup_samples",
+    "1",
+    "--out",
+    "benchmarks/logs/foveal_serving_l40s/nope_local_32768.json"
+  ],
+  "subprocess_returncode": 0,
+  "decoder_sha256": "08c4ad535ee2a01df009eef9f997534daaba85cb38685d43c6ca3f7450a8ef4a",
+  "subprocess_wall_time_s": 47.90467594999973
+}

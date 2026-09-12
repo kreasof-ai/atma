@@ -1,0 +1,25 @@
+START polar_local_2048
+DONE polar_local_2048 completed True oom False seconds 46.8
+START polar_kl_2048
+DONE polar_kl_2048 completed True oom False seconds 46.4
+START nope_local_2048
+DONE nope_local_2048 completed True oom False seconds 48.5
+START nope_lm_output_kl_2048
+DONE nope_lm_output_kl_2048 completed True oom False seconds 46.7
+START polar_local_32768
+DONE polar_local_32768 completed True oom False seconds 48.5
+START polar_kl_32768
+DONE polar_kl_32768 completed True oom False seconds 46.7
+START nope_local_32768
+DONE nope_local_32768 completed True oom False seconds 47.9
+START nope_lm_output_kl_32768
+DONE nope_lm_output_kl_32768 completed True oom False seconds 30.1
+START polar_local_262144
+DONE polar_local_262144 completed True oom False seconds 43.4
+START polar_kl_262144
+DONE polar_kl_262144 completed True oom False seconds 36.0
+START nope_local_262144
+DONE nope_local_262144 completed True oom False seconds 34.8
+START nope_lm_output_kl_262144
+DONE nope_lm_output_kl_262144 completed True oom False seconds 36.4
+COMPLETE

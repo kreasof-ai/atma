@@ -1,0 +1,6 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+warmup 0: prefill=4.147s decode=1.922s peak=16.716GiB
+measurement 1: prefill=2.297s decode=1.821s peak=16.716GiB
+measurement 2: prefill=2.296s decode=1.847s peak=16.716GiB
+measurement 3: prefill=2.299s decode=1.864s peak=16.716GiB
+OK -> benchmarks/logs/foveal_serving_l40s/nope_local_262144.json

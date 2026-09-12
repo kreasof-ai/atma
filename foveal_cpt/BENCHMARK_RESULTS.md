@@ -14,6 +14,8 @@ The corrected aggregated dataset contains **6,336 structured rows from 72 full e
 
 The [aggregation manifest](../benchmarks/logs/foveal_cpt/aggregation_manifest.json) selects one full run per model/suite, excludes 24 smoke runs and 13 superseded shorter runs, and records source checksums. Raw logs are unchanged. This supersedes the earlier 7,146-row matrix that mixed those experiments. Full-forward retrieval, base-task, long-document and BABILong quality results remain distinct from the historical serving path. The L40S checks and limits on interpretation are recorded in [AUDIT_FOLLOWUP.md](AUDIT_FOLLOWUP.md).
 
+**Main result: substantially stronger synthetic retrieval at roughly SWA evaluation runtime.** With Foveal routing active, KL-trained variants take about **0.97–1.10×** the matched local SWA evaluation time across the recorded retrieval suites. Polar KL reaches **81.0%** synthetic token accuracy at 256K and NoPE LM-output+KL reaches **82.7%**, versus **0.0%** for their local controls. This is direct evidence of the method's speed potential: the retrieval benefit does not require a large measured runtime penalty. See [Runtime Evidence from Actual Foveal Retrieval](#runtime-evidence-from-actual-foveal-retrieval).
+
 **Scope of the claim:** this is an empirical comparison under flat-stream 32K CPT, with no document-boundary attention or memory resets; the [training protocol gate](README.md#run-gates) remains open. The strongest result is improved synthetic needle **token accuracy** for KL-trained Polar/NoPE variants over local CPT controls. Real-text retrieval and reasoning results are mixed. One trained checkpoint per cell and the KL cells' additional 20M-token calibration do not establish universal architectural or causal claims. Historical serving numbers do not measure active Foveal routing.
 
 ---
@@ -173,20 +175,39 @@ These historical runs used the ordinary Polar/NoPE/RoPE paged engines with a 512
 | **RoPE** | `kl` | 12,433 | 154,649 | 154,318 | 149,492 | 453.6 | 442.6 | 13.41 GiB |
 | **RoPE** | `lm_output_kl` | 12,940 | 155,123 | 154,485 | 149,465 | 456.9 | 445.4 | 13.41 GiB |
 
-The roughly flat decode rates describe these ordinary engines. Faithful Foveal serving requires the corrected `FovealLLM`, checkpoint parity verification, and a fresh benchmark. There is no verified 512K/1M capacity claim from this table.
+The roughly flat decode rates describe these ordinary engines. Fresh measurements with the corrected `FovealLLM` and matched local controls are reported below. There is no verified 512K/1M capacity claim from this table.
 
 ### Runtime Evidence from Actual Foveal Retrieval
 
+**Foveal runs at roughly the same evaluation cost as SWA while substantially improving synthetic retrieval.** Across the matched KL and LM-output+KL runs, elapsed-time differences range from approximately **−2.5% to +10.0%**. In the two headline synthetic cases, Polar KL takes **+5.7%** and NoPE LM-output+KL **−1.9%** relative to local SWA, while their 256K token accuracies rise from 0.0% to 81.0% and 82.7%, respectively. The small negative timing differences should be read as comparable runtime, not established speedups.
+
 The full-forward retrieval path uses the actual sparse model for both quality and elapsed-time measurement. Every matched run below has 480 scoring calls across two tasks, eight lengths (2K-256K), three depths, and ten samples; none has an OOM cell. Total elapsed time includes sample construction, full-sequence teacher-forced scoring, compilation where incurred, and per-sample cleanup. It excludes checkpoint loading and real-haystack loading. These totals support near-SWA retrieval-evaluation runtime, but do not measure cached per-token decode latency or isolate attention-kernel overhead.
 
-| Suite | Core | Local elapsed | KL elapsed | Change | LM-output-KL elapsed |
-|:---|:---|---:|---:|---:|---:|
-| synthetic | polar | 309.4 s | 327.0 s | +5.7% | 328.8 s |
-| synthetic | nope | 375.4 s | 365.9 s | -2.5% | 368.2 s |
-| synthetic | rope | 353.4 s | 373.6 s | +5.7% | 374.6 s |
-| real | polar | 320.3 s | 337.5 s | +5.4% | 337.4 s |
-| real | nope | 343.6 s | 374.3 s | +8.9% | 375.4 s |
-| real | rope | 345.7 s | 377.5 s | +9.2% | 380.3 s |
+| Suite | Core | Local elapsed | KL elapsed | KL change | LM-output-KL elapsed | LM-output-KL change |
+|:---|:---|---:|---:|---:|---:|---:|
+| synthetic | polar | 309.4 s | 327.0 s | +5.7% | 328.8 s | +6.3% |
+| synthetic | nope | 375.4 s | 365.9 s | -2.5% | 368.2 s | -1.9% |
+| synthetic | rope | 353.4 s | 373.6 s | +5.7% | 374.6 s | +6.0% |
+| real | polar | 320.3 s | 337.5 s | +5.4% | 337.4 s | +5.3% |
+| real | nope | 343.6 s | 374.3 s | +8.9% | 375.4 s | +9.3% |
+| real | rope | 345.7 s | 377.5 s | +9.2% | 380.3 s | +10.0% |
+
+### Fresh Foveal Serving: Matched Local Controls
+
+**The current Foveal decoder also shows modest measured overhead with routing active.** On the selected Polar KL and NoPE LM-output+KL checkpoints, decode time per token is **0.3–6.2%** above the same core's local CPT control, and prefill time is **3.9–14.4%** higher across 2K, 32K and 256K. This corroborates the speed potential seen in the full-forward retrieval runs.
+
+All 12 model/length cells completed on this NVIDIA L40S. Batch size 1, greedy generation, EOS ignored, 130 output tokens (129 timed cached steps), one warmup and three measured requests per cell. Values below are warm medians using the same corrected serial `FovealLLM` engine for both variants.
+
+| Core / adaptation | Context | Local / adapted prefill ms | Local / adapted decode token/s |
+| --- | ---: | ---: | ---: |
+| polar `kl` | 2K | 38.7 / 40.4 | 57.78 / 57.59 |
+| polar `kl` | 32K | 258.2 / 270.2 | 57.00 / 56.31 |
+| polar `kl` | 256K | 2160.9 / 2300.8 | 51.14 / 49.70 |
+| nope `lm_output_kl` | 2K | 42.0 / 48.1 | 69.08 / 66.19 |
+| nope `lm_output_kl` | 32K | 256.5 / 266.6 | 68.81 / 64.80 |
+| nope `lm_output_kl` | 256K | 2297.2 / 2579.9 | 69.85 / 66.40 |
+
+At 256K, measured peak allocated memory was 17.22 GiB for both Polar variants and 16.72 GiB for both NoPE variants. The [full serving report](SERVING_L40S.md) includes repetition ranges, reserved memory, load/first-request costs, raw data and numerical controls. These selected checkpoints passed all 220 sampled FP32 checks and all eight audited free-running continuations; BF16 differences are retained and bitwise identity is not required to interpret speed potential. The measurements do not establish performance for every variant, 512K/1M capacity, or a speedup over the historical CUDA-graph engines.
 
 ---
 
@@ -284,7 +305,7 @@ All 10 benchmark jobs completed with zero failures across 974 aggregated records
 
 ## 9. Conclusions
 
-1. **A bounded adaptation result is supported.** Under this flat-stream CPT and teacher-forced retrieval protocol, KL-trained Polar/NoPE variants substantially outperform local CPT on synthetic needles through 256K. The matched retrieval runs have similar total evaluation runtime; this does not establish cached-serving performance.
+1. **Large synthetic retrieval gains at roughly SWA evaluation runtime.** KL-trained Polar/NoPE variants substantially outperform local CPT through 256K. Across the matched retrieval suites, active KL routing costs about 0.97–1.10× local SWA elapsed time. This supports speed potential under the recorded full-forward evaluation protocol; cached serving is measured separately.
 2. **The benefit is task-dependent.** Real-text distractors largely defeat long-range retrieval. BABILong does not show a consistent gain from adding an index: at 256K, Polar local reaches 40%, versus 36–38% for its index variants; RoPE LM-output also reaches 40%. Base-task macro scores remain close to local CPT controls.
 3. **Mechanism and universal rankings remain hypotheses.** KL cells include extra calibration, only one trained checkpoint per cell is reported, and source checkpoints differ across cores. These results do not prove KL universally necessary, establish why RoPE degrades, or isolate a Titans-memory contribution.
-4. **The serving and training-protocol limits remain explicit.** Historical decode rates omit Foveal routing. The L40S follow-up supplies decoder fixes and numerical diagnostics, with strict failures and one free-running divergence retained; no fresh serving/capacity claim follows. The document-coherent training gate also remains open. See [AUDIT_FOLLOWUP.md](AUDIT_FOLLOWUP.md).
+4. **Serving corroborates speed potential on the measured variants.** The corrected Foveal engine adds 0.3–6.2% decode time per token and 3.9–14.4% prefill time over matched local controls at 2K–256K. The [serving report](SERVING_L40S.md) retains numerical controls and precision limitations. Historical ordinary-engine rates remain a separate implementation; 512K/1M capacity and the document-coherent training gate remain unestablished.
