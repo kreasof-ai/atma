@@ -4,7 +4,7 @@ The [serving report](../../../foveal_cpt/SERVING_L40S.md) replaces the earlier e
 
 The twelve serving JSONs contain one warmup and three measured fresh-state requests per model/length. All generated 130 tokens with 129 timed graph decode steps, and every nonlocal attention layer retained active routing. `dense_*` measures the existing full-attention source-checkpoint engines at 2K with the same token budget; their graph boundaries and scheduler differ from the Foveal engine. `validation_*` retains BF16 teacher-fed comparisons, full-forward numerical controls and free-running tokens. `fp32_*` retains the unchanged strict tolerance results at 641- and 3,968-token prefixes, including an active 32-remote-page cap.
 
-`regressions.log` records 124 passing tests. `eager_profile.log` and its provenance file explain the earlier implementation bottleneck; profiler timings include instrumentation overhead. `setup_failures/` retains initial helper-import failures, which produced no measurements. The corrected helper runs are recorded in `rechecks.console.log`; the canonical summaries use their successful reports.
+`regressions.log` records 124 passing tests. `eager_profile.log` and its provenance file explain the earlier implementation bottleneck; profiler timings include instrumentation overhead. Trailing whitespace in the text logs is normalized; numerical JSON reports are unchanged. `setup_failures/` retains initial helper-import failures, which produced no measurements. The corrected helper runs are recorded in `rechecks.console.log`; the canonical summaries use their successful reports.
 
 From the repository root, with the recorded CUDA environment and pinned checkpoint snapshot:
 

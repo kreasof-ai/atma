@@ -5,33 +5,33 @@ DONE dense_nope_2048 code 1 seconds 1.5 error subprocess exit 1
 START validation_polar_kl
 DONE validation_polar_kl code 1 seconds 0.0 error subprocess exit 1
 START fp32_polar_kl
-DONE fp32_polar_kl code 0 seconds 22.1 error 
+DONE fp32_polar_kl code 0 seconds 22.1 error
 START validation_nope_lm_output_kl
 DONE validation_nope_lm_output_kl code 1 seconds 0.0 error subprocess exit 1
 START fp32_nope_lm_output_kl
-DONE fp32_nope_lm_output_kl code 0 seconds 21.0 error 
+DONE fp32_nope_lm_output_kl code 0 seconds 21.0 error
 START polar_local_2048
-DONE polar_local_2048 code 0 seconds 17.9 error 
+DONE polar_local_2048 code 0 seconds 17.9 error
 START polar_kl_2048
-DONE polar_kl_2048 code 0 seconds 17.6 error 
+DONE polar_kl_2048 code 0 seconds 17.6 error
 START nope_local_2048
-DONE nope_local_2048 code 0 seconds 20.1 error 
+DONE nope_local_2048 code 0 seconds 20.1 error
 START nope_lm_output_kl_2048
-DONE nope_lm_output_kl_2048 code 0 seconds 19.7 error 
+DONE nope_lm_output_kl_2048 code 0 seconds 19.7 error
 START polar_local_32768
-DONE polar_local_32768 code 0 seconds 18.3 error 
+DONE polar_local_32768 code 0 seconds 18.3 error
 START polar_kl_32768
-DONE polar_kl_32768 code 0 seconds 18.5 error 
+DONE polar_kl_32768 code 0 seconds 18.5 error
 START nope_local_32768
-DONE nope_local_32768 code 0 seconds 19.5 error 
+DONE nope_local_32768 code 0 seconds 19.5 error
 START nope_lm_output_kl_32768
-DONE nope_lm_output_kl_32768 code 0 seconds 20.1 error 
+DONE nope_lm_output_kl_32768 code 0 seconds 20.1 error
 START polar_local_262144
-DONE polar_local_262144 code 0 seconds 25.9 error 
+DONE polar_local_262144 code 0 seconds 25.9 error
 START polar_kl_262144
-DONE polar_kl_262144 code 0 seconds 26.6 error 
+DONE polar_kl_262144 code 0 seconds 26.6 error
 START nope_local_262144
-DONE nope_local_262144 code 0 seconds 27.9 error 
+DONE nope_local_262144 code 0 seconds 27.9 error
 START nope_lm_output_kl_262144
-DONE nope_lm_output_kl_262144 code 0 seconds 29.1 error 
+DONE nope_lm_output_kl_262144 code 0 seconds 29.1 error
 COMPLETE
