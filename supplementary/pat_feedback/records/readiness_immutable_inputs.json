@@ -1,0 +1,80 @@
+{
+  "item_id": "immutable_inputs",
+  "status": "satisfied",
+  "timestamp_iso": "2026-09-12T16:40:32Z",
+  "runtime_environment": {
+    "python": "3.12.14",
+    "pytorch": "2.14.0+cu130",
+    "cuda": "13.0",
+    "device": "NVIDIA L40S",
+    "os": "Linux-6.12.103-127.188.amzn2023.x86_64-x86_64-with-glibc2.39"
+  },
+  "tokenizer": {
+    "name": "gpt2",
+    "vocab_size": 50257,
+    "model_max_length": 1000000000000000000000000000000
+  },
+  "datasets": {
+    "codelion/finepdfs-1B": {
+      "revision": "6fbca6dd53e3e794f607cfe1f5a91c07e17b01ab"
+    },
+    "emozilla/pg19": {
+      "revision": "c021754c8e01c5b1cc83a1f549c1f97fbbb756b8"
+    },
+    "hoskinson-center/proof-pile": {
+      "revision": "490b980249446f2f3bd2df3a8cf085d0f2de240a"
+    }
+  },
+  "checkpoints": {
+    "primary_nope": {
+      "repo_id": "ChavyvAkvar/atma-10b-L40S-mbs16-nope__reg-baseline__distr-0__mem-1__win-0",
+      "revision": "d2974b46bf1be80fe0285ed7c15903b8079f615a",
+      "path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-10b-L40S-mbs16-nope__reg-baseline__distr-0__mem-1__win-0/snapshots/d2974b46bf1be80fe0285ed7c15903b8079f615a/weights.pt",
+      "file_bytes": 1409767463,
+      "verified_accessible": true
+    },
+    "primary_polar": {
+      "repo_id": "ChavyvAkvar/atma-10b-L40S-mbs16-polar__reg-baseline__distr-0__mem-1__win-0",
+      "revision": "faa10ea68590d57c0869c9dd6d38f40c476cff5d",
+      "path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-10b-L40S-mbs16-polar__reg-baseline__distr-0__mem-1__win-0/snapshots/faa10ea68590d57c0869c9dd6d38f40c476cff5d/weights.pt",
+      "file_bytes": 1409939695,
+      "verified_accessible": true
+    },
+    "foveal_nope_lm_output_kl": {
+      "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+      "revision": "e4cf2558793646c26d9e5a6c6eeadb4e1011cad3",
+      "subfolder": "nope/lm_output_kl/cpt",
+      "path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/lm_output_kl/cpt/cpt-step-001908.pt",
+      "file_bytes": 3133088091,
+      "verified_accessible": true
+    },
+    "foveal_polar_lm_output_kl": {
+      "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+      "revision": "e4cf2558793646c26d9e5a6c6eeadb4e1011cad3",
+      "subfolder": "polar/lm_output_kl/cpt",
+      "path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output_kl/cpt/cpt-step-001908.pt",
+      "file_bytes": 3133461659,
+      "verified_accessible": true
+    },
+    "repl_seed1_nope": {
+      "repo_id": "ChavyvAkvar/repl_seed1_nope",
+      "revision": "8ab5fe847915223abfec6a146c97f173b8c72058",
+      "verified_accessible": true
+    },
+    "repl_seed1_polar": {
+      "repo_id": "ChavyvAkvar/repl_seed1_polar",
+      "revision": "6b3226d04af1f8c982c9085c8c9dbd8282e11220",
+      "verified_accessible": true
+    },
+    "repl_seed2_nope": {
+      "repo_id": "ChavyvAkvar/repl_seed2_nope",
+      "revision": "3196eac86d84759bb245b410da61eb8665bfdf05",
+      "verified_accessible": true
+    },
+    "repl_seed2_polar": {
+      "repo_id": "ChavyvAkvar/repl_seed2_polar",
+      "revision": "50a3790bd3fcb55b3a4d69921df2725b21863fa5",
+      "verified_accessible": true
+    }
+  }
+}

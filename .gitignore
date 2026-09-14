@@ -33,6 +33,10 @@ paper/**/*.toc
 .DS_Store
 Thumbs.db
 .vscode/
+finewebedu10B/
+checkpoints/
+*.pt
+
 
 # Local TDA benchmark runtime lock and large adapted checkpoint binary.
 /supplementary/robustness/work/evaluation/tda_pipeline/.lock

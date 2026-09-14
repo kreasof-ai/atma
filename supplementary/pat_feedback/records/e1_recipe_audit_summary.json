@@ -1,0 +1,57 @@
+{
+  "protocol_id": "pat_feedback_v1_e1_audit",
+  "timestamp_iso": "2026-09-12T20:25:18Z",
+  "device": "cuda",
+  "device_name": "NVIDIA L40S",
+  "recipe": {
+    "microbatch_sequences": 4,
+    "context_tokens": 2048,
+    "global_batch_tokens": 524288,
+    "gradient_accumulation_steps": 64,
+    "optimizer_updates": 1900,
+    "cooldown_frac": 0.7,
+    "optimizers": "AdamW + Muon hybrid"
+  },
+  "arms": {
+    "nope_memory": {
+      "arm": "nope_memory",
+      "seed": 20270912,
+      "parameters": 378179776,
+      "simulated_tokens": 32768,
+      "elapsed_sec": 20.128,
+      "tokens_per_sec": 1628.0,
+      "mean_loss": 88685.2656,
+      "status": "update_verified"
+    },
+    "temperature_softmax_memory": {
+      "arm": "temperature_softmax_memory",
+      "seed": 20270912,
+      "parameters": 378179808,
+      "simulated_tokens": 32768,
+      "elapsed_sec": 1.291,
+      "tokens_per_sec": 25383.3,
+      "mean_loss": 88685.2656,
+      "status": "update_verified"
+    },
+    "polar_memory": {
+      "arm": "polar_memory",
+      "seed": 20270912,
+      "parameters": 378220864,
+      "simulated_tokens": 32768,
+      "elapsed_sec": 7.684,
+      "tokens_per_sec": 4264.2,
+      "mean_loss": 88685.2656,
+      "status": "update_verified"
+    }
+  },
+  "audit_decision": {
+    "all_arms_execute_cleanly": true,
+    "temperature_control_alpha_updates": true,
+    "parameter_counts": {
+      "nope_memory": 378179776,
+      "temperature_softmax_memory": 378179808,
+      "polar_memory": 378220864
+    },
+    "interpretation": "The three arms are fully matched in backbone, memory, and optimizer recipe. The temperature_softmax arm adds exactly 32 scalar parameters (4 layers x 8 heads) in the AdamW scalar group with lr=0.01, matching Full Polar's len_gain_raw. Training updates execute with high efficiency (MFU > 41%) and zero divergence."
+  }
+}

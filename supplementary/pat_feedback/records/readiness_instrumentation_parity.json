@@ -1,0 +1,20 @@
+{
+  "item_id": "instrumentation_parity",
+  "status": "satisfied",
+  "timestamp_iso": "2026-09-12T16:40:35Z",
+  "output_max_abs_diff": 0.0,
+  "pass_zero_perturbation": true,
+  "telemetry_fields": [
+    "pre_cap_logits",
+    "post_cap_logits",
+    "stable_log_gamma",
+    "half_life_tokens",
+    "write_gate_norm",
+    "state_frobenius_norm",
+    "readout_norm_before_norm",
+    "readout_norm_after_norm",
+    "output_gate_norm",
+    "projected_residual_contribution"
+  ],
+  "measured_overhead_frac": 0.008
+}

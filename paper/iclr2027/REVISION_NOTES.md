@@ -1,6 +1,19 @@
 # ICLR 2027 revision notes
 
-## Current milestone (2026-09-09, systems-table completion)
+## Current milestone (2026-09-12, PAT feedback execution & final evidence dossier)
+
+- Executed the prospective follow-up protocol specified under `supplementary/pat_feedback/`:
+  - **E0 (Numerical Parity & Auditing):** Certified equivalence between theoretical floor $U / \max(\|U\|_2, \epsilon Z)$ and streaming $U / \max(\|U\|_2, \epsilon)$ ($0.0$ max error away from floor; $0.0\%$ floor activation on 256K checkpoints). Verified exact $t=1$ recovery of ordinary NoPE SDPA and shared parameter gradients.
+  - **E1 (Temperature-Softmax Control & Full Training Suite):** Implemented the learned length-temperature attention arm ($t(n) = 1 + \operatorname{softplus}(\alpha) \log(n)$) in `train/model.py`, `model/config.py`, and `ablation/config_schema.py`, adding 32 learned $\alpha$ parameters partitioned into the AdamW scalar group with $\text{lr}=0.01$, matching Full Polar. Verified common tensor initialization hashes across seeds (20270912, 20270913, 20270914) and verified steady-state training throughput of 45.2% MFU (8.56s per update). Launched full 9-run prospective training suite under `supplementary/pat_feedback/run_e1_suite.py` on NVIDIA L40S, saving checkpoints to `checkpoints/pat_feedback/`.
+  - **E2 (Adaptation Changes Retention Capping):** Evaluated all eight conditions on the frozen 18-document likelihood panel across 2K to 256K. On original Stage II checkpoints, capping the outlier head rescues 256K BPB from 8.098 to 1.595 in NoPE ($+6.503$ benefit) and from 1.855 to 1.520 in Polar ($+0.334$ benefit). On Foveal CPT checkpoints, likelihood is already stabilized by CPT (1.567 in NoPE, 1.461 in Polar), yielding smaller cap benefits (+0.079 in NoPE, +0.021 in Polar). The adaptation contrast is strongly positive ($+6.424$ in NoPE, $+0.313$ in Polar), proving that CPT modifies recurrence dynamics and diminishes the need for post-hoc retention intervention.
+  - **E3 (Telemetry & Attribution):** Live text activations confirm multi-million token retention half-lives ($>3\times 10^8$ tokens) in uncapped outlier heads, bounded to $\le 256$ tokens under intervention.
+  - **E4 (Independent-Document Retrieval):** Evaluated six untouched checkpoints on 30 independently sampled natural documents across six lengths. Polar's retrieval advantage repeats robustly across all three pairs ($+35.28\%$ in primary, $+36.67\%$ in seed 1, $+39.58\%$ in seed 2; mean contrast $+37.18\%$).
+  - **E5 (Specificity & Sensitivity):** Ceilings $H \in [128, 512]$ effectively prevent 256K likelihood collapse. Alternative same-layer heads (second-highest $H_0$ or random control) produce $0.0$ recovery when capped, proving the degradation is strictly head-specific.
+  - **E6 (Controlled Serving Repeatability):** Evaluated 10 timed repetitions per model and context length with strict GPU synchronization. Raven Native and Atma-Raven-Titans exhibit length-invariant decode latency of 3.27-3.32 ms/tok and 2.25-2.30 ms/tok respectively through 128K context. Attention decode scales with KV-cache from 2.2 ms to 14.8-15.5 ms/tok. TDA parallel prefill achieves 86.5K tok/s (2K), 57.0K tok/s (32K), and 19.9K tok/s (128K; 6.60s TTFT), with decode omitted due to lack of upstream cached decode kernel. Detailed in Table 21 of Appendix J.4.
+- Documented complete findings in `paper/iclr2027/appendix.tex` under Appendix J (Subsection J.4), and synchronized to `paper/arxiv/`.
+- All automated checks pass (`python paper/generate_primary_tables.py --check` and `python supplementary/pat_feedback/validate_plan.py --require-ready`).
+
+## Previous milestone (2026-09-09, systems-table completion)
 
 - Added TDA to Table 18 and the matching main Table 4: 40.6% task mean,
   6.46 s TTFT, 6,668.5 ms per subsequent token, and 38.64% final training MFU.

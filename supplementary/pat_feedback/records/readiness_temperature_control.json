@@ -1,0 +1,32 @@
+{
+  "item_id": "temperature_control",
+  "status": "satisfied",
+  "timestamp_iso": "2026-09-12T16:40:04Z",
+  "model_parameter_count": 378179808,
+  "learned_alphas": {
+    "count": 4,
+    "layers": [
+      2,
+      6,
+      10,
+      14
+    ],
+    "initial_value": -1.0,
+    "shape": [
+      8
+    ],
+    "gradients_verified": true
+  },
+  "optimizer_membership": {
+    "optimizer": "AdamW",
+    "group": "scalar_parameters (ndim < 2)",
+    "learning_rate": 0.01,
+    "weight_decay": 0.0,
+    "verified": true
+  },
+  "t1_nope_recovery": {
+    "forward_diff_fp64": 0.0,
+    "shared_gradient_diff_fp64": 0.0,
+    "exact": true
+  }
+}

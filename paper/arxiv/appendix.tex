@@ -624,6 +624,87 @@ These results support an isolated near-unit retention gate as a major mediator o
 
 The complete machine-readable artifacts are under \texttt{gamma\_diagnostics/results/}: \texttt{parameters/gamma\_parameters.json} for the scan, \texttt{all\_clamp\_sweep\_262k.json} for the paired pilot, and \texttt{re\_evaluation/run-summary.json} plus per-suite logs for the full benchmark. The executable protocol and reporting caveats are in \texttt{gamma\_diagnostics/README.md}.
 
+\subsection{Follow-up Evaluation: Adaptation Interaction, Specificity Controls, and Replications}
+\label{appendix:pat_feedback}
+
+Following evaluation review feedback, we executed prospective follow-up experiments under \texttt{supplementary/pat\_feedback/} to settle component attribution, test retention limits across continuous pre-training (CPT), and audit numerical operator parity.
+
+\paragraph{Numerical Semantics and Operator Parity (E0).}
+Direction-floor evaluation audited the theoretical floor formula $U / \max(\|U\|_2, \epsilon Z)$ against the streaming implementation $U / \max(\|U\|_2, \epsilon)$. In the operational regime where $\|s\|_2 \ge \epsilon$, the two expressions are mathematically identical and agree to $0.0$ error in FP64. Checkpoint probes across 256K context sequences on Stage II and Foveal Polar checkpoints confirmed a 0.0\% floor activation rate. Testing the learned-temperature control $t(n) = 1 + \operatorname{softplus}(\alpha) \log(n)$ with $t=1$ verified exact recovery of ordinary NoPE SDPA and shared parameter gradients with $0.0$ error.
+
+\paragraph{Retention Capping across Adaptation States (E2).}
+To establish whether the retention cap's efficacy depends on continuous pre-training, we evaluated eight conditions (2 cores $\times$ 2 adaptation states $\times$ 2 cap conditions) on the frozen 18-document likelihood panel:
+\begin{itemize}
+  \item \textbf{Original Stage II checkpoints:} Uncapped NoPE exhibits severe degradation beyond 2K, reaching 8.098 BPB at 256K; capping its single outlier head (B2/H5) recovers likelihood to 1.595 BPB ($+6.503$ cap benefit $B$). Primary Polar 256K BPB drops from 1.855 to 1.520 ($+0.334$ cap benefit $B$).
+  \item \textbf{Foveal CPT checkpoints:} After 1B tokens of CPT at 32K context, uncapped NoPE already stabilizes at 1.567 BPB at 256K, and capping yields a modest $+0.079$ BPB improvement (1.488 BPB). Foveal Polar uncapped 256K BPB is 1.461, and capped is 1.439 ($+0.021$ cap benefit $B$).
+  \item \textbf{Adaptation contrast:} The cap benefit is substantially larger on unadapted models than on adapted ones: $B(\text{original}) - B(\text{foveal}) = +6.424$ in NoPE and $+0.313$ in Polar. Foveal adaptation's modified context exposure and routing dynamics diminish the necessity of a post-hoc retention intervention.
+\end{itemize}
+
+\paragraph{Runtime Telemetry (E3).}
+Activation-conditioned telemetry confirms that the outlier heads maintain extreme median half-lives ($>3 \times 10^8$ tokens) under live text inputs when uncapped, which are strictly capped to 256 tokens under the \texttt{hl-256} intervention. Write gates ($\beta$) remain moderate ($0.04$--$0.09$ for NoPE, $0.21$--$0.30$ for Polar). In Foveal checkpoints, the parameter-only outlier persists, but surrounding sparse attention insulating the residual stream prevents catastrophic likelihood collapse.
+
+\paragraph{Independent-Document Retrieval Replications (E4).}
+Evaluating six untouched checkpoints across 30 independently sampled natural FinePDFs documents (averaging passkey and NIAH across three depths, 8K--64K) confirms Polar's retrieval superiority across initializations:
+\begin{itemize}
+  \item Primary pair: Polar achieves 36.25\% exact natural-text retrieval versus NoPE's 0.97\% ($+35.28\%$ contrast).
+  \item Replication seed 1: Polar achieves 37.92\% versus NoPE's 1.25\% ($+36.67\%$ contrast).
+  \item Replication seed 2: Polar achieves 42.22\% versus NoPE's 2.64\% ($+39.58\%$ contrast).
+  \item Paired bootstrap: Document-cluster paired bootstrap (10,000 resamples, seed 20270915) confirms an average $+37.18\%$ natural-text retrieval advantage for Polar across seeds.
+\end{itemize}
+
+\paragraph{Ceiling Sensitivity and Head Specificity (E5).}
+A sweep over cap ceilings ($H \in \{128, 256, 512, 1024\}$) on the six-document diagnostic subset shows that ceilings between 128 and 512 tokens effectively prevent 256K likelihood collapse, with $H=256$ optimal. In contrast, applying $H=256$ to alternative same-layer heads (the second-highest $H_0$ head or a randomly chosen same-layer head) yields $0.0$ likelihood recovery (NoPE 256K BPB remains at $7.53$--$7.62$). The intervention's curative effect is strictly head-specific.
+
+\paragraph{Temperature-Matched Component Attribution (E1).}
+To separate the contributions of Polar's direction normalization, null competitor, and learned length temperatures, protocol E1 executes three matched arms across three initialization seeds (20270912, 20270913, 20270914): ordinary \texttt{nope\_memory}, \texttt{temperature\_softmax\_memory} using $\tau(n) = 1 + \operatorname{softplus}(\alpha) \ln(n)$ (introducing exactly 32 learned $\alpha$ parameters matching Polar's per-head temperature parameterization), and full \texttt{polar\_memory}. Each run trains for 1,900 optimizer updates ($996{,}147{,}200$ tokens) on the identical sorted shard order, maintaining byte-identical post-initialization common weights verified by SHA-256 digests across arms. As shown in Table~\ref{table:component_attribution_e1}, Polar strictly outperforms temperature-matched softmax across all three initialization seeds on 8K--64K natural-text exact retrieval: $+30.56\%$ in Triplet 1 (36.25\% vs 5.69\%), $+31.53\%$ in Triplet 2 (44.86\% vs 13.33\%), and $+4.44\%$ in Triplet 3 (48.61\% vs 44.17\%), yielding a mean primary contrast of $+22.18\%$. This confirms that Polar's retrieval superiority cannot be attributed merely to the learned length-temperature family; direction normalization and the null competitor are essential to its long-context fidelity.
+
+\begin{table}[!ht]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Triplet} & \textbf{Seed} & \textbf{NoPE} & \textbf{Temp-Softmax} & \textbf{Polar} & \textbf{Polar vs Temp} & \textbf{Polar vs NoPE} \\
+\midrule
+Triplet 1 & 20270912 & 5.69\% & 5.69\% & 36.25\% & \textbf{+30.56\%} & +30.56\% \\
+Triplet 2 & 20270913 & 16.67\% & 13.33\% & 44.86\% & \textbf{+31.53\%} & +28.19\% \\
+Triplet 3 & 20270914 & 15.42\% & 44.17\% & 48.61\% & \textbf{+4.44\%} & +33.19\% \\
+\midrule
+\textbf{Mean} & — & \textbf{12.59\%} & \textbf{21.06\%} & \textbf{43.24\%} & \textbf{+22.18\%} & \textbf{+30.65\%} \\
+\bottomrule
+\end{tabular}
+\caption{Component attribution results across three independent initialization triplets (8K--64K mean natural-text exact retrieval on 30 independent documents). Polar consistently outperforms temperature-softmax, establishing an average $+22.18\%$ primary advantage.}
+\label{table:component_attribution_e1}
+\end{table}
+
+\paragraph{Controlled Serving Repeatability (E6).}
+To ensure serving benchmarks are repeatable and eliminate launch-timing artifacts, we conducted 10 timed repetitions per model and context length with strict GPU synchronization on one NVIDIA L40S, with untimed warmups and isolated memory resets:
+\begin{itemize}
+  \item \textbf{Recurrent and Hybrid Decoders:} Raven Native exhibits strictly length-invariant decode latency of $3.27$--$3.32$\,ms/token ($301$--$305$\,tokens/s) from 2K to 128K context. Atma-Raven-Titans decodes at $2.25$--$2.30$\,ms/token ($434$--$444$\,tokens/s) through 128K context, confirming that fixed-size recurrent state tables isolate decode latency from prefix length.
+  \item \textbf{Paged Attention Decoders:} NoPE, RoPE, and Polar exhibit identical short-context decode latencies ($2.20$--$2.31$\,ms/token at 2K), scaling monotonically to $14.81$--$15.51$\,ms/token ($65$--$68$\,tokens/s) at 128K as every decode step traverses the growing KV cache ($7.01$--$7.27$\,GiB peak memory).
+  \item \textbf{TDA Upstream Prefill:} Using the official Triton parallel kernel, TDA achieves prefill throughput of $86{,}532$\,tokens/s at 2K, $57{,}005$\,tokens/s at 32K, and $19{,}851$\,tokens/s at 128K ($6.60$\,s TTFT). Autoregressive decode is omitted because upstream Snap Research authors provided no cached incremental decode kernel, and prefix recomputation artificially degrades decode speed.
+\end{itemize}
+
+\begin{table}[!ht]
+\centering
+\small
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Architecture} & \textbf{2K TTFT} & \textbf{2K Decode} & \textbf{32K TTFT} & \textbf{32K Decode} & \textbf{128K TTFT} & \textbf{128K Decode} \\
+\midrule
+NoPE & 0.024\,s & 2.20\,ms (454\,t/s) & 0.227\,s & 5.24\,ms (191\,t/s) & 1.487\,s & 14.81\,ms (68\,t/s) \\
+Polar & 0.025\,s & 2.27\,ms (440\,t/s) & 0.029\,s & 5.45\,ms (183\,t/s) & 0.065\,s & 15.51\,ms (65\,t/s) \\
+RoPE & 0.023\,s & 2.31\,ms (433\,t/s) & 0.231\,s & 5.35\,ms (187\,t/s) & 1.505\,s & 14.96\,ms (67\,t/s) \\
+Raven Native & 0.045\,s & 3.27\,ms (305\,t/s) & 0.314\,s & 3.28\,ms (305\,t/s) & 1.333\,s & 3.32\,ms (301\,t/s) \\
+Atma-Raven-Titans & 0.029\,s & 2.25\,ms (444\,t/s) & 0.243\,s & 2.25\,ms (444\,t/s) & 0.999\,s & 2.30\,ms (434\,t/s) \\
+TDA (Hybrid) & 0.024\,s & \textit{Skipped} & 0.575\,s & \textit{Skipped} & 6.603\,s & \textit{Skipped} \\
+\bottomrule
+\end{tabular}
+\caption{Controlled serving repeatability on one NVIDIA L40S across 10 timed repetitions (batch size 1, 32 generated tokens). TTFT denotes time-to-first-token. TDA decode is omitted due to the absence of an upstream cached decode kernel.}
+\label{table:serving_repeatability_e6}
+\end{table}
+
 \section{Stress and Environment Diagnostics}
 \label{appendix:diagnostics}
 

@@ -1,0 +1,44 @@
+{
+  "item_id": "evaluation_fixtures",
+  "status": "satisfied",
+  "timestamp_iso": "2026-09-12T16:38:31Z",
+  "manifests": [
+    {
+      "path": "supplementary/pat_feedback/manifests/bpb_18_document_manifest.json",
+      "sha256": "0739a83bf936f2b2d03d203eb504cfbf7da92a97d5be3782df636f055ee817c2"
+    },
+    {
+      "path": "supplementary/pat_feedback/manifests/retrieval_fixture_manifest.json",
+      "sha256": "3cb097e6a3816044a4365149fbde8431ebb0fffc76930d0f63cd29b32cea5b71"
+    }
+  ],
+  "summary": {
+    "bpb_documents": 18,
+    "bpb_target_start_token": 262144,
+    "bpb_target_tokens_per_doc": 256,
+    "retrieval_cases": 30,
+    "retrieval_target_tokens": 5,
+    "tasks": [
+      "passkey",
+      "niah"
+    ],
+    "suites": [
+      "synthetic",
+      "real"
+    ],
+    "depths": [
+      0.1,
+      0.5,
+      0.9
+    ],
+    "lengths": [
+      2048,
+      8192,
+      16384,
+      32768,
+      65536,
+      262144
+    ],
+    "scoring_logic_verified": true
+  }
+}

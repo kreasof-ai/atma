@@ -1,0 +1,99 @@
+{
+  "item_id": "matched_initialization_and_recipe",
+  "status": "satisfied",
+  "timestamp_iso": "2026-09-12T16:40:32Z",
+  "configs": [
+    {
+      "run_id": "pat_e1_s1_nope_memory",
+      "path": "supplementary/pat_feedback/configs/pat_e1_s1_nope_memory.json",
+      "sha256": "7dd62706e250c2fe02aa4ec638f1440fab6c93c4a0e992fba9e154abfbb76191"
+    },
+    {
+      "run_id": "pat_e1_s1_temperature_softmax_memory",
+      "path": "supplementary/pat_feedback/configs/pat_e1_s1_temperature_softmax_memory.json",
+      "sha256": "7d661e6f6f6acc4097d06b522cec7bb18d798e384782fe5a13e905801f24117e"
+    },
+    {
+      "run_id": "pat_e1_s1_polar_memory",
+      "path": "supplementary/pat_feedback/configs/pat_e1_s1_polar_memory.json",
+      "sha256": "adfca033382bd286044ec102e909e9c66afbea4ad02bafa0a820a7fd577665ab"
+    },
+    {
+      "run_id": "pat_e1_s2_nope_memory",
+      "path": "supplementary/pat_feedback/configs/pat_e1_s2_nope_memory.json",
+      "sha256": "7d721feff90cac37a7cd85cd03ce4220042fb56472e3789a728992c62865ce9c"
+    },
+    {
+      "run_id": "pat_e1_s2_temperature_softmax_memory",
+      "path": "supplementary/pat_feedback/configs/pat_e1_s2_temperature_softmax_memory.json",
+      "sha256": "4b562d811363b09e263a21d5e56b6fb34549b607ee0f1f046b52e66b3b4c7192"
+    },
+    {
+      "run_id": "pat_e1_s2_polar_memory",
+      "path": "supplementary/pat_feedback/configs/pat_e1_s2_polar_memory.json",
+      "sha256": "77b6d593609450eefa1610110db77605f0d6d3d7a756f4410383ee8197e975a0"
+    },
+    {
+      "run_id": "pat_e1_s3_nope_memory",
+      "path": "supplementary/pat_feedback/configs/pat_e1_s3_nope_memory.json",
+      "sha256": "6cca14c4e115ef2f11e8302f3ade3e7e6b43dab28493a514c8a8a870d47a247a"
+    },
+    {
+      "run_id": "pat_e1_s3_temperature_softmax_memory",
+      "path": "supplementary/pat_feedback/configs/pat_e1_s3_temperature_softmax_memory.json",
+      "sha256": "26314a8c758609fd45cae1132c922a38018b144a4f035e2e20a2420d3350cfd0"
+    },
+    {
+      "run_id": "pat_e1_s3_polar_memory",
+      "path": "supplementary/pat_feedback/configs/pat_e1_s3_polar_memory.json",
+      "sha256": "e48336873f0053e52b31e1aa09ed6c7e5a3e7eefb218cd1d835d980b36ac3ac0"
+    }
+  ],
+  "triplet_audits": {
+    "seed_20270912": {
+      "seed": 20270912,
+      "shared_tensors_count": 236,
+      "sample_tensor_hashes": {
+        "blocks.0.attn.conv.weight": "a9d1b0cdd138592ea1f83af319e30ad8580462043d7a1f65d54531d699458c30",
+        "blocks.0.attn.in_proj.bias": "f3cc103136423a57975750907ebc1d367e2985ac6338976d4d5a439f50323f4a",
+        "blocks.0.attn.in_proj.weight": "cfadd44a103cbd6d5726fa07b27d7aad2f67ed3930ff96901c486a5beaf7e723",
+        "blocks.0.attn.out_proj.bias": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+        "blocks.0.attn.out_proj.weight": "bb9f8df61474d25e71fa00722318cd387396ca1736605e1248821cc0de3d3af8"
+      },
+      "all_shared_tensors_identical": true
+    },
+    "seed_20270913": {
+      "seed": 20270913,
+      "shared_tensors_count": 236,
+      "sample_tensor_hashes": {
+        "blocks.0.attn.conv.weight": "c7b2f57baa4a10c62962f51864b3b771538d3ed58098d0fba5b84803abb2db60",
+        "blocks.0.attn.in_proj.bias": "f3cc103136423a57975750907ebc1d367e2985ac6338976d4d5a439f50323f4a",
+        "blocks.0.attn.in_proj.weight": "cfadd44a103cbd6d5726fa07b27d7aad2f67ed3930ff96901c486a5beaf7e723",
+        "blocks.0.attn.out_proj.bias": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+        "blocks.0.attn.out_proj.weight": "bb9f8df61474d25e71fa00722318cd387396ca1736605e1248821cc0de3d3af8"
+      },
+      "all_shared_tensors_identical": true
+    },
+    "seed_20270914": {
+      "seed": 20270914,
+      "shared_tensors_count": 236,
+      "sample_tensor_hashes": {
+        "blocks.0.attn.conv.weight": "310ef1376bba9b6e202c8c7cf244e6dce7206a8716c35e6de49d00035c78f395",
+        "blocks.0.attn.in_proj.bias": "f3cc103136423a57975750907ebc1d367e2985ac6338976d4d5a439f50323f4a",
+        "blocks.0.attn.in_proj.weight": "cfadd44a103cbd6d5726fa07b27d7aad2f67ed3930ff96901c486a5beaf7e723",
+        "blocks.0.attn.out_proj.bias": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+        "blocks.0.attn.out_proj.weight": "bb9f8df61474d25e71fa00722318cd387396ca1736605e1248821cc0de3d3af8"
+      },
+      "all_shared_tensors_identical": true
+    }
+  },
+  "optimizer_schedule_audit": {
+    "updates": 1900,
+    "global_batch_tokens": 524288,
+    "training_tokens_per_run": 996147200,
+    "microbatch_sequences": 4,
+    "grad_accum_steps": 64,
+    "cooldown_frac": 0.7,
+    "adamw_muon_split_verified": true
+  }
+}

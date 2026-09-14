@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 
 REG_MODES = ["baseline", "weak", "strong", "discrete", "zipfian"]
 ATTN_TYPES = ["rope", "nope", "polar"]
-INCOMPATIBLE_ATTN_TYPES = ["wall"]  # diagnostic only: unstable under this Atma/Muon protocol
+INCOMPATIBLE_ATTN_TYPES = ["wall", "temperature_softmax"]  # specialized arms
 ALL_ATTN_TYPES = ATTN_TYPES + INCOMPATIBLE_ATTN_TYPES
 EVAL_LENGTHS = [2048, 4096, 8192, 16384, 32768, 65536]
 

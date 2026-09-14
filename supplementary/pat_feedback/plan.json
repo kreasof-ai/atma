@@ -328,58 +328,98 @@
       "failed_attempts",
       "storage"
     ],
-    "allocated_gpu_hours": null,
-    "training_retry_token_reserve": null,
-    "checkpoint_storage_bytes": null
+    "allocated_gpu_hours": 48.0,
+    "training_retry_token_reserve": 1000000000,
+    "checkpoint_storage_bytes": 50000000000
   },
   "readiness": [
     {
       "id": "operator_semantics",
-      "status": "unresolved",
+      "status": "satisfied",
       "requirement": "E0 operator decision, path parity and historical-checkpoint impact",
-      "evidence": []
+      "evidence": [
+        {
+          "path": "supplementary/pat_feedback/records/e0_audit_report.json",
+          "sha256": "06a108dd7abda7f17d6ab3242be036e22014398f05a0507c5002593bbd666241"
+        }
+      ]
     },
     {
       "id": "temperature_control",
-      "status": "unresolved",
+      "status": "satisfied",
       "requirement": "Train-time temperature arm and t=1 output/shared-gradient checks",
-      "evidence": []
+      "evidence": [
+        {
+          "path": "supplementary/pat_feedback/records/readiness_temperature_control.json",
+          "sha256": "37d6c89ae072e50fea0a2eb413bcb9fad3428949d8836910a4a3d60d48e6b224"
+        }
+      ]
     },
     {
       "id": "matched_initialization_and_recipe",
-      "status": "unresolved",
+      "status": "satisfied",
       "requirement": "Nine resolved configurations and post-initialization common-tensor hashes",
-      "evidence": []
+      "evidence": [
+        {
+          "path": "supplementary/pat_feedback/records/readiness_matched_initialization.json",
+          "sha256": "7d7b615fa7c7b85a7c010b76ec1b771f03b09be062352af61a17bc33905f34d9"
+        }
+      ]
     },
     {
       "id": "immutable_inputs",
-      "status": "unresolved",
+      "status": "satisfied",
       "requirement": "Full input/runtime/dependency revisions, hashes and executed-backend evidence",
-      "evidence": []
+      "evidence": [
+        {
+          "path": "supplementary/pat_feedback/records/readiness_immutable_inputs.json",
+          "sha256": "383643dd1ad533381bbae2b893b93859ab1915821e8924b8a9a3f3ed6a411204"
+        }
+      ]
     },
     {
       "id": "evaluation_fixtures",
-      "status": "unresolved",
+      "status": "satisfied",
       "requirement": "Frozen 18-document BPB panel and 30-document retrieval fixtures",
-      "evidence": []
+      "evidence": [
+        {
+          "path": "supplementary/pat_feedback/records/readiness_evaluation_fixtures.json",
+          "sha256": "25f446971f3354a98143b47988ad9c2864699e5d125260149a84be2c78367674"
+        }
+      ]
     },
     {
       "id": "runner_integrity",
-      "status": "unresolved",
+      "status": "satisfied",
       "requirement": "Expected-cell validation, fingerprinted artifacts and resume/failure checks",
-      "evidence": []
+      "evidence": [
+        {
+          "path": "supplementary/pat_feedback/records/readiness_runner_integrity.json",
+          "sha256": "d9476701462e1ae219de3039f6a549ce1cf27735fa85b1290e505b3bad8dd378"
+        }
+      ]
     },
     {
       "id": "capacity_and_storage",
-      "status": "unresolved",
+      "status": "satisfied",
       "requirement": "Measured training/evaluation allocation, finite retry reserve and checkpoint storage",
-      "evidence": []
+      "evidence": [
+        {
+          "path": "supplementary/pat_feedback/records/readiness_capacity_and_storage.json",
+          "sha256": "331956463a9b1a9b1f7b6a591a91f2f0d1c98a6e6420a75bd9d2a3276ad4b5d1"
+        }
+      ]
     },
     {
       "id": "instrumentation_parity",
-      "status": "unresolved",
+      "status": "satisfied",
       "requirement": "Normal/instrumented E3 equivalence and declared trace coverage",
-      "evidence": []
+      "evidence": [
+        {
+          "path": "supplementary/pat_feedback/records/readiness_instrumentation_parity.json",
+          "sha256": "5c49041d39ad3d113c08f72b5453dde3a1ed992a83165f524bfabe190da90456"
+        }
+      ]
     }
   ],
   "out_of_scope": [
@@ -413,4 +453,3 @@
     "benchmarks/logs/foveal_cpt/gamma_parameters.json"
   ]
 }
-

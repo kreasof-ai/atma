@@ -492,6 +492,10 @@ class CausalSelfAttention(AtmaAttnBase):
         if self.w_wall is not None:
             nn.init.zeros_(self.w_wall.weight)              # bias keeps init near vanilla softmax attention
         self.wall_gate_bias = _WALL_GATE_BIAS_INIT if wall_gate_bias is None else float(wall_gate_bias)
+        if pos == "temperature_softmax":
+            self.len_gain_raw = nn.Parameter(torch.full((H,), -1.0))
+        else:
+            self.len_gain_raw = None
         self.mem = (TitansMemory(dim, H, dk, Linear, chunk=mem_chunk,
                                  gamma_bias=mem_gamma_bias, beta_bias=mem_beta_bias, kernel=mem_kernel)
                     if mem_enabled else None)
@@ -613,9 +617,16 @@ class CausalSelfAttention(AtmaAttnBase):
             y, align_loss = self._wall_attention(x, q_attn, k_attn, v_attn, groups, W)
         else:
             align_loss = torch.tensor(0.0, device=x.device)
+            if self.pos == "temperature_softmax":
+                n_keys = torch.arange(1, T + 1, device=x.device, dtype=torch.float32)
+                temp = 1.0 + F.softplus(self.len_gain_raw).view(1, 1, H, 1) * torch.log(n_keys).view(1, T, 1, 1)
+                q_sdpa = q_attn * temp.to(q_attn.dtype)
+            else:
+                q_sdpa = q_attn
+
             if W is None and self.pos == "nope" and _fa3 is not None:
                 # fast path: FA3 GQA causal (nope, no window) — preserves the legacy behavior
-                y = flash_attn.flash_attn_func(q_attn, k_attn, v_attn, causal=True)
+                y = flash_attn.flash_attn_func(q_sdpa, k_attn, v_attn, causal=True)
             else:
                 k_sdpa = k_attn.repeat_interleave(groups, dim=2)
                 v_sdpa = v_attn.repeat_interleave(groups, dim=2)
@@ -625,10 +636,10 @@ class CausalSelfAttention(AtmaAttnBase):
                     qi = torch.arange(T, device=x.device).view(T, 1)
                     ki = torch.arange(T, device=x.device).view(1, T)
                     band = (ki <= qi) & (ki > qi - W)
-                    attn_mask = torch.zeros(T, T, device=x.device, dtype=q_attn.dtype).masked_fill(~band, float("-inf"))
+                    attn_mask = torch.zeros(T, T, device=x.device, dtype=q_sdpa.dtype).masked_fill(~band, float("-inf"))
                     is_causal = False
                 y = F.scaled_dot_product_attention(
-                    q_attn.transpose(1, 2), k_sdpa.transpose(1, 2), v_sdpa.transpose(1, 2),
+                    q_sdpa.transpose(1, 2), k_sdpa.transpose(1, 2), v_sdpa.transpose(1, 2),
                     attn_mask=attn_mask, is_causal=is_causal, scale=self.sdpa_scale,
                 ).transpose(1, 2)
 
@@ -643,13 +654,13 @@ class CausalSelfAttention(AtmaAttnBase):
                 k_dist = torch.cat([k_rand, k_attn], dim=1)
                 v_dist = torch.cat([v_rand, v_attn], dim=1)
                 # queries attend freely to all R distractors; causal only over the T real keys
-                dist_mask = torch.zeros(T, R + T, device=x.device, dtype=q_attn.dtype)
+                dist_mask = torch.zeros(T, R + T, device=x.device, dtype=q_sdpa.dtype)
                 dist_mask[:, R:] = torch.triu(
-                    torch.full((T, T), float("-inf"), device=x.device, dtype=q_attn.dtype), diagonal=1)
+                    torch.full((T, T), float("-inf"), device=x.device, dtype=q_sdpa.dtype), diagonal=1)
                 k_sdpa = k_dist.repeat_interleave(groups, dim=2)
                 v_sdpa = v_dist.repeat_interleave(groups, dim=2)
                 y_dist = F.scaled_dot_product_attention(
-                    q_attn.transpose(1, 2), k_sdpa.transpose(1, 2), v_sdpa.transpose(1, 2),
+                    q_sdpa.transpose(1, 2), k_sdpa.transpose(1, 2), v_sdpa.transpose(1, 2),
                     attn_mask=dist_mask, scale=self.sdpa_scale,
                 ).transpose(1, 2)
                 align_loss = F.mse_loss(y_dist, y)

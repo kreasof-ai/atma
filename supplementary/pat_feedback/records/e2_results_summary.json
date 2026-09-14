@@ -1,0 +1,42 @@
+{
+  "protocol_id": "pat_feedback_v1_e2",
+  "timestamp_iso": "2026-09-12T19:21:59Z",
+  "total_elapsed_sec": 1529.0,
+  "conditions_evaluated": 8,
+  "primary_endpoints": {
+    "nope": {
+      "original_stage2": {
+        "uncapped_256k_bpb": 8.097750269296009,
+        "capped_256k_bpb": 1.595199384197177,
+        "cap_benefit_B": 6.502550885098832,
+        "growth_2k_to_256k_uncapped": 6.665782969621575,
+        "growth_2k_to_256k_capped": 0.14163064022225313
+      },
+      "foveal_cpt": {
+        "uncapped_256k_bpb": 1.5666779444592354,
+        "capped_256k_bpb": 1.4881680577054477,
+        "cap_benefit_B": 0.07850988675378767,
+        "growth_2k_to_256k_uncapped": 0.1247538680759408,
+        "growth_2k_to_256k_capped": 0.02971315905273464
+      },
+      "adaptation_contrast_B_orig_minus_B_fov": 6.424040998345044
+    },
+    "polar": {
+      "original_stage2": {
+        "uncapped_256k_bpb": 1.8546951207155882,
+        "capped_256k_bpb": 1.5204346644494204,
+        "cap_benefit_B": 0.33426045626616774,
+        "growth_2k_to_256k_uncapped": 0.43821389265413657,
+        "growth_2k_to_256k_capped": 0.09504019732120073
+      },
+      "foveal_cpt": {
+        "uncapped_256k_bpb": 1.4605805025517355,
+        "capped_256k_bpb": 1.4394166893117355,
+        "cap_benefit_B": 0.02116381324000005,
+        "growth_2k_to_256k_uncapped": 0.022562034999360492,
+        "growth_2k_to_256k_capped": -0.002785702577652316
+      },
+      "adaptation_contrast_B_orig_minus_B_fov": 0.3130966430261677
+    }
+  }
+}

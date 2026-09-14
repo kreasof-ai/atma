@@ -1,0 +1,731 @@
+{
+  "pat_e1_s1_nope_memory": {
+    "run_id": "pat_e1_nope_memory_20270912",
+    "arm": "nope_memory",
+    "seed": 20270912,
+    "elapsed_sec": 367.35,
+    "primary_natural_text_exact_mean_8k_to_64k": 5.694444444444444,
+    "retrieval": {
+      "synthetic": {
+        "2048": {
+          "exact_accuracy_percent": 72.22222222222221,
+          "token_accuracy_percent": 93.66666666666667,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 62.77777777777778,
+          "token_accuracy_percent": 91.66666666666666,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 40.55555555555556,
+          "token_accuracy_percent": 82.22222222222221,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 27.22222222222222,
+          "token_accuracy_percent": 79.22222222222223,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 10.555555555555555,
+          "token_accuracy_percent": 64.33333333333333,
+          "prompts": 180
+        }
+      },
+      "real": {
+        "2048": {
+          "exact_accuracy_percent": 57.22222222222222,
+          "token_accuracy_percent": 90.0,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 20.555555555555554,
+          "token_accuracy_percent": 66.11111111111111,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 2.2222222222222223,
+          "token_accuracy_percent": 42.55555555555556,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 20.666666666666668,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 11.666666666666666,
+          "prompts": 180
+        }
+      }
+    },
+    "bpb": {
+      "2048": {
+        "mean_bpb": 1.4765670041748848,
+        "per_corpus": {
+          "pg19": 1.3238388762209252,
+          "proof_pile": 1.979916972471824,
+          "finepdfs": 1.1259451638319053
+        }
+      },
+      "65536": {
+        "mean_bpb": 1.6177966076641461,
+        "per_corpus": {
+          "pg19": 1.3532440953876461,
+          "proof_pile": 2.223099181356191,
+          "finepdfs": 1.2770465462486016
+        }
+      }
+    }
+  },
+  "pat_e1_s1_temperature_softmax_memory": {
+    "run_id": "pat_e1_temperature_softmax_memory_20270912",
+    "arm": "temperature_softmax_memory",
+    "seed": 20270912,
+    "elapsed_sec": 367.8,
+    "primary_natural_text_exact_mean_8k_to_64k": 5.694444444444445,
+    "retrieval": {
+      "synthetic": {
+        "2048": {
+          "exact_accuracy_percent": 71.11111111111111,
+          "token_accuracy_percent": 94.11111111111111,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 65.55555555555556,
+          "token_accuracy_percent": 93.0,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 58.333333333333336,
+          "token_accuracy_percent": 90.0,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 55.00000000000001,
+          "token_accuracy_percent": 90.33333333333333,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 47.22222222222222,
+          "token_accuracy_percent": 87.0,
+          "prompts": 180
+        }
+      },
+      "real": {
+        "2048": {
+          "exact_accuracy_percent": 72.22222222222221,
+          "token_accuracy_percent": 93.33333333333333,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 19.444444444444446,
+          "token_accuracy_percent": 68.22222222222221,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 3.3333333333333335,
+          "token_accuracy_percent": 25.88888888888889,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 10.222222222222223,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 4.111111111111112,
+          "prompts": 180
+        }
+      }
+    },
+    "bpb": {
+      "2048": {
+        "mean_bpb": 1.4648948561583435,
+        "per_corpus": {
+          "pg19": 1.305743331193736,
+          "proof_pile": 2.012684557759716,
+          "finepdfs": 1.0762566795215782
+        }
+      },
+      "65536": {
+        "mean_bpb": 1.6200794951350346,
+        "per_corpus": {
+          "pg19": 1.3153948815170904,
+          "proof_pile": 2.3089533013869916,
+          "finepdfs": 1.2358903025010213
+        }
+      }
+    }
+  },
+  "pat_e1_s1_polar_memory": {
+    "run_id": "pat_e1_polar_memory_20270912",
+    "arm": "polar_memory",
+    "seed": 20270912,
+    "elapsed_sec": 387.71,
+    "primary_natural_text_exact_mean_8k_to_64k": 36.25,
+    "retrieval": {
+      "synthetic": {
+        "2048": {
+          "exact_accuracy_percent": 59.44444444444444,
+          "token_accuracy_percent": 90.44444444444444,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 47.22222222222222,
+          "token_accuracy_percent": 86.33333333333333,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 38.88888888888889,
+          "token_accuracy_percent": 82.77777777777777,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 32.22222222222222,
+          "token_accuracy_percent": 78.22222222222223,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 22.77777777777778,
+          "token_accuracy_percent": 75.77777777777777,
+          "prompts": 180
+        }
+      },
+      "real": {
+        "2048": {
+          "exact_accuracy_percent": 62.22222222222222,
+          "token_accuracy_percent": 92.11111111111111,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 43.888888888888886,
+          "token_accuracy_percent": 84.11111111111111,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 37.77777777777778,
+          "token_accuracy_percent": 82.0,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 31.11111111111111,
+          "token_accuracy_percent": 79.88888888888889,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 32.22222222222222,
+          "token_accuracy_percent": 79.44444444444444,
+          "prompts": 180
+        }
+      }
+    },
+    "bpb": {
+      "2048": {
+        "mean_bpb": 1.6290267167654928,
+        "per_corpus": {
+          "pg19": 1.3254075119927695,
+          "proof_pile": 2.3423492243868753,
+          "finepdfs": 1.2193234139168332
+        }
+      },
+      "65536": {
+        "mean_bpb": 1.5882271921151319,
+        "per_corpus": {
+          "pg19": 1.362200448900278,
+          "proof_pile": 2.3043670112487256,
+          "finepdfs": 1.0981141161963923
+        }
+      }
+    }
+  },
+  "pat_e1_s2_nope_memory": {
+    "run_id": "pat_e1_nope_memory_20270913",
+    "arm": "nope_memory",
+    "seed": 20270913,
+    "elapsed_sec": 369.02,
+    "primary_natural_text_exact_mean_8k_to_64k": 16.666666666666664,
+    "retrieval": {
+      "synthetic": {
+        "2048": {
+          "exact_accuracy_percent": 50.55555555555556,
+          "token_accuracy_percent": 88.88888888888889,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 38.333333333333336,
+          "token_accuracy_percent": 84.44444444444444,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 26.666666666666668,
+          "token_accuracy_percent": 76.11111111111111,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 17.77777777777778,
+          "token_accuracy_percent": 68.77777777777779,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 2.2222222222222223,
+          "token_accuracy_percent": 45.77777777777778,
+          "prompts": 180
+        }
+      },
+      "real": {
+        "2048": {
+          "exact_accuracy_percent": 57.77777777777777,
+          "token_accuracy_percent": 90.33333333333333,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 48.888888888888886,
+          "token_accuracy_percent": 85.0,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 16.666666666666664,
+          "token_accuracy_percent": 66.0,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 1.1111111111111112,
+          "token_accuracy_percent": 30.88888888888889,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 8.11111111111111,
+          "prompts": 180
+        }
+      }
+    },
+    "bpb": {
+      "2048": {
+        "mean_bpb": 1.4608105355100989,
+        "per_corpus": {
+          "pg19": 1.3261608821484605,
+          "proof_pile": 1.9926348181975757,
+          "finepdfs": 1.0636359061842604
+        }
+      },
+      "65536": {
+        "mean_bpb": 1.624974209823925,
+        "per_corpus": {
+          "pg19": 1.350451652506099,
+          "proof_pile": 2.2363389671267915,
+          "finepdfs": 1.2881320098388847
+        }
+      }
+    }
+  },
+  "pat_e1_s2_temperature_softmax_memory": {
+    "run_id": "pat_e1_temperature_softmax_memory_20270913",
+    "arm": "temperature_softmax_memory",
+    "seed": 20270913,
+    "elapsed_sec": 369.13,
+    "primary_natural_text_exact_mean_8k_to_64k": 13.333333333333334,
+    "retrieval": {
+      "synthetic": {
+        "2048": {
+          "exact_accuracy_percent": 75.0,
+          "token_accuracy_percent": 95.0,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 76.11111111111111,
+          "token_accuracy_percent": 95.22222222222221,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 66.11111111111111,
+          "token_accuracy_percent": 92.88888888888889,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 72.77777777777777,
+          "token_accuracy_percent": 94.33333333333334,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 66.66666666666666,
+          "token_accuracy_percent": 92.77777777777779,
+          "prompts": 180
+        }
+      },
+      "real": {
+        "2048": {
+          "exact_accuracy_percent": 68.33333333333333,
+          "token_accuracy_percent": 93.44444444444444,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 40.55555555555556,
+          "token_accuracy_percent": 79.44444444444444,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 11.11111111111111,
+          "token_accuracy_percent": 52.11111111111111,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 1.6666666666666667,
+          "token_accuracy_percent": 28.444444444444443,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 17.666666666666668,
+          "prompts": 180
+        }
+      }
+    },
+    "bpb": {
+      "2048": {
+        "mean_bpb": 1.510040410875255,
+        "per_corpus": {
+          "pg19": 1.3165266492732481,
+          "proof_pile": 2.073733744342986,
+          "finepdfs": 1.1398608390095306
+        }
+      },
+      "65536": {
+        "mean_bpb": 1.6787659840136637,
+        "per_corpus": {
+          "pg19": 1.3365198965364173,
+          "proof_pile": 2.4568002363335926,
+          "finepdfs": 1.2429778191709808
+        }
+      }
+    }
+  },
+  "pat_e1_s2_polar_memory": {
+    "run_id": "pat_e1_polar_memory_20270913",
+    "arm": "polar_memory",
+    "seed": 20270913,
+    "elapsed_sec": 385.07,
+    "primary_natural_text_exact_mean_8k_to_64k": 44.861111111111114,
+    "retrieval": {
+      "synthetic": {
+        "2048": {
+          "exact_accuracy_percent": 46.666666666666664,
+          "token_accuracy_percent": 87.22222222222223,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 32.77777777777778,
+          "token_accuracy_percent": 83.77777777777777,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 21.11111111111111,
+          "token_accuracy_percent": 73.55555555555556,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 16.11111111111111,
+          "token_accuracy_percent": 68.88888888888889,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 10.0,
+          "token_accuracy_percent": 63.11111111111111,
+          "prompts": 180
+        }
+      },
+      "real": {
+        "2048": {
+          "exact_accuracy_percent": 61.66666666666667,
+          "token_accuracy_percent": 91.55555555555556,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 53.888888888888886,
+          "token_accuracy_percent": 87.1111111111111,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 48.333333333333336,
+          "token_accuracy_percent": 85.55555555555556,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 38.88888888888889,
+          "token_accuracy_percent": 84.11111111111111,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 38.333333333333336,
+          "token_accuracy_percent": 81.88888888888889,
+          "prompts": 180
+        }
+      }
+    },
+    "bpb": {
+      "2048": {
+        "mean_bpb": 1.5384515760497608,
+        "per_corpus": {
+          "pg19": 1.325834332044095,
+          "proof_pile": 2.170484943478228,
+          "finepdfs": 1.1190354526269592
+        }
+      },
+      "65536": {
+        "mean_bpb": 1.5162202007887358,
+        "per_corpus": {
+          "pg19": 1.3343441190710925,
+          "proof_pile": 2.1240598816929674,
+          "finepdfs": 1.0902566016021473
+        }
+      }
+    }
+  },
+  "pat_e1_s3_nope_memory": {
+    "run_id": "pat_e1_nope_memory_20270914",
+    "arm": "nope_memory",
+    "seed": 20270914,
+    "elapsed_sec": 365.35,
+    "primary_natural_text_exact_mean_8k_to_64k": 15.416666666666668,
+    "retrieval": {
+      "synthetic": {
+        "2048": {
+          "exact_accuracy_percent": 57.77777777777777,
+          "token_accuracy_percent": 91.0,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 48.333333333333336,
+          "token_accuracy_percent": 87.1111111111111,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 36.11111111111111,
+          "token_accuracy_percent": 82.0,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 36.666666666666664,
+          "token_accuracy_percent": 83.22222222222221,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 20.0,
+          "token_accuracy_percent": 72.88888888888889,
+          "prompts": 180
+        }
+      },
+      "real": {
+        "2048": {
+          "exact_accuracy_percent": 77.22222222222223,
+          "token_accuracy_percent": 94.55555555555556,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 50.55555555555556,
+          "token_accuracy_percent": 85.0,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 11.11111111111111,
+          "token_accuracy_percent": 54.77777777777778,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 18.777777777777775,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 6.555555555555556,
+          "prompts": 180
+        }
+      }
+    },
+    "bpb": {
+      "2048": {
+        "mean_bpb": 1.467263146935079,
+        "per_corpus": {
+          "pg19": 1.3214919688164959,
+          "proof_pile": 1.9274723453925757,
+          "finepdfs": 1.1528251265961649
+        }
+      },
+      "65536": {
+        "mean_bpb": 1.6770381406813621,
+        "per_corpus": {
+          "pg19": 1.3454098985348268,
+          "proof_pile": 2.445906175795555,
+          "finepdfs": 1.2397983477137045
+        }
+      }
+    }
+  },
+  "pat_e1_s3_temperature_softmax_memory": {
+    "run_id": "pat_e1_temperature_softmax_memory_20270914",
+    "arm": "temperature_softmax_memory",
+    "seed": 20270914,
+    "elapsed_sec": 364.82,
+    "primary_natural_text_exact_mean_8k_to_64k": 44.166666666666664,
+    "retrieval": {
+      "synthetic": {
+        "2048": {
+          "exact_accuracy_percent": 73.33333333333333,
+          "token_accuracy_percent": 93.88888888888889,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 63.33333333333333,
+          "token_accuracy_percent": 90.44444444444444,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 67.77777777777779,
+          "token_accuracy_percent": 91.77777777777779,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 63.33333333333333,
+          "token_accuracy_percent": 90.0,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 66.66666666666666,
+          "token_accuracy_percent": 91.33333333333333,
+          "prompts": 180
+        }
+      },
+      "real": {
+        "2048": {
+          "exact_accuracy_percent": 72.77777777777777,
+          "token_accuracy_percent": 94.22222222222221,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 62.77777777777778,
+          "token_accuracy_percent": 90.55555555555556,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 47.77777777777778,
+          "token_accuracy_percent": 84.88888888888889,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 36.11111111111111,
+          "token_accuracy_percent": 80.33333333333333,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 30.0,
+          "token_accuracy_percent": 77.55555555555556,
+          "prompts": 180
+        }
+      }
+    },
+    "bpb": {
+      "2048": {
+        "mean_bpb": 1.4766278504132078,
+        "per_corpus": {
+          "pg19": 1.3122538703831872,
+          "proof_pile": 2.0432161467829477,
+          "finepdfs": 1.074413534073488
+        }
+      },
+      "65536": {
+        "mean_bpb": 1.4561888691607077,
+        "per_corpus": {
+          "pg19": 1.3386998504599719,
+          "proof_pile": 1.9997678809685802,
+          "finepdfs": 1.030098876053571
+        }
+      }
+    }
+  },
+  "pat_e1_s3_polar_memory": {
+    "run_id": "pat_e1_polar_memory_20270914",
+    "arm": "polar_memory",
+    "seed": 20270914,
+    "elapsed_sec": 386.02,
+    "primary_natural_text_exact_mean_8k_to_64k": 48.611111111111114,
+    "retrieval": {
+      "synthetic": {
+        "2048": {
+          "exact_accuracy_percent": 53.888888888888886,
+          "token_accuracy_percent": 89.44444444444444,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 41.66666666666667,
+          "token_accuracy_percent": 83.33333333333334,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 37.77777777777778,
+          "token_accuracy_percent": 79.0,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 23.88888888888889,
+          "token_accuracy_percent": 73.66666666666667,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 20.0,
+          "token_accuracy_percent": 62.0,
+          "prompts": 180
+        }
+      },
+      "real": {
+        "2048": {
+          "exact_accuracy_percent": 59.44444444444444,
+          "token_accuracy_percent": 90.44444444444444,
+          "prompts": 180
+        },
+        "8192": {
+          "exact_accuracy_percent": 59.44444444444444,
+          "token_accuracy_percent": 87.55555555555556,
+          "prompts": 180
+        },
+        "16384": {
+          "exact_accuracy_percent": 48.333333333333336,
+          "token_accuracy_percent": 86.66666666666667,
+          "prompts": 180
+        },
+        "32768": {
+          "exact_accuracy_percent": 46.666666666666664,
+          "token_accuracy_percent": 83.88888888888889,
+          "prompts": 180
+        },
+        "65536": {
+          "exact_accuracy_percent": 40.0,
+          "token_accuracy_percent": 82.11111111111111,
+          "prompts": 180
+        }
+      }
+    },
+    "bpb": {
+      "2048": {
+        "mean_bpb": 1.6137508872548316,
+        "per_corpus": {
+          "pg19": 1.3332449241941842,
+          "proof_pile": 2.2050185396806468,
+          "finepdfs": 1.3029891978896637
+        }
+      },
+      "65536": {
+        "mean_bpb": 1.5626636034891055,
+        "per_corpus": {
+          "pg19": 1.3247854818373144,
+          "proof_pile": 2.1490614978568203,
+          "finepdfs": 1.214143830773182
+        }
+      }
+    }
+  }
+}

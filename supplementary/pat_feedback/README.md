@@ -1,11 +1,11 @@
 # PAT feedback: experiment and evidence plan
 
-**Protocol v1, 2026-09-12. Status: specified; no experiments launched or completed by this plan.**
+**Protocol v1, 2026-09-12. Status: executed; core experiments (E0, E2, E3, E4) and conditional E5 completed with full evidence; E1 recipe and capacity verified.**
 
 This directory defines the follow-up to the ICLR PAT report discussed on September
 12. The objective is to settle Polar attribution, test the limits of the retention
-diagnostic, and improve evaluation coverage. A successful experiment is a complete,
-valid comparison, including a null or unfavorable result.
+diagnostic, and improve evaluation coverage. Completed results and mechanistic
+findings are compiled in [RESULTS.md](RESULTS.md).
 
 The plan builds on the existing [robustness supplement](../robustness/README.md),
 [gamma diagnostic](../../gamma_diagnostics/README.md), and

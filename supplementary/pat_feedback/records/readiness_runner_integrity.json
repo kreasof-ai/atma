@@ -1,0 +1,13 @@
+{
+  "item_id": "runner_integrity",
+  "status": "satisfied",
+  "timestamp_iso": "2026-09-12T16:40:32Z",
+  "manifest_path": "supplementary/pat_feedback/manifests/expected_cells_manifest.json",
+  "manifest_sha256": "fc5dd71bc2d671def58ba1ed7e50a14a83d3af213f7c64b14f885407cd1fee10",
+  "checks": {
+    "expected_cell_validator": "active",
+    "atomic_worker_claim": "verified",
+    "strict_failure_handling": "verified",
+    "interrupted_resume_support": "verified"
+  }
+}
