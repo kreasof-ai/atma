@@ -1,6 +1,18 @@
 # ICLR 2027 revision notes
 
-## Current milestone (2026-09-12, PAT feedback execution & final evidence dossier)
+## Current milestone (2026-09-15, main-text integration of PAT feedback evidence)
+
+- Integrated prospective PAT feedback findings (E0–E6) into the main manuscript (pages 1–9):
+  - **Abstract:** Replaced the obsolete "unresolved" attribution statement with resolved findings: Polar's $+22.18\%$ advantage over temperature-matched softmax on natural text, $+37.18\%$ on 30 independent documents, and continuous pre-training (CPT) naturally insulating recurrence against collapse.
+  - **Section 3 (Method):** Added explicit write gate formulation $\beta_t = \sigma(W_\beta x_t + b_\beta)$, initialization bias $b_{\text{init}} = +3.9$, GQA KV broadcasting to 8 query heads, output gating $y_i^{\text{polar}}$, and memory branch unit $L_2$ normalization.
+  - **Section 5.2 (Component attribution and temperature control):** Elevated E1 directly to Section 5.2, reporting the $+22.18\%$ mean advantage ($+30.65\%$ over NoPE) across three seeds.
+  - **Section 5.4 (Replication and multi-document retrieval):** Incorporated E4 multi-document findings ($+37.18\%$ average advantage across 30 independent documents).
+  - **Section 5.5 / Table 4 (Systems):** Replaced TDA decode latency with `\textit{Skipped}` and updated caption/prose noting the absence of an upstream cached incremental decode kernel.
+  - **Section 6 (Retention audit & intervention):** Added E5 head specificity ($0.0$ recovery on alternative heads). Kept the main text strictly focused on ATMA pretraining and fresh-pair replications, removing casual references to Foveal CPT; in Appendix J.4, clearly scoped Foveal CPT as an exploratory experimental sparse-attention architecture deferred to dedicated future work.
+  - **Page budget strictly preserved:** Both AI and Reproducibility statements fit completely on page 9; page 10 begins cleanly with References.
+- Rebuilt both ICLR and arXiv PDFs with Tectonic 0.17.0 and verified `generate_primary_tables.py --check`.
+
+## Previous milestone (2026-09-12, PAT feedback execution & final evidence dossier)
 
 - Executed the prospective follow-up protocol specified under `supplementary/pat_feedback/`:
   - **E0 (Numerical Parity & Auditing):** Certified equivalence between theoretical floor $U / \max(\|U\|_2, \epsilon Z)$ and streaming $U / \max(\|U\|_2, \epsilon)$ ($0.0$ max error away from floor; $0.0\%$ floor activation on 256K checkpoints). Verified exact $t=1$ recovery of ordinary NoPE SDPA and shared parameter gradients.

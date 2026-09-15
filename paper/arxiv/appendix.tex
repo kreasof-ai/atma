@@ -633,11 +633,11 @@ Following evaluation review feedback, we executed prospective follow-up experime
 Direction-floor evaluation audited the theoretical floor formula $U / \max(\|U\|_2, \epsilon Z)$ against the streaming implementation $U / \max(\|U\|_2, \epsilon)$. In the operational regime where $\|s\|_2 \ge \epsilon$, the two expressions are mathematically identical and agree to $0.0$ error in FP64. Checkpoint probes across 256K context sequences on Stage II and Foveal Polar checkpoints confirmed a 0.0\% floor activation rate. Testing the learned-temperature control $t(n) = 1 + \operatorname{softplus}(\alpha) \log(n)$ with $t=1$ verified exact recovery of ordinary NoPE SDPA and shared parameter gradients with $0.0$ error.
 
 \paragraph{Retention Capping across Adaptation States (E2).}
-To establish whether the retention cap's efficacy depends on continuous pre-training, we evaluated eight conditions (2 cores $\times$ 2 adaptation states $\times$ 2 cap conditions) on the frozen 18-document likelihood panel:
+To establish whether the retention cap's efficacy depends on long-context adaptation, we evaluated eight conditions (2 attention cores $\times$ 2 adaptation states $\times$ 2 cap conditions) on the frozen 18-document likelihood panel. For the adapted state, we inspected checkpoints from an exploratory continuous pre-training study (Foveal CPT) combining 1B tokens at 32K context with an experimental routed sparse-attention architecture:
 \begin{itemize}
   \item \textbf{Original Stage II checkpoints:} Uncapped NoPE exhibits severe degradation beyond 2K, reaching 8.098 BPB at 256K; capping its single outlier head (B2/H5) recovers likelihood to 1.595 BPB ($+6.503$ cap benefit $B$). Primary Polar 256K BPB drops from 1.855 to 1.520 ($+0.334$ cap benefit $B$).
-  \item \textbf{Foveal CPT checkpoints:} After 1B tokens of CPT at 32K context, uncapped NoPE already stabilizes at 1.567 BPB at 256K, and capping yields a modest $+0.079$ BPB improvement (1.488 BPB). Foveal Polar uncapped 256K BPB is 1.461, and capped is 1.439 ($+0.021$ cap benefit $B$).
-  \item \textbf{Adaptation contrast:} The cap benefit is substantially larger on unadapted models than on adapted ones: $B(\text{original}) - B(\text{foveal}) = +6.424$ in NoPE and $+0.313$ in Polar. Foveal adaptation's modified context exposure and routing dynamics diminish the necessity of a post-hoc retention intervention.
+  \item \textbf{Exploratory Sparse-CPT checkpoints:} After 1B tokens of 32K context adaptation under Foveal sparse attention, uncapped NoPE already stabilizes at 1.567 BPB at 256K, and capping yields a modest $+0.079$ BPB improvement (1.488 BPB). Foveal Polar uncapped 256K BPB is 1.461, and capped is 1.439 ($+0.021$ cap benefit $B$).
+  \item \textbf{Adaptation contrast and scope:} The cap benefit is substantially larger on unadapted models than on adapted ones: $B(\text{original}) - B(\text{foveal}) = +6.424$ in NoPE and $+0.313$ in Polar. However, because this exploratory setup simultaneously introduces routed sparse attention, extended 32K sequence length, and backbone parameter updates, it represents a distinct architectural direction rather than an isolated test of context length alone. Comprehensive evaluation of sparse-attention CPT is therefore deferred to dedicated future work.
 \end{itemize}
 
 \paragraph{Runtime Telemetry (E3).}
@@ -670,7 +670,7 @@ Triplet 1 & 20270912 & 5.69\% & 5.69\% & 36.25\% & \textbf{+30.56\%} & +30.56\% 
 Triplet 2 & 20270913 & 16.67\% & 13.33\% & 44.86\% & \textbf{+31.53\%} & +28.19\% \\
 Triplet 3 & 20270914 & 15.42\% & 44.17\% & 48.61\% & \textbf{+4.44\%} & +33.19\% \\
 \midrule
-\textbf{Mean} & — & \textbf{12.59\%} & \textbf{21.06\%} & \textbf{43.24\%} & \textbf{+22.18\%} & \textbf{+30.65\%} \\
+\textbf{Mean} & -- & \textbf{12.59\%} & \textbf{21.06\%} & \textbf{43.24\%} & \textbf{+22.18\%} & \textbf{+30.65\%} \\
 \bottomrule
 \end{tabular}
 \caption{Component attribution results across three independent initialization triplets (8K--64K mean natural-text exact retrieval on 30 independent documents). Polar consistently outperforms temperature-softmax, establishing an average $+22.18\%$ primary advantage.}
