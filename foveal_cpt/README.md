@@ -4,6 +4,10 @@ This directory is an isolated 12-run adaptation experiment over the three existi
 checkpoints. Every cell trains for **1B tokens** at 32K context and a 524,288-token global batch
 (1,908 optimizer steps). There is no 100M-token screening stage.
 
+> **Evaluation Results:** Complete benchmark matrix, comparative analysis, and scientific interpretation across all 12 checkpoints are documented in [**`BENCHMARK_RESULTS.md`**](BENCHMARK_RESULTS.md).
+> **Main result:** KL-trained Foveal substantially improves synthetic retrieval at roughly SWA evaluation runtime: approximately **0.97–1.10×** the matched local elapsed time. Polar KL and NoPE LM-output+KL reach **81.0% / 82.7%** synthetic token accuracy at 256K, versus **0.0%** locally. See [the matched runtime evidence](BENCHMARK_RESULTS.md#runtime-evidence-from-actual-foveal-retrieval).
+> Structured logs and aggregated matrices live under `benchmarks/logs/foveal_cpt/benchmark_matrix.csv` and `benchmark_matrix.json` (6,336 audited rows from 72 full runs). See [AUDIT_FOLLOWUP.md](AUDIT_FOLLOWUP.md) for the L40S checks and claim assessment: synthetic retrieval gains are supported under the recorded protocol. [Verified fast serving](BENCHMARK_RESULTS.md#6-foveal-serving-performance--context-scaling-verified-fast-decoder) achieves **510–594 decode token/s with routing active** across all 12 checkpoints from 2K to 512K context, versus fresh dense baselines of 442–466 token/s at 2K. The data protocol gate below remains open.
+
 | attention core | local SWA-512 | LM index output | index KL | LM output + KL |
 | --- | --- | --- | --- | --- |
 | Polar | `polar-local.json` | `polar-lm_output.json` | `polar-kl.json` | `polar-lm_output_kl.json` |

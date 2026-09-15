@@ -1,0 +1,41 @@
+{
+  "date_utc": "2026-09-12",
+  "purpose": "Focused serving measurement for the reported Polar/NoPE retrieval improvements against matched local CPT controls.",
+  "checkpoint_revision": "e4cf2558793646c26d9e5a6c6eeadb4e1011cad3",
+  "models": [
+    [
+      "polar",
+      "local"
+    ],
+    [
+      "polar",
+      "kl"
+    ],
+    [
+      "nope",
+      "local"
+    ],
+    [
+      "nope",
+      "lm_output_kl"
+    ]
+  ],
+  "lengths": [
+    2048,
+    32768,
+    262144
+  ],
+  "generated_tokens": 130,
+  "warmup_samples": 1,
+  "measured_samples": 3,
+  "decoder_sha256": "08c4ad535ee2a01df009eef9f997534daaba85cb38685d43c6ca3f7450a8ef4a",
+  "git_commit": "04c00c999f4bde26a06d00307f15154434d1be8d",
+  "numerical_scope": "The selected four checkpoints matched both audited free-running continuations; BF16 strict allclose still fails. These timings measure the corrected implementation, not universal numerical equivalence. Cache diagnostics reached 32K; no 256K cache-parity claim.",
+  "compiler_cache_policy": "Persistent caches reused; first request reported separately, not an isolated cold-compilation measurement.",
+  "scope_exclusions": [
+    "RoPE and other adaptation modes",
+    "512K/1M capacity",
+    "historical ordinary-engine speedup comparison",
+    "batching throughput"
+  ]
+}

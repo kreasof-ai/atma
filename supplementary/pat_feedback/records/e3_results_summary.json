@@ -1,0 +1,24 @@
+{
+  "protocol_id": "pat_feedback_v1_e3",
+  "timestamp_iso": "2026-09-12T19:29:50Z",
+  "total_elapsed_sec": 245.52,
+  "diagnostics": {
+    "mechanism_separation": {
+      "nope": {
+        "original_uncapped_tracked_head_runtime_hl": 937274432.0,
+        "original_capped_tracked_head_runtime_hl": 256.00006103515625,
+        "foveal_uncapped_tracked_head_runtime_hl": 729950080.0,
+        "foveal_capped_tracked_head_runtime_hl": 256.00006103515625,
+        "write_gate_beta": 0.042292844504117966
+      },
+      "polar": {
+        "original_uncapped_tracked_head_runtime_hl": 644178688.0,
+        "original_capped_tracked_head_runtime_hl": 256.00006103515625,
+        "foveal_uncapped_tracked_head_runtime_hl": 827141824.0,
+        "foveal_capped_tracked_head_runtime_hl": 256.00006103515625,
+        "write_gate_beta": 0.21876735985279083
+      }
+    },
+    "interpretation": "The outlier heads (B2/H5 in NoPE and B2/H6 in Polar) persistently manifest extreme activation-conditioned runtime retention (>1e6 tokens) when uncapped, which is strictly bounded to <=256 tokens under the hl-256 intervention. In Foveal CPT models, the parameter outlier persists and runtime retention remains large, but the overall model degradation is mitigated by surrounding attention routing and adjusted representations, explaining why the cap benefit is substantially smaller."
+  }
+}

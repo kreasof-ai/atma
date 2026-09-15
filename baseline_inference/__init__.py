@@ -1,6 +1,6 @@
 """Isolated inference forks for ablation baselines."""
 
-__all__ = ["BaselineLLM"]
+__all__ = ["BaselineLLM", "FovealLLM"]
 
 
 def __getattr__(name):
@@ -8,4 +8,8 @@ def __getattr__(name):
         from .engine import BaselineLLM
 
         return BaselineLLM
+    if name == "FovealLLM":
+        from .foveal_engine import FovealLLM
+
+        return FovealLLM
     raise AttributeError(name)

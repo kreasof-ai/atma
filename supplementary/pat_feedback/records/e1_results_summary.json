@@ -1,0 +1,42 @@
+{
+  "status": "completed",
+  "completed_runs": 9,
+  "total_planned_runs": 9,
+  "triplet_contrasts": {
+    "s1": {
+      "nope_memory": 5.694444444444444,
+      "temperature_softmax_memory": 5.694444444444445,
+      "polar_memory": 36.25,
+      "primary_contrast_polar_vs_temp": 30.555555555555557,
+      "secondary_contrast_temp_vs_nope": 8.881784197001252e-16,
+      "total_polar_vs_nope": 30.555555555555557
+    },
+    "s2": {
+      "nope_memory": 16.666666666666664,
+      "temperature_softmax_memory": 13.333333333333334,
+      "polar_memory": 44.861111111111114,
+      "primary_contrast_polar_vs_temp": 31.52777777777778,
+      "secondary_contrast_temp_vs_nope": -3.3333333333333304,
+      "total_polar_vs_nope": 28.19444444444445
+    },
+    "s3": {
+      "nope_memory": 15.416666666666668,
+      "temperature_softmax_memory": 44.166666666666664,
+      "polar_memory": 48.611111111111114,
+      "primary_contrast_polar_vs_temp": 4.44444444444445,
+      "secondary_contrast_temp_vs_nope": 28.749999999999996,
+      "total_polar_vs_nope": 33.19444444444444
+    }
+  },
+  "runs": [
+    "pat_e1_s1_nope_memory",
+    "pat_e1_s1_temperature_softmax_memory",
+    "pat_e1_s1_polar_memory",
+    "pat_e1_s2_nope_memory",
+    "pat_e1_s2_temperature_softmax_memory",
+    "pat_e1_s2_polar_memory",
+    "pat_e1_s3_nope_memory",
+    "pat_e1_s3_temperature_softmax_memory",
+    "pat_e1_s3_polar_memory"
+  ]
+}

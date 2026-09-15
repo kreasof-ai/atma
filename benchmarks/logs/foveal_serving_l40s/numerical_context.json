@@ -1,0 +1,207 @@
+{
+  "purpose": "Numerical context for interpreting measured speed potential; bitwise agreement is not required. No universal BF16 tolerance or output-equivalence guarantee is asserted.",
+  "decoder_sha256": "08c4ad535ee2a01df009eef9f997534daaba85cb38685d43c6ca3f7450a8ef4a",
+  "source_archive": "../foveal_verified/l40s_cache_evidence.tar.gz",
+  "models": {
+    "polar_local": {
+      "bf16": {
+        "comparisons": 1413,
+        "max_abs_logit_error": 0.8592886924743652,
+        "mean_rms_logit_error": 0.04679049204267767,
+        "max_relative_l2_logit_error": 0.031192906200885773,
+        "strict_failures": 1393,
+        "greedy_disagreements": 1
+      },
+      "fp32": {
+        "comparisons": 55,
+        "max_abs_logit_error": 5.841255187988281e-05,
+        "mean_rms_logit_error": 2.9488117661458093e-06,
+        "max_relative_l2_logit_error": 1.5886427036093664e-06,
+        "strict_failures": 0,
+        "greedy_disagreements": 0
+      },
+      "controls": {
+        "full_forward_shape_control": {
+          "comparisons": 1413,
+          "max_abs_logit_error": 0.8340873718261719,
+          "mean_rms_logit_error": 0.03924424855861752,
+          "max_relative_l2_logit_error": 0.03144599497318268,
+          "strict_failures": 1413,
+          "greedy_disagreements": 3
+        },
+        "full_forward_recurrent_control": {
+          "comparisons": 1413,
+          "max_abs_logit_error": 0.9602375030517578,
+          "mean_rms_logit_error": 0.04891510709516456,
+          "max_relative_l2_logit_error": 0.036925021559000015,
+          "strict_failures": 1413,
+          "greedy_disagreements": 4
+        }
+      },
+      "prefill_exact": true,
+      "sources": [
+        "polar_local_boundaries.json",
+        "polar_local_long.json",
+        "polar_local_continuation.json",
+        "polar_local_prose.json",
+        "polar_local_generated_pages.json",
+        "polar_local_routing.json",
+        "polar_local_fp32.json",
+        "polar_local_fp32_continuation.json",
+        "polar_local_fp32_generated_pages.json",
+        "polar_local_greedy.json"
+      ],
+      "free_running_identical": 2
+    },
+    "polar_kl": {
+      "bf16": {
+        "comparisons": 1413,
+        "max_abs_logit_error": 0.7013287544250488,
+        "mean_rms_logit_error": 0.04288800793745399,
+        "max_relative_l2_logit_error": 0.04412778466939926,
+        "strict_failures": 1393,
+        "greedy_disagreements": 4
+      },
+      "fp32": {
+        "comparisons": 55,
+        "max_abs_logit_error": 3.933906555175781e-05,
+        "mean_rms_logit_error": 2.301986536291555e-06,
+        "max_relative_l2_logit_error": 8.853008353071345e-07,
+        "strict_failures": 0,
+        "greedy_disagreements": 0
+      },
+      "controls": {
+        "full_forward_shape_control": {
+          "comparisons": 1413,
+          "max_abs_logit_error": 0.7719283103942871,
+          "mean_rms_logit_error": 0.03785925108932983,
+          "max_relative_l2_logit_error": 0.03889034315943718,
+          "strict_failures": 1413,
+          "greedy_disagreements": 2
+        },
+        "full_forward_recurrent_control": {
+          "comparisons": 1413,
+          "max_abs_logit_error": 0.7567715644836426,
+          "mean_rms_logit_error": 0.04442842082850113,
+          "max_relative_l2_logit_error": 0.047125570476055145,
+          "strict_failures": 1413,
+          "greedy_disagreements": 7
+        }
+      },
+      "prefill_exact": true,
+      "sources": [
+        "polar_kl_boundaries.json",
+        "polar_kl_long.json",
+        "polar_kl_continuation.json",
+        "polar_kl_prose.json",
+        "polar_kl_generated_pages.json",
+        "polar_kl_routing.json",
+        "polar_kl_fp32.json",
+        "polar_kl_fp32_continuation.json",
+        "polar_kl_fp32_generated_pages.json",
+        "polar_kl_greedy.json"
+      ],
+      "free_running_identical": 2
+    },
+    "nope_local": {
+      "bf16": {
+        "comparisons": 1413,
+        "max_abs_logit_error": 0.6223804950714111,
+        "mean_rms_logit_error": 0.037569491343634694,
+        "max_relative_l2_logit_error": 0.03344486281275749,
+        "strict_failures": 1393,
+        "greedy_disagreements": 5
+      },
+      "fp32": {
+        "comparisons": 55,
+        "max_abs_logit_error": 2.3365020751953125e-05,
+        "mean_rms_logit_error": 2.0170000673467506e-06,
+        "max_relative_l2_logit_error": 1.0929508107437869e-06,
+        "strict_failures": 0,
+        "greedy_disagreements": 0
+      },
+      "controls": {
+        "full_forward_shape_control": {
+          "comparisons": 1413,
+          "max_abs_logit_error": 0.5809121131896973,
+          "mean_rms_logit_error": 0.03268252478493361,
+          "max_relative_l2_logit_error": 0.03320152312517166,
+          "strict_failures": 1413,
+          "greedy_disagreements": 5
+        },
+        "full_forward_recurrent_control": {
+          "comparisons": 1413,
+          "max_abs_logit_error": 0.6029071807861328,
+          "mean_rms_logit_error": 0.03871540527102674,
+          "max_relative_l2_logit_error": 0.03475392609834671,
+          "strict_failures": 1413,
+          "greedy_disagreements": 4
+        }
+      },
+      "prefill_exact": true,
+      "sources": [
+        "nope_local_boundaries.json",
+        "nope_local_long.json",
+        "nope_local_continuation.json",
+        "nope_local_prose.json",
+        "nope_local_generated_pages.json",
+        "nope_local_routing.json",
+        "nope_local_fp32.json",
+        "nope_local_fp32_continuation.json",
+        "nope_local_fp32_generated_pages.json",
+        "nope_local_greedy.json"
+      ],
+      "free_running_identical": 2
+    },
+    "nope_lm_output_kl": {
+      "bf16": {
+        "comparisons": 1413,
+        "max_abs_logit_error": 0.9266535043716431,
+        "mean_rms_logit_error": 0.03937544881696407,
+        "max_relative_l2_logit_error": 0.03267209976911545,
+        "strict_failures": 1393,
+        "greedy_disagreements": 4
+      },
+      "fp32": {
+        "comparisons": 55,
+        "max_abs_logit_error": 2.384185791015625e-05,
+        "mean_rms_logit_error": 2.3095578750475068e-06,
+        "max_relative_l2_logit_error": 8.083071065811964e-07,
+        "strict_failures": 0,
+        "greedy_disagreements": 0
+      },
+      "controls": {
+        "full_forward_shape_control": {
+          "comparisons": 1413,
+          "max_abs_logit_error": 0.7815916538238525,
+          "mean_rms_logit_error": 0.03369433456936769,
+          "max_relative_l2_logit_error": 0.04433766379952431,
+          "strict_failures": 1413,
+          "greedy_disagreements": 2
+        },
+        "full_forward_recurrent_control": {
+          "comparisons": 1413,
+          "max_abs_logit_error": 0.837701678276062,
+          "mean_rms_logit_error": 0.04109132057154698,
+          "max_relative_l2_logit_error": 0.03234880790114403,
+          "strict_failures": 1413,
+          "greedy_disagreements": 2
+        }
+      },
+      "prefill_exact": true,
+      "sources": [
+        "nope_lm_output_kl_boundaries.json",
+        "nope_lm_output_kl_long.json",
+        "nope_lm_output_kl_continuation.json",
+        "nope_lm_output_kl_prose.json",
+        "nope_lm_output_kl_generated_pages.json",
+        "nope_lm_output_kl_routing.json",
+        "nope_lm_output_kl_fp32.json",
+        "nope_lm_output_kl_fp32_continuation.json",
+        "nope_lm_output_kl_fp32_generated_pages.json",
+        "nope_lm_output_kl_greedy.json"
+      ],
+      "free_running_identical": 2
+    }
+  }
+}

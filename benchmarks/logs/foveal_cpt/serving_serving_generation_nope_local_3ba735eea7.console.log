@@ -1,0 +1,80 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[run] benchmark=serving model=/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt tasks=[] lengths=['2k', '4k', '8k', '16k', '32k', '64k', '128k'] samples=100 gamma_clamp=None
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1678.39it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1967.08it/s]
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt/cpt-step-001908.pt
+KV cache: 4 layers, 16 blocks × 256 (16.8 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+[serving] context=   2k prefill=12802.7 tok/s decode=484.4 tok/s peak=0.86 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1669.54it/s]
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt/cpt-step-001908.pt
+KV cache: 4 layers, 17 blocks × 256 (17.8 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+[serving] context=   4k prefill=104390.6 tok/s decode=487.3 tok/s peak=1.01 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1608.25it/s]
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt/cpt-step-001908.pt
+KV cache: 4 layers, 33 blocks × 256 (34.6 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+[serving] context=   8k prefill=153780.6 tok/s decode=484.9 tok/s peak=1.17 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1595.40it/s]
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt/cpt-step-001908.pt
+KV cache: 4 layers, 65 blocks × 256 (68.2 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+[serving] context=  16k prefill=171362.8 tok/s decode=482.6 tok/s peak=1.58 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1751.64it/s]
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt/cpt-step-001908.pt
+KV cache: 4 layers, 129 blocks × 256 (135.3 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+[serving] context=  32k prefill=157854.3 tok/s decode=484.0 tok/s peak=2.46 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1626.96it/s]
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt/cpt-step-001908.pt
+KV cache: 4 layers, 257 blocks × 256 (269.5 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+[serving] context=  64k prefill=157647.9 tok/s decode=478.4 tok/s peak=4.14 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1630.91it/s]
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt/cpt-step-001908.pt
+KV cache: 4 layers, 513 blocks × 256 (537.9 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+[serving] context= 128k prefill=157286.7 tok/s decode=473.9 tok/s peak=7.51 GiB
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1638.72it/s]
+[run] done in 94.7s -> /home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/serving_serving_generation_nope_local_3ba735eea7.log

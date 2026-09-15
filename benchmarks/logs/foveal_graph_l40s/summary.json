@@ -1,0 +1,287 @@
+{
+  "protocol": {
+    "git_commit": "36373b7ec2a9ff5c69881737381204f592480df4",
+    "decoder_sources_sha256": {
+      "baseline_inference/foveal_engine.py": "680508078ea5b64f9682196704737dc2f9d059ab7a9dc02a098fee9f16054d18",
+      "baseline_inference/foveal_decode.py": "3d5fe59eb83e2d988ba313e5143fdeb492745d8eb35c70334e81bab5288b712d",
+      "baseline_inference/foveal_triton.py": "57ffd529dc9b946d83a2141e45ed8805c2edba78d9d7ef497df12c2ab112bfe8"
+    },
+    "checkpoint_revision": "e4cf2558793646c26d9e5a6c6eeadb4e1011cad3",
+    "models": [
+      [
+        "polar",
+        "local"
+      ],
+      [
+        "polar",
+        "kl"
+      ],
+      [
+        "nope",
+        "local"
+      ],
+      [
+        "nope",
+        "lm_output_kl"
+      ]
+    ],
+    "lengths": [
+      2048,
+      32768,
+      262144
+    ],
+    "generated_tokens": 130,
+    "timed_decode_steps": 129,
+    "warmup_samples": 1,
+    "samples": 3,
+    "backend": "FovealLLM",
+    "decode_backend": "cuda_graph",
+    "numerics": "Strict failures are retained. Optimized decoding is assessed with FP32 structural tests and BF16 full-forward controls, not bitwise equality.",
+    "comparison": "Fresh ordinary dense source-checkpoint measurements at 2K; matched CPT local controls at all measured lengths. Same fixed output budget.",
+    "compiler_cache": "Persistent caches reused; capture/setup counted in first-request prefill and excluded from warm requests."
+  },
+  "rows": [
+    {
+      "core": "polar",
+      "mode": "local",
+      "context_tokens": 2048,
+      "source": "polar_local_2048.json",
+      "prefill_ms": 40.42133700022532,
+      "decode_tokens_s": 654.104334327469,
+      "decode_min": 654.0394000634919,
+      "decode_max": 654.1074188604565,
+      "allocated_gib": 2.0955333709716797,
+      "reserved_gib": 2.23046875,
+      "load_s": 5.328063528000712,
+      "first_prefill_s": 1.503213362999304,
+      "first_decode_s": 0.19412903200100118
+    },
+    {
+      "core": "polar",
+      "mode": "kl",
+      "context_tokens": 2048,
+      "source": "polar_kl_2048.json",
+      "prefill_ms": 42.05120600090595,
+      "decode_tokens_s": 588.803125328363,
+      "decode_min": 588.7419316546979,
+      "decode_max": 588.8617458114511,
+      "allocated_gib": 2.0955333709716797,
+      "reserved_gib": 2.23046875,
+      "load_s": 5.3377476500008925,
+      "first_prefill_s": 1.1122880940001778,
+      "first_decode_s": 0.21613575400078844
+    },
+    {
+      "core": "nope",
+      "mode": "local",
+      "context_tokens": 2048,
+      "source": "nope_local_2048.json",
+      "prefill_ms": 65.15377400137368,
+      "decode_tokens_s": 660.3230472332281,
+      "decode_min": 660.3198429578105,
+      "decode_max": 660.4230172225766,
+      "allocated_gib": 2.0952987670898438,
+      "reserved_gib": 2.23046875,
+      "load_s": 5.305476363000707,
+      "first_prefill_s": 2.108492519999345,
+      "first_decode_s": 0.19235445399863238
+    },
+    {
+      "core": "nope",
+      "mode": "lm_output_kl",
+      "context_tokens": 2048,
+      "source": "nope_lm_output_kl_2048.json",
+      "prefill_ms": 51.364423999984865,
+      "decode_tokens_s": 590.2371859428641,
+      "decode_min": 590.2369428873093,
+      "decode_max": 590.2418553521613,
+      "allocated_gib": 2.0952987670898438,
+      "reserved_gib": 2.23046875,
+      "load_s": 5.432173177001459,
+      "first_prefill_s": 1.8665484210014256,
+      "first_decode_s": 0.2155602760012698
+    },
+    {
+      "core": "polar",
+      "mode": "local",
+      "context_tokens": 32768,
+      "source": "polar_local_32768.json",
+      "prefill_ms": 258.77371699971263,
+      "decode_tokens_s": 654.7176367040453,
+      "decode_min": 654.6850040462842,
+      "decode_max": 654.7229500743972,
+      "allocated_gib": 4.049774169921875,
+      "reserved_gib": 4.505859375,
+      "load_s": 5.3008589330002,
+      "first_prefill_s": 1.2049488800003019,
+      "first_decode_s": 0.19713864699951955
+    },
+    {
+      "core": "polar",
+      "mode": "kl",
+      "context_tokens": 32768,
+      "source": "polar_kl_32768.json",
+      "prefill_ms": 271.02963300058036,
+      "decode_tokens_s": 572.3475981444118,
+      "decode_min": 572.3259887207627,
+      "decode_max": 572.3715202283028,
+      "allocated_gib": 4.049909591674805,
+      "reserved_gib": 4.505859375,
+      "load_s": 5.357499316998656,
+      "first_prefill_s": 1.310990945001322,
+      "first_decode_s": 0.22553777400025865
+    },
+    {
+      "core": "nope",
+      "mode": "local",
+      "context_tokens": 32768,
+      "source": "nope_local_32768.json",
+      "prefill_ms": 258.58304200119164,
+      "decode_tokens_s": 660.7071225640703,
+      "decode_min": 660.6935530729955,
+      "decode_max": 660.7876407350511,
+      "allocated_gib": 3.986551284790039,
+      "reserved_gib": 4.505859375,
+      "load_s": 5.2742845229986415,
+      "first_prefill_s": 1.8988118760007637,
+      "first_decode_s": 0.1953043620014796
+    },
+    {
+      "core": "nope",
+      "mode": "lm_output_kl",
+      "context_tokens": 32768,
+      "source": "nope_lm_output_kl_32768.json",
+      "prefill_ms": 268.4168169998884,
+      "decode_tokens_s": 573.1254721846753,
+      "decode_min": 573.1177060780922,
+      "decode_max": 573.1421051091253,
+      "allocated_gib": 3.9866867065429688,
+      "reserved_gib": 4.755859375,
+      "load_s": 5.287873788998695,
+      "first_prefill_s": 2.1590131579996523,
+      "first_decode_s": 0.22520188399903418
+    },
+    {
+      "core": "polar",
+      "mode": "local",
+      "context_tokens": 262144,
+      "source": "polar_local_262144.json",
+      "prefill_ms": 2162.7366590000747,
+      "decode_tokens_s": 654.3431432702168,
+      "decode_min": 654.3354031989388,
+      "decode_max": 654.3815841131399,
+      "allocated_gib": 18.842235565185547,
+      "reserved_gib": 22.373046875,
+      "load_s": 5.29981708699961,
+      "first_prefill_s": 3.0842818499986606,
+      "first_decode_s": 0.21017533600024763
+    },
+    {
+      "core": "polar",
+      "mode": "kl",
+      "context_tokens": 262144,
+      "source": "polar_kl_262144.json",
+      "prefill_ms": 2303.0300669997814,
+      "decode_tokens_s": 570.9999054233706,
+      "decode_min": 570.9336863615755,
+      "decode_max": 571.0011944230176,
+      "allocated_gib": 18.843318939208984,
+      "reserved_gib": 22.375,
+      "load_s": 5.347036895000201,
+      "first_prefill_s": 3.311566745000164,
+      "first_decode_s": 0.23891907500001253
+    },
+    {
+      "core": "nope",
+      "mode": "local",
+      "context_tokens": 262144,
+      "source": "nope_local_262144.json",
+      "prefill_ms": 2303.040308001073,
+      "decode_tokens_s": 661.1248076157678,
+      "decode_min": 661.1166081136876,
+      "decode_max": 661.1372393822096,
+      "allocated_gib": 18.33809471130371,
+      "reserved_gib": 22.373046875,
+      "load_s": 5.283250991000386,
+      "first_prefill_s": 3.88032979199852,
+      "first_decode_s": 0.20817090700074914
+    },
+    {
+      "core": "nope",
+      "mode": "lm_output_kl",
+      "context_tokens": 262144,
+      "source": "nope_lm_output_kl_262144.json",
+      "prefill_ms": 2582.8064500001346,
+      "decode_tokens_s": 571.9522998539303,
+      "decode_min": 571.9199665874888,
+      "decode_max": 571.963980387072,
+      "allocated_gib": 18.33917808532715,
+      "reserved_gib": 22.375,
+      "load_s": 5.319495841000389,
+      "first_prefill_s": 4.235915930001283,
+      "first_decode_s": 0.23807075100012298
+    }
+  ],
+  "dense": [
+    {
+      "core": "polar",
+      "source": "dense_polar_2048.json",
+      "decode_tokens_s": 441.6297711850355,
+      "prefill_ms": 24.544191360473633
+    },
+    {
+      "core": "nope",
+      "source": "dense_nope_2048.json",
+      "decode_tokens_s": 465.57435053251623,
+      "prefill_ms": 21.702367782592773
+    }
+  ],
+  "numerics": {
+    "polar_kl": {
+      "fp32_comparisons": 12,
+      "fp32_strict_failures": 0,
+      "bf16_comparisons": 18,
+      "bf16_strict_failures": 15,
+      "bf16_greedy_disagreements": 0,
+      "bf16_mean_rms": 0.03461293824430969,
+      "full_forward_recurrent_mean_rms": 0.04465378262102604,
+      "identical_free_running": [
+        true,
+        true
+      ]
+    },
+    "nope_lm_output_kl": {
+      "fp32_comparisons": 12,
+      "fp32_strict_failures": 0,
+      "bf16_comparisons": 18,
+      "bf16_strict_failures": 15,
+      "bf16_greedy_disagreements": 0,
+      "bf16_mean_rms": 0.028294954655898943,
+      "full_forward_recurrent_mean_rms": 0.04279797327601247,
+      "identical_free_running": [
+        true,
+        true
+      ]
+    }
+  },
+  "source_sha256": {
+    "polar_local_2048.json": "09aab135417e73deb02b2c6fe55f2e5f1fcb87d5a85a8b7fe5eac062182e19b2",
+    "polar_kl_2048.json": "fdd87861647470a72244456d974e093c6c7b34a2a264b475975f08950444c223",
+    "nope_local_2048.json": "8882c49ed66aa0cf581c74f5d0c044ead5792c9c8e2681fb9fe33895340dbaa9",
+    "nope_lm_output_kl_2048.json": "1f97213448fe1cbe566e7b7cb30b6fc6b86066a5c204265e8748f2dfda2b6b49",
+    "polar_local_32768.json": "4ba98013331802dd982c91e5792cadecb62da55786ddea9d0d4bc6d9815c8ba2",
+    "polar_kl_32768.json": "4cd0d1bcfd6bcd085c1a7cd841e3156a8920c1ad95bdbbd5f1c6f1bf22b9f670",
+    "nope_local_32768.json": "3658331fcb7eefead5732d6f633188ced956ebbe8b954248af8acb8f4439c46e",
+    "nope_lm_output_kl_32768.json": "fdb1a4a6d9555da6d5490411d5c24a4e5adbdf43a9a70099f2934df7f2b5636a",
+    "polar_local_262144.json": "cacacee8b070427767018a8ce7aca92094b8ef4328c73540a8c75c34429b6b82",
+    "polar_kl_262144.json": "8333a35764d32132c974736548e18d2119053f2a2abb55bcb632acff1070a747",
+    "nope_local_262144.json": "3a65d3f72e66309c462ce3976e744577d6a0059d44f0075abcf3ab92cfa264cb",
+    "nope_lm_output_kl_262144.json": "f4ee047a7e8ab1dbdc806f6378888b82acf70e7780b5d92fc9c1b0dc793a382c",
+    "dense_polar_2048.json": "b233e5c2a465adf0781bc005dbba8e950257d2586bf89b9cfb0f8f7fd224434f",
+    "dense_nope_2048.json": "72fa7d6db07c4e93ea9107110ed11783e6859679a2d48895fcceeac10dd1aabe",
+    "validation_polar_kl.json": "313226fe7f6a45821edea7578930a9829a3c76029339bfb802b988477719d82b",
+    "validation_nope_lm_output_kl.json": "516ca55b22e5d3c6998e8ceafe5d7b048a0f59ff1418fea2da5ca3b5a728421b",
+    "fp32_polar_kl.json": "477b6f24e1c69926f3984f4987f953b277e508824889129871bbde166938a187",
+    "fp32_nope_lm_output_kl.json": "1bd8aa79c517510de27ded6f2ddc047b61a27e8762751e6a2ef95f647e1cc61c"
+  }
+}

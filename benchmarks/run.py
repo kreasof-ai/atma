@@ -28,7 +28,10 @@ def _infer_max_model_len(lengths, max_tokens):
             vals.append(_parse_len(length))
         except ValueError:
             pass
-    return (max(vals) if vals else 65536) + max_tokens + 64
+    max_val = max(vals) if vals else 65536
+    if max_val <= 0:
+        max_val = 2048
+    return max_val + max_tokens + 64
 
 
 def _dataset_revisions(path):
@@ -61,6 +64,8 @@ def main():
                     help="retrieval only: needle depth fractions")
     ap.add_argument("--samples", type=int, default=100, help="samples per cell")
     ap.add_argument("--serving_samples", type=int, default=1)
+    ap.add_argument("--serving_warmup_samples", type=int, default=0,
+                    help="unmeasured cached-serving requests per context length before timing")
     ap.add_argument("--serving_backend", choices=("paged", "direct"), default="paged",
                     help="direct measures full-prefix recomputation, not cached decoding (supports TDA)")
     ap.add_argument("--seed", type=int, default=1234,
@@ -251,6 +256,7 @@ def main():
                 res = run_serving(
                     args.model, args.lengths, decode_tokens=args.decode_tokens,
                     samples=args.serving_samples, max_num_seqs=args.max_num_seqs,
+                    warmup_samples=args.serving_warmup_samples,
                     max_num_batched_tokens=args.max_num_batched_tokens,
                     strict=args.strict, log_fn=log,
                 )

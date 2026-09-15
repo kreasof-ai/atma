@@ -1,0 +1,15 @@
+ModelRunner rank 0 starting on device: cuda
+Total parameters: 378.22M
+Loading weights from checkpoint: /home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-10b-L40S-mbs16-polar__reg-baseline__distr-0__mem-1__win-0/snapshots/faa10ea68590d57c0869c9dd6d38f40c476cff5d/weights.pt
+Per-seq state tables (conv + mem): 28 keys, 2.2 MB
+KV cache: 4 layers, 16 blocks × 256 (16.8 MB)
+Warming up model...
+Warmup complete.
+Capturing CUDA graphs for decode...
+CUDA graphs captured for batch sizes: [1]
+Warning: Failed loading tokenizer from custom path '/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-10b-L40S-mbs16-polar__reg-baseline__distr-0__mem-1__win-0/snapshots/faa10ea68590d57c0869c9dd6d38f40c476cff5d/weights.pt'. Falling back to standard 'gpt2' tokenizer.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+polar 0 {'prefill_throughput': 3171.561158526488, 'decode_throughput': 441.11453350181523, 'prefill_tokens': 2048, 'decode_tokens': 129, 'prefill_time': 0.64573876953125, 'decode_time': 0.2924410560131072, 'peak_allocated_bytes': 889994240}
+polar 1 {'prefill_throughput': 79323.86108721835, 'decode_throughput': 441.6297711850355, 'prefill_tokens': 2048, 'decode_tokens': 129, 'prefill_time': 0.025818208694458007, 'decode_time': 0.2920998728275299, 'peak_allocated_bytes': 889994240}
+polar 2 {'prefill_throughput': 83441.33118592502, 'decode_throughput': 443.23083046776685, 'prefill_tokens': 2048, 'decode_tokens': 129, 'prefill_time': 0.024544191360473634, 'decode_time': 0.29104473590850827, 'peak_allocated_bytes': 889994240}
+polar 3 {'prefill_throughput': 85530.27934342196, 'decode_throughput': 441.2864852764088, 'prefill_tokens': 2048, 'decode_tokens': 129, 'prefill_time': 0.02394473648071289, 'decode_time': 0.29232710337638873, 'peak_allocated_bytes': 889994240}

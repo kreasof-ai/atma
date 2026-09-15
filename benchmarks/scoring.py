@@ -9,6 +9,13 @@ from pathlib import Path
 # Match scaled_ablation.eval_hf_checkpoints: model.blocks reads this during import.
 os.environ.setdefault("FLA_CUSTOM_OP", "1")
 
+try:
+    import torch._dynamo
+
+    torch._dynamo.config.recompile_limit = 1000
+except Exception:
+    pass
+
 from benchmarks.model import (
     atma_config_from_dict,
     read_checkpoint_config,
@@ -90,6 +97,50 @@ class DirectScorer:
         return tokenizer
 
     def _load_model(self, torch):
+        if self.cfg.get("is_foveal"):
+            from dataclasses import fields
+            from foveal_cpt.checkpoint import load_foveal_weights, load_pretrained
+            from foveal_cpt.config import FovealConfig
+
+            foveal_cfg_raw = self.cfg.get("foveal_config") or self.cfg
+            while "foveal_config" in foveal_cfg_raw and isinstance(foveal_cfg_raw["foveal_config"], dict):
+                foveal_cfg_raw = foveal_cfg_raw["foveal_config"]
+            valid_fields = {f.name for f in fields(FovealConfig)}
+            foveal_dict = {k: v for k, v in foveal_cfg_raw.items() if k in valid_fields}
+            if "checkpoint" not in foveal_dict or not foveal_dict["checkpoint"]:
+                base_ck = self.cfg.get("base_checkpoint") or self.cfg.get("checkpoint")
+                if base_ck:
+                    foveal_dict["checkpoint"] = base_ck
+            foveal_cfg = FovealConfig(**foveal_dict)
+            model, atma_config, _ = load_pretrained(foveal_cfg, device="cpu")
+            load_foveal_weights(model, self.weights_path)
+            model.to(self.device)
+            model.eval()
+            for block in model.blocks:
+                attn = getattr(block, "attn", None)
+                if attn is not None and hasattr(attn, "set_mode"):
+                    attn.set_mode("sparse")
+                    attn.teacher_query_blocks = 0
+                    attn.set_route(
+                        foveal_cfg.top_p,
+                        foveal_cfg.min_remote_pages,
+                        foveal_cfg.max_remote_pages,
+                    )
+                    attn.compile_flex = True
+                    try:
+                        from torch.nn.attention.flex_attention import flex_attention
+
+                        attn._compiled_flex = torch.compile(flex_attention, dynamic=True)
+                    except Exception:
+                        pass
+            if self.gamma_clamp:
+                from gamma_diagnostics.clamp import apply_gamma_clamp
+
+                self._gamma_clamp_handle = apply_gamma_clamp(model, self.gamma_clamp)
+                targets = self._gamma_clamp_handle.resolved_targets
+                print(f"Applied gamma clamp to {len(targets)} layer-head target(s): {targets}")
+            return model
+
         architecture = self.cfg.get("arch_type") or self.cfg.get("attn_type", "polar")
         if architecture in {"tda_hybrid", "mamba3_native", "gdn2_native"}:
             from external_baselines.verify_checkpoint import _add_pinned_sources
@@ -175,6 +226,30 @@ class DirectScorer:
         return TokenRequest(tuple(context), tuple(continuation))
 
     def _forward_hidden(self, input_ids):
+        import torch
+
+        seq_len = input_ids.shape[1]
+        cfg = getattr(self, "cfg", None) or {}
+        if cfg.get("is_foveal") and seq_len % 64 != 0:
+            pad_len = ((seq_len + 63) // 64) * 64 - seq_len
+            eos_id = (
+                self.tokenizer.eos_token_id
+                if getattr(self.tokenizer, "eos_token_id", None) is not None
+                else 50256
+            )
+            pad = torch.full(
+                (input_ids.shape[0], pad_len),
+                eos_id,
+                dtype=input_ids.dtype,
+                device=input_ids.device,
+            )
+            padded = torch.cat([input_ids, pad], dim=1)
+            x = self.model.embed(padded)
+            for block in self.model.blocks:
+                out = block(x)
+                x = out[0] if isinstance(out, tuple) else out
+            return x[:, :seq_len]
+
         x = self.model.embed(input_ids)
         for block in self.model.blocks:
             out = block(x)
@@ -189,6 +264,9 @@ class DirectScorer:
         full = [list(req.context_ids + req.continuation_ids) for req in prepared]
         valid_input_lengths = [len(ids) - 1 for ids in full]
         width = max(valid_input_lengths)
+        cfg = getattr(self, "cfg", None) or {}
+        if cfg.get("is_foveal"):
+            width = max(64, ((width + 63) // 64) * 64)
         batch = torch.full(
             (len(full), width),
             self.tokenizer.eos_token_id,

@@ -1,0 +1,472 @@
+{
+  "results": {
+    "primary_nope": {
+      "synthetic": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 93.33333333333333,
+          "token_accuracy_percent": 98.66666666666667
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 84.44444444444444,
+          "token_accuracy_percent": 96.66666666666667
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 72.22222222222221,
+          "token_accuracy_percent": 92.55555555555556
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 20.0,
+          "token_accuracy_percent": 67.55555555555556
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 1.1111111111111112,
+          "token_accuracy_percent": 26.111111111111114
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.0
+        }
+      },
+      "real": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 97.22222222222221,
+          "token_accuracy_percent": 99.44444444444444
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 3.888888888888889,
+          "token_accuracy_percent": 10.666666666666668
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.1111111111111111
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.0
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.0
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.0
+        }
+      }
+    },
+    "primary_polar": {
+      "synthetic": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 98.33333333333333,
+          "token_accuracy_percent": 99.66666666666667
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 90.0,
+          "token_accuracy_percent": 98.0
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 86.11111111111111,
+          "token_accuracy_percent": 97.22222222222221
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 78.33333333333333,
+          "token_accuracy_percent": 95.66666666666667
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 64.44444444444444,
+          "token_accuracy_percent": 92.77777777777779
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 23.333333333333332,
+          "token_accuracy_percent": 69.33333333333334
+        }
+      },
+      "real": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 96.11111111111111,
+          "token_accuracy_percent": 99.22222222222223
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 72.77777777777777,
+          "token_accuracy_percent": 93.55555555555556
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 45.0,
+          "token_accuracy_percent": 81.0
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 18.88888888888889,
+          "token_accuracy_percent": 62.0
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 8.333333333333332,
+          "token_accuracy_percent": 44.888888888888886
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 3.3333333333333335,
+          "token_accuracy_percent": 19.333333333333332
+        }
+      }
+    },
+    "repl_seed1_nope": {
+      "synthetic": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 95.0,
+          "token_accuracy_percent": 99.0
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 85.0,
+          "token_accuracy_percent": 96.77777777777777
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 72.77777777777777,
+          "token_accuracy_percent": 93.77777777777779
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 49.44444444444444,
+          "token_accuracy_percent": 88.77777777777777
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 21.666666666666668,
+          "token_accuracy_percent": 71.11111111111111
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 6.666666666666667
+        }
+      },
+      "real": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 95.0,
+          "token_accuracy_percent": 99.0
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 5.0,
+          "token_accuracy_percent": 5.777777777777778
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.0
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.1111111111111111
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.0
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.0
+        }
+      }
+    },
+    "repl_seed1_polar": {
+      "synthetic": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 93.88888888888889,
+          "token_accuracy_percent": 98.66666666666667
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 80.55555555555556,
+          "token_accuracy_percent": 95.55555555555556
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 41.66666666666667,
+          "token_accuracy_percent": 82.66666666666667
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 19.444444444444446,
+          "token_accuracy_percent": 70.44444444444444
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 6.666666666666667,
+          "token_accuracy_percent": 58.77777777777777
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 31.333333333333336
+        }
+      },
+      "real": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 98.33333333333333,
+          "token_accuracy_percent": 99.66666666666667
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 79.44444444444444,
+          "token_accuracy_percent": 94.77777777777779
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 50.55555555555556,
+          "token_accuracy_percent": 82.55555555555556
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 15.555555555555555,
+          "token_accuracy_percent": 58.77777777777777
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 6.111111111111111,
+          "token_accuracy_percent": 40.0
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 20.666666666666668
+        }
+      }
+    },
+    "repl_seed2_nope": {
+      "synthetic": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 95.55555555555556,
+          "token_accuracy_percent": 99.11111111111111
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 88.88888888888889,
+          "token_accuracy_percent": 97.77777777777777
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 79.44444444444444,
+          "token_accuracy_percent": 95.77777777777777
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 47.77777777777778,
+          "token_accuracy_percent": 84.66666666666667
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 17.22222222222222,
+          "token_accuracy_percent": 70.33333333333334
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 24.666666666666668
+        }
+      },
+      "real": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 98.33333333333333,
+          "token_accuracy_percent": 99.66666666666667
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 9.444444444444445,
+          "token_accuracy_percent": 23.88888888888889
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 1.1111111111111112,
+          "token_accuracy_percent": 1.5555555555555556
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.0
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.0
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.0
+        }
+      }
+    },
+    "repl_seed2_polar": {
+      "synthetic": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 85.0,
+          "token_accuracy_percent": 97.0
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 87.77777777777777,
+          "token_accuracy_percent": 97.55555555555556
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 75.55555555555556,
+          "token_accuracy_percent": 94.88888888888889
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 45.55555555555556,
+          "token_accuracy_percent": 83.11111111111111
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 41.11111111111111,
+          "token_accuracy_percent": 82.0
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 13.333333333333334,
+          "token_accuracy_percent": 50.0
+        }
+      },
+      "real": {
+        "2048": {
+          "length": 2048,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 86.66666666666667,
+          "token_accuracy_percent": 97.33333333333334
+        },
+        "8192": {
+          "length": 8192,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 82.22222222222221,
+          "token_accuracy_percent": 95.88888888888889
+        },
+        "16384": {
+          "length": 16384,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 61.66666666666667,
+          "token_accuracy_percent": 86.55555555555556
+        },
+        "32768": {
+          "length": 32768,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 22.77777777777778,
+          "token_accuracy_percent": 62.11111111111111
+        },
+        "65536": {
+          "length": 65536,
+          "prompt_count": 180,
+          "exact_accuracy_percent": 2.2222222222222223,
+          "token_accuracy_percent": 31.0
+        },
+        "262144": {
+          "length": 262144,
+          "prompt_count": 30,
+          "exact_accuracy_percent": 0.0,
+          "token_accuracy_percent": 0.6666666666666667
+        }
+      }
+    }
+  }
+}

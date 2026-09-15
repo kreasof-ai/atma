@@ -1,0 +1,8 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (11901 > 1024). Running this sequence through the model will result in indexing errors
+checked prose prompt=65 steps=66 max_error=0.239897 greedy_disagreements=0
+checked prose prompt=641 steps=66 max_error=0.140098 greedy_disagreements=0
+checked prose prompt=8192 steps=66 max_error=0.185584 greedy_disagreements=0
+greedy prompt=65 steps=130 identical=True
+greedy prompt=641 steps=130 identical=True

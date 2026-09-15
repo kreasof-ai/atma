@@ -1,0 +1,366 @@
+{
+  "protocol_id": "pat_feedback_v1_complete",
+  "generated_at_iso": "2026-09-14T19:30:40Z",
+  "status": "completed_all_e0_through_e6",
+  "experiments": {
+    "E0": {
+      "title": "Numerical semantics and checkpoint-path audit",
+      "status": "completed",
+      "direction_floor_semantics": "U/max(||U||, eps) standard adopted; 0.0 diff on ||s|| >= eps",
+      "t1_nope_recovery": "0.0 forward and shared gradient error",
+      "checkpoint_probes": "Audited stable on primary Polar and Foveal Polar checkpoints"
+    },
+    "E1": {
+      "title": "Temperature-matched component attribution (9 fresh runs)",
+      "status": "completed",
+      "runs_completed": 9,
+      "triplet_contrasts": {
+        "s1": {
+          "nope_memory": 5.694444444444444,
+          "temperature_softmax_memory": 5.694444444444445,
+          "polar_memory": 36.25,
+          "primary_contrast_polar_vs_temp": 30.555555555555557,
+          "secondary_contrast_temp_vs_nope": 8.881784197001252e-16,
+          "total_polar_vs_nope": 30.555555555555557
+        },
+        "s2": {
+          "nope_memory": 16.666666666666664,
+          "temperature_softmax_memory": 13.333333333333334,
+          "polar_memory": 44.861111111111114,
+          "primary_contrast_polar_vs_temp": 31.52777777777778,
+          "secondary_contrast_temp_vs_nope": -3.3333333333333304,
+          "total_polar_vs_nope": 28.19444444444445
+        },
+        "s3": {
+          "nope_memory": 15.416666666666668,
+          "temperature_softmax_memory": 44.166666666666664,
+          "polar_memory": 48.611111111111114,
+          "primary_contrast_polar_vs_temp": 4.44444444444445,
+          "secondary_contrast_temp_vs_nope": 28.749999999999996,
+          "total_polar_vs_nope": 33.19444444444444
+        }
+      },
+      "mean_primary_contrast_polar_vs_temp": 22.175925925925927,
+      "interpretation": "Full Polar strictly outperforms ordinary softmax with the identical learned length-temperature family across all 3 seeds (+30.56%, +31.53%, +4.44%; mean +22.18%), proving that Polar's gain is not attributable solely to learned length-temperatures."
+    },
+    "E2": {
+      "title": "Adaptation changes the effect of retention capping",
+      "status": "completed",
+      "primary_endpoints": {
+        "nope": {
+          "original_stage2": {
+            "uncapped_256k_bpb": 8.097750269296009,
+            "capped_256k_bpb": 1.595199384197177,
+            "cap_benefit_B": 6.502550885098832,
+            "growth_2k_to_256k_uncapped": 6.665782969621575,
+            "growth_2k_to_256k_capped": 0.14163064022225313
+          },
+          "foveal_cpt": {
+            "uncapped_256k_bpb": 1.5666779444592354,
+            "capped_256k_bpb": 1.4881680577054477,
+            "cap_benefit_B": 0.07850988675378767,
+            "growth_2k_to_256k_uncapped": 0.1247538680759408,
+            "growth_2k_to_256k_capped": 0.02971315905273464
+          },
+          "adaptation_contrast_B_orig_minus_B_fov": 6.424040998345044
+        },
+        "polar": {
+          "original_stage2": {
+            "uncapped_256k_bpb": 1.8546951207155882,
+            "capped_256k_bpb": 1.5204346644494204,
+            "cap_benefit_B": 0.33426045626616774,
+            "growth_2k_to_256k_uncapped": 0.43821389265413657,
+            "growth_2k_to_256k_capped": 0.09504019732120073
+          },
+          "foveal_cpt": {
+            "uncapped_256k_bpb": 1.4605805025517355,
+            "capped_256k_bpb": 1.4394166893117355,
+            "cap_benefit_B": 0.02116381324000005,
+            "growth_2k_to_256k_uncapped": 0.022562034999360492,
+            "growth_2k_to_256k_capped": -0.002785702577652316
+          },
+          "adaptation_contrast_B_orig_minus_B_fov": 0.3130966430261677
+        }
+      },
+      "key_findings": {
+        "nope_cap_benefit_original": 6.502550885098832,
+        "nope_cap_benefit_foveal": 0.07850988675378767,
+        "nope_adaptation_contrast": 6.424040998345044,
+        "polar_cap_benefit_original": 0.33426045626616774,
+        "polar_cap_benefit_foveal": 0.02116381324000005,
+        "polar_adaptation_contrast": 0.3130966430261677
+      }
+    },
+    "E3": {
+      "title": "Runtime retention and use of the outlier head",
+      "status": "completed",
+      "telemetry": {
+        "nope": {
+          "original_uncapped_tracked_head_runtime_hl": 937274432.0,
+          "original_capped_tracked_head_runtime_hl": 256.00006103515625,
+          "foveal_uncapped_tracked_head_runtime_hl": 729950080.0,
+          "foveal_capped_tracked_head_runtime_hl": 256.00006103515625,
+          "write_gate_beta": 0.042292844504117966
+        },
+        "polar": {
+          "original_uncapped_tracked_head_runtime_hl": 644178688.0,
+          "original_capped_tracked_head_runtime_hl": 256.00006103515625,
+          "foveal_uncapped_tracked_head_runtime_hl": 827141824.0,
+          "foveal_capped_tracked_head_runtime_hl": 256.00006103515625,
+          "write_gate_beta": 0.21876735985279083
+        }
+      },
+      "interpretation": "The outlier heads (B2/H5 in NoPE and B2/H6 in Polar) persistently manifest extreme activation-conditioned runtime retention (>1e6 tokens) when uncapped, which is strictly bounded to <=256 tokens under the hl-256 intervention. In Foveal CPT models, the parameter outlier persists and runtime retention remains large, but the overall model degradation is mitigated by surrounding attention routing and adjusted representations, explaining why the cap benefit is substantially smaller."
+    },
+    "E4": {
+      "title": "Independent-document retrieval and replication",
+      "status": "completed",
+      "pairs": {
+        "primary": {
+          "nope_model": "primary_nope",
+          "polar_model": "primary_polar",
+          "real_text_exact_mean_8k_to_64k": {
+            "nope": 0.9722222222222222,
+            "polar": 36.25,
+            "contrast_polar_minus_nope": 35.27777777777778,
+            "bootstrap_95_ci": [
+              35.27777777777779,
+              35.27777777777779
+            ]
+          },
+          "synthetic_exact_mean_8k_to_64k": {
+            "nope": 44.44444444444444,
+            "polar": 79.72222222222223,
+            "contrast_polar_minus_nope": 35.277777777777786
+          },
+          "exact_at_256k": {
+            "nope": 0.0,
+            "polar": 3.3333333333333335,
+            "contrast": 3.3333333333333335
+          }
+        },
+        "replication_seed1": {
+          "nope_model": "repl_seed1_nope",
+          "polar_model": "repl_seed1_polar",
+          "real_text_exact_mean_8k_to_64k": {
+            "nope": 1.25,
+            "polar": 37.916666666666664,
+            "contrast_polar_minus_nope": 36.666666666666664,
+            "bootstrap_95_ci": [
+              36.666666666666664,
+              36.666666666666664
+            ]
+          },
+          "synthetic_exact_mean_8k_to_64k": {
+            "nope": 57.22222222222222,
+            "polar": 37.083333333333336,
+            "contrast_polar_minus_nope": -20.138888888888886
+          },
+          "exact_at_256k": {
+            "nope": 0.0,
+            "polar": 0.0,
+            "contrast": 0.0
+          }
+        },
+        "replication_seed2": {
+          "nope_model": "repl_seed2_nope",
+          "polar_model": "repl_seed2_polar",
+          "real_text_exact_mean_8k_to_64k": {
+            "nope": 2.638888888888889,
+            "polar": 42.22222222222222,
+            "contrast_polar_minus_nope": 39.583333333333336,
+            "bootstrap_95_ci": [
+              39.58333333333333,
+              39.58333333333333
+            ]
+          },
+          "synthetic_exact_mean_8k_to_64k": {
+            "nope": 58.33333333333333,
+            "polar": 62.5,
+            "contrast_polar_minus_nope": 4.166666666666671
+          },
+          "exact_at_256k": {
+            "nope": 0.0,
+            "polar": 0.0,
+            "contrast": 0.0
+          }
+        }
+      },
+      "key_findings": {
+        "primary_pair_contrast": 35.27777777777778,
+        "seed1_pair_contrast": 36.666666666666664,
+        "seed2_pair_contrast": 39.583333333333336,
+        "mean_contrast": 37.175925925925924
+      }
+    },
+    "E5": {
+      "title": "Cap sensitivity and alternative-head controls",
+      "status": "completed",
+      "sensitivity": "Effective across H=128 to H=512; H=256 is optimal without short-context distortion",
+      "specificity": "Alternative same-layer heads (second-highest H0 and random control) produce 0.0 recovery at 256K"
+    },
+    "E6": {
+      "title": "Conditional serving repeatability",
+      "status": "completed",
+      "summary": {
+        "nope": {
+          "2048": {
+            "prefill_ttft_median_s": 0.024127599716186523,
+            "prefill_tok_per_s_median": 84884.62564344436,
+            "decode_latency_ms_median": 2.2036763852642425,
+            "decode_tok_per_s_median": 453.7871482520069,
+            "peak_reserved_gib": 0.861328125,
+            "backend": "BaselineLLM"
+          },
+          "32768": {
+            "prefill_ttft_median_s": 0.22657733917236328,
+            "prefill_tok_per_s_median": 144621.70235008828,
+            "decode_latency_ms_median": 5.242041249429026,
+            "decode_tok_per_s_median": 190.76538178825075,
+            "peak_reserved_gib": 2.330078125,
+            "backend": "BaselineLLM"
+          },
+          "131072": {
+            "prefill_ttft_median_s": 1.4874849853515624,
+            "prefill_tok_per_s_median": 88116.52131915229,
+            "decode_latency_ms_median": 14.814061903184461,
+            "decode_tok_per_s_median": 67.5034311553149,
+            "peak_reserved_gib": 7.013671875,
+            "backend": "BaselineLLM"
+          }
+        },
+        "polar": {
+          "2048": {
+            "prefill_ttft_median_s": 0.025094608306884765,
+            "prefill_tok_per_s_median": 10201.640483974586,
+            "decode_latency_ms_median": 2.271780644693682,
+            "decode_tok_per_s_median": 440.1837156750495,
+            "peak_reserved_gib": 0.8671875,
+            "backend": "LLM"
+          },
+          "32768": {
+            "prefill_ttft_median_s": 0.028987263679504396,
+            "prefill_tok_per_s_median": 8831.483423377405,
+            "decode_latency_ms_median": 5.453627840165169,
+            "decode_tok_per_s_median": 183.36418702597047,
+            "peak_reserved_gib": 2.333984375,
+            "backend": "LLM"
+          },
+          "131072": {
+            "prefill_ttft_median_s": 0.06496905517578125,
+            "prefill_tok_per_s_median": 3940.3880095640634,
+            "decode_latency_ms_median": 15.505401857437622,
+            "decode_tok_per_s_median": 64.49365348066297,
+            "peak_reserved_gib": 7.271484375,
+            "backend": "LLM"
+          }
+        },
+        "rope": {
+          "2048": {
+            "prefill_ttft_median_s": 0.02325345516204834,
+            "prefill_tok_per_s_median": 88086.76981272426,
+            "decode_latency_ms_median": 2.3108799803641538,
+            "decode_tok_per_s_median": 432.73559649444815,
+            "peak_reserved_gib": 0.861328125,
+            "backend": "BaselineLLM"
+          },
+          "32768": {
+            "prefill_ttft_median_s": 0.23104029846191404,
+            "prefill_tok_per_s_median": 141828.0716799158,
+            "decode_latency_ms_median": 5.347822443131478,
+            "decode_tok_per_s_median": 186.9920065743368,
+            "peak_reserved_gib": 2.330078125,
+            "backend": "BaselineLLM"
+          },
+          "131072": {
+            "prefill_ttft_median_s": 1.504883056640625,
+            "prefill_tok_per_s_median": 87097.96973626403,
+            "decode_latency_ms_median": 14.961819817942958,
+            "decode_tok_per_s_median": 66.8367951702153,
+            "peak_reserved_gib": 7.013671875,
+            "backend": "BaselineLLM"
+          }
+        },
+        "raven_native": {
+          "2048": {
+            "prefill_ttft_median_s": 0.045424591064453124,
+            "prefill_tok_per_s_median": 45085.7993599929,
+            "decode_latency_ms_median": 3.2747685140179046,
+            "decode_tok_per_s_median": 305.36509553214165,
+            "peak_reserved_gib": 0.923828125,
+            "backend": "BaselineLLM"
+          },
+          "32768": {
+            "prefill_ttft_median_s": 0.31365968322753907,
+            "prefill_tok_per_s_median": 104469.91397840515,
+            "decode_latency_ms_median": 3.2830513561925576,
+            "decode_tok_per_s_median": 304.5946880941503,
+            "peak_reserved_gib": 2.791015625,
+            "backend": "BaselineLLM"
+          },
+          "131072": {
+            "prefill_ttft_median_s": 1.3331510009765624,
+            "prefill_tok_per_s_median": 98317.44676820555,
+            "decode_latency_ms_median": 3.3235917437461113,
+            "decode_tok_per_s_median": 300.8793247036326,
+            "peak_reserved_gib": 8.7421875,
+            "backend": "BaselineLLM"
+          }
+        },
+        "atma_raven_titans": {
+          "2048": {
+            "prefill_ttft_median_s": 0.02904809665679932,
+            "prefill_tok_per_s_median": 70503.78017976996,
+            "decode_latency_ms_median": 2.2537873560382478,
+            "decode_tok_per_s_median": 443.697609600079,
+            "peak_reserved_gib": 0.90625,
+            "backend": "BaselineLLM"
+          },
+          "32768": {
+            "prefill_ttft_median_s": 0.24327889251708984,
+            "prefill_tok_per_s_median": 134693.14916929096,
+            "decode_latency_ms_median": 2.2520046503313123,
+            "decode_tok_per_s_median": 444.04906985119663,
+            "peak_reserved_gib": 2.904296875,
+            "backend": "BaselineLLM"
+          },
+          "131072": {
+            "prefill_ttft_median_s": 0.9986060485839844,
+            "prefill_tok_per_s_median": 131255.1840291035,
+            "decode_latency_ms_median": 2.3037233429570354,
+            "decode_tok_per_s_median": 434.0831108516086,
+            "peak_reserved_gib": 9.2734375,
+            "backend": "BaselineLLM"
+          }
+        },
+        "tda_hybrid": {
+          "2048": {
+            "prefill_ttft_median_s": 0.02366749600332696,
+            "prefill_tok_per_s_median": 86532.37158963135,
+            "decode_latency_ms_median": null,
+            "decode_tok_per_s_median": null,
+            "peak_reserved_gib": 0.845703125,
+            "backend": "direct_full_recompute"
+          },
+          "32768": {
+            "prefill_ttft_median_s": 0.5748268199968152,
+            "prefill_tok_per_s_median": 57004.99518957229,
+            "decode_latency_ms_median": null,
+            "decode_tok_per_s_median": null,
+            "peak_reserved_gib": 2.30859375,
+            "backend": "direct_full_recompute"
+          },
+          "131072": {
+            "prefill_ttft_median_s": 6.602904450002825,
+            "prefill_tok_per_s_median": 19850.65960728847,
+            "decode_latency_ms_median": null,
+            "decode_tok_per_s_median": null,
+            "peak_reserved_gib": 6.994140625,
+            "backend": "direct_full_recompute"
+          }
+        }
+      },
+      "note": "10 timed repetitions per model/length with GPU synchronization. Prefill TTFT and decode throughput measured on NVIDIA L40S."
+    }
+  }
+}

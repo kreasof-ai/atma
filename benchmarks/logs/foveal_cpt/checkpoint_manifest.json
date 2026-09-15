@@ -1,0 +1,134 @@
+{
+  "nope_kl": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/kl/cpt",
+    "core": "nope",
+    "key": "nope_kl",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "nope/kl/cpt",
+    "variant": "kl",
+    "weights_bytes": 3132032427,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/kl/cpt/cpt-step-001908.pt"
+  },
+  "nope_lm_output": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/lm_output/cpt",
+    "core": "nope",
+    "key": "nope_lm_output",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "nope/lm_output/cpt",
+    "variant": "lm_output",
+    "weights_bytes": 3133088091,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/lm_output/cpt/cpt-step-001908.pt"
+  },
+  "nope_lm_output_kl": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/lm_output_kl/cpt",
+    "core": "nope",
+    "key": "nope_lm_output_kl",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "nope/lm_output_kl/cpt",
+    "variant": "lm_output_kl",
+    "weights_bytes": 3133088091,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/lm_output_kl/cpt/cpt-step-001908.pt"
+  },
+  "nope_local": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt",
+    "core": "nope",
+    "key": "nope_local",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "nope/local/cpt",
+    "variant": "local",
+    "weights_bytes": 3130976699,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/nope/local/cpt/cpt-step-001908.pt"
+  },
+  "polar_kl": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/kl/cpt",
+    "core": "polar",
+    "key": "polar_kl",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "polar/kl/cpt",
+    "variant": "kl",
+    "weights_bytes": 3132405995,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/kl/cpt/cpt-step-001908.pt"
+  },
+  "polar_lm_output": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt",
+    "core": "polar",
+    "key": "polar_lm_output",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "polar/lm_output/cpt",
+    "variant": "lm_output",
+    "weights_bytes": 3133461659,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt/cpt-step-001908.pt"
+  },
+  "polar_lm_output_kl": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output_kl/cpt",
+    "core": "polar",
+    "key": "polar_lm_output_kl",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "polar/lm_output_kl/cpt",
+    "variant": "lm_output_kl",
+    "weights_bytes": 3133461659,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output_kl/cpt/cpt-step-001908.pt"
+  },
+  "polar_local": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/local/cpt",
+    "core": "polar",
+    "key": "polar_local",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "polar/local/cpt",
+    "variant": "local",
+    "weights_bytes": 3131350267,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/local/cpt/cpt-step-001908.pt"
+  },
+  "rope_kl": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/rope/kl/cpt",
+    "core": "rope",
+    "key": "rope_kl",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "rope/kl/cpt",
+    "variant": "kl",
+    "weights_bytes": 3131831435,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/rope/kl/cpt/cpt-step-001908.pt"
+  },
+  "rope_lm_output": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/rope/lm_output/cpt",
+    "core": "rope",
+    "key": "rope_lm_output",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "rope/lm_output/cpt",
+    "variant": "lm_output",
+    "weights_bytes": 3132887163,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/rope/lm_output/cpt/cpt-step-001908.pt"
+  },
+  "rope_lm_output_kl": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/rope/lm_output_kl/cpt",
+    "core": "rope",
+    "key": "rope_lm_output_kl",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "rope/lm_output_kl/cpt",
+    "variant": "lm_output_kl",
+    "weights_bytes": 3132887163,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/rope/lm_output_kl/cpt/cpt-step-001908.pt"
+  },
+  "rope_local": {
+    "checkpoint_dir": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/rope/local/cpt",
+    "core": "rope",
+    "key": "rope_local",
+    "repo_id": "ChavyvAkvar/atma-foveal-cpt-all",
+    "step": 1908,
+    "subfolder": "rope/local/cpt",
+    "variant": "local",
+    "weights_bytes": 3130775771,
+    "weights_path": "/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/rope/local/cpt/cpt-step-001908.pt"
+  }
+}

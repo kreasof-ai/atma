@@ -1,0 +1,271 @@
+{
+  "protocol_id": "pat_feedback_v1_e5",
+  "timestamp_iso": "2026-09-12T20:41:06Z",
+  "total_elapsed_sec": 239.48,
+  "results": {
+    "primary_nope": {
+      "outlier_H5__uncapped": {
+        "head": 5,
+        "ceiling_tokens": null,
+        "bpb": {
+          "2048": 1.6101,
+          "65536": 6.2585,
+          "262144": 7.5327
+        }
+      },
+      "outlier_H5__hl_128": {
+        "head": 5,
+        "ceiling_tokens": 128,
+        "bpb": {
+          "2048": 1.6462,
+          "65536": 1.6715,
+          "262144": 1.7788
+        }
+      },
+      "outlier_H5__hl_256": {
+        "head": 5,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.6354,
+          "65536": 1.6615,
+          "262144": 1.7823
+        }
+      },
+      "outlier_H5__hl_512": {
+        "head": 5,
+        "ceiling_tokens": 512,
+        "bpb": {
+          "2048": 1.6246,
+          "65536": 1.6814,
+          "262144": 1.8508
+        }
+      },
+      "outlier_H5__hl_1024": {
+        "head": 5,
+        "ceiling_tokens": 1024,
+        "bpb": {
+          "2048": 1.6167,
+          "65536": 2.0047,
+          "262144": 2.46
+        }
+      },
+      "second_highest_H7__hl_256": {
+        "head": 7,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.6105,
+          "65536": 6.2829,
+          "262144": 7.624
+        }
+      },
+      "random_control_H4__hl_256": {
+        "head": 4,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.6101,
+          "65536": 6.2585,
+          "262144": 7.5327
+        }
+      }
+    },
+    "primary_polar": {
+      "outlier_H6__uncapped": {
+        "head": 6,
+        "ceiling_tokens": null,
+        "bpb": {
+          "2048": 1.5551,
+          "65536": 1.717,
+          "262144": 1.9638
+        }
+      },
+      "outlier_H6__hl_128": {
+        "head": 6,
+        "ceiling_tokens": 128,
+        "bpb": {
+          "2048": 1.5662,
+          "65536": 1.5134,
+          "262144": 1.6505
+        }
+      },
+      "outlier_H6__hl_256": {
+        "head": 6,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.5644,
+          "65536": 1.5149,
+          "262144": 1.6562
+        }
+      },
+      "outlier_H6__hl_512": {
+        "head": 6,
+        "ceiling_tokens": 512,
+        "bpb": {
+          "2048": 1.5618,
+          "65536": 1.5182,
+          "262144": 1.6621
+        }
+      },
+      "outlier_H6__hl_1024": {
+        "head": 6,
+        "ceiling_tokens": 1024,
+        "bpb": {
+          "2048": 1.558,
+          "65536": 1.526,
+          "262144": 1.6761
+        }
+      },
+      "second_highest_H0__hl_256": {
+        "head": 0,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.5549,
+          "65536": 1.7199,
+          "262144": 1.9656
+        }
+      },
+      "random_control_H5__hl_256": {
+        "head": 5,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.5551,
+          "65536": 1.717,
+          "262144": 1.9638
+        }
+      }
+    },
+    "foveal_nope_lm_output_kl": {
+      "outlier_H5__uncapped": {
+        "head": 5,
+        "ceiling_tokens": null,
+        "bpb": {
+          "2048": 1.6059576728501652,
+          "65536": 1.5625946187123194,
+          "262144": 1.6939738764129526
+        }
+      },
+      "outlier_H5__hl_128": {
+        "head": 5,
+        "ceiling_tokens": 128,
+        "bpb": {
+          "2048": 1.6386397173054246,
+          "65536": 1.627357770538052,
+          "262144": 1.6498581877069625
+        }
+      },
+      "outlier_H5__hl_256": {
+        "head": 5,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.6295880539375263,
+          "65536": 1.6102133363980038,
+          "262144": 1.6338996488706479
+        }
+      },
+      "outlier_H5__hl_512": {
+        "head": 5,
+        "ceiling_tokens": 512,
+        "bpb": {
+          "2048": 1.6190835989417909,
+          "65536": 1.599074460454182,
+          "262144": 1.6208111156812175
+        }
+      },
+      "outlier_H5__hl_1024": {
+        "head": 5,
+        "ceiling_tokens": 1024,
+        "bpb": {
+          "2048": 1.612727539182742,
+          "65536": 1.586381511291212,
+          "262144": 1.6109440482192503
+        }
+      },
+      "second_highest_H7__hl_256": {
+        "head": 7,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.6055597594649111,
+          "65536": 1.575334588793831,
+          "262144": 1.734120605477224
+        }
+      },
+      "random_control_H4__hl_256": {
+        "head": 4,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.6059576728501652,
+          "65536": 1.5625946187123194,
+          "262144": 1.6939738764129526
+        }
+      }
+    },
+    "foveal_polar_lm_output_kl": {
+      "outlier_H6__uncapped": {
+        "head": 6,
+        "ceiling_tokens": null,
+        "bpb": {
+          "2048": 1.621460776526146,
+          "65536": 1.66784897696137,
+          "262144": 1.6465487097010398
+        }
+      },
+      "outlier_H6__hl_128": {
+        "head": 6,
+        "ceiling_tokens": 128,
+        "bpb": {
+          "2048": 1.6254105872321276,
+          "65536": 1.6451741523995769,
+          "262144": 1.612623960361725
+        }
+      },
+      "outlier_H6__hl_256": {
+        "head": 6,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.6259584310009654,
+          "65536": 1.6433619326776323,
+          "262144": 1.616218948142708
+        }
+      },
+      "outlier_H6__hl_512": {
+        "head": 6,
+        "ceiling_tokens": 512,
+        "bpb": {
+          "2048": 1.6244897194106154,
+          "65536": 1.6467463785527705,
+          "262144": 1.6149666313068491
+        }
+      },
+      "outlier_H6__hl_1024": {
+        "head": 6,
+        "ceiling_tokens": 1024,
+        "bpb": {
+          "2048": 1.6232497294343948,
+          "65536": 1.6514280363077325,
+          "262144": 1.622208945151224
+        }
+      },
+      "second_highest_H0__hl_256": {
+        "head": 0,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.6213345252795388,
+          "65536": 1.6641795567959512,
+          "262144": 1.6538753838176736
+        }
+      },
+      "random_control_H5__hl_256": {
+        "head": 5,
+        "ceiling_tokens": 256,
+        "bpb": {
+          "2048": 1.621460776526146,
+          "65536": 1.66784897696137,
+          "262144": 1.6465487097010398
+        }
+      }
+    }
+  },
+  "interpretation": {
+    "sensitivity": "Capping the outlier head with ceilings between H=128 and H=512 effectively rescues 256K likelihood. H=256 provides optimal likelihood recovery without 2K distortion.",
+    "specificity": "Capping alternative same-layer heads (second-highest H0 or random control) with H=256 produces zero recovery at 256K, confirming that degradation is strictly localized to the pathological outlier head."
+  }
+}

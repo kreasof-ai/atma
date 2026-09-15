@@ -33,6 +33,13 @@ try:
     except ImportError:  # PyTorch < 2.9
         AuxRequest = None
 
+    try:
+        import torch._dynamo
+
+        torch._dynamo.config.recompile_limit = 1000
+    except Exception:
+        pass
+
     HAS_FLEX_ATTENTION = True
 except Exception:  # pragma: no cover - depends on the training PyTorch build.
     BlockMask = None
@@ -436,7 +443,11 @@ class FovealAttention(nn.Module):
 
     def _flex(self, q: Tensor, k: Tensor, v: Tensor, **kwargs):
         if self._compiled_flex is None:
-            self._compiled_flex = torch.compile(flex_attention, dynamic=False) if self.compile_flex else flex_attention
+            self._compiled_flex = (
+                torch.compile(flex_attention, dynamic=True)
+                if self.compile_flex
+                else flex_attention
+            )
         if self.flex_kernel_options is not None:
             kwargs["kernel_options"] = self.flex_kernel_options
         return self._compiled_flex(q, k, v, **kwargs)

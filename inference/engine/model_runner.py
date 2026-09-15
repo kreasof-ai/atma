@@ -92,7 +92,7 @@ class ModelRunner:
             torch.cuda.empty_cache()
             torch.cuda.reset_peak_memory_stats()
             # warmup pass to measure peak model memory
-            seq_len = min(self.config.max_num_batched_tokens, self.config.max_model_len)
+            seq_len = min(64, self.config.max_num_batched_tokens, self.config.max_model_len)
             num_seqs = min(self.config.max_num_batched_tokens // seq_len, self.config.max_num_seqs)
             dummy_seqs = [Sequence([0] * seq_len) for _ in range(num_seqs)]
             for s in dummy_seqs:
@@ -139,9 +139,19 @@ class ModelRunner:
             peak = torch.cuda.memory_stats()["allocated_bytes.all.peak"]
             current = torch.cuda.memory_stats()["allocated_bytes.all.current"]
             available = int(total * config.gpu_memory_utilization - used - peak + current)
-            config.num_kvcache_blocks = max(16, available // block_bytes)
+            needed_blocks = max(
+                16,
+                self.config.max_num_seqs
+                * ((self.config.max_model_len + self.block_size - 1) // self.block_size),
+            )
+            config.num_kvcache_blocks = min(max(16, available // block_bytes), needed_blocks)
         else:
-            config.num_kvcache_blocks = 128
+            needed_blocks = max(
+                16,
+                self.config.max_num_seqs
+                * ((self.config.max_model_len + self.block_size - 1) // self.block_size),
+            )
+            config.num_kvcache_blocks = max(16, needed_blocks)
 
         print(f"KV cache: {num_attn_layers} layers, {config.num_kvcache_blocks} blocks × {self.block_size} "
               f"({block_bytes * config.num_kvcache_blocks / 1e6:.1f} MB)")

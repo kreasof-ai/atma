@@ -78,6 +78,29 @@ class SoftmaxAttention(AtmaAttention):
     def _attend(self, q, k, v, *, causal, q_start=0):
         # q/k/v [B,H,T,D], already GQA-expanded.
         Tq, Tk = q.shape[2], k.shape[2]
+        if self.window is not None and Tq > 2048:
+            chunk_size = 2048
+            outs = []
+            for c_start in range(0, Tq, chunk_size):
+                c_end = min(c_start + chunk_size, Tq)
+                qc = q[:, :, c_start:c_end]
+                k_start = max(0, q_start + c_start - self.window)
+                kc = k[:, :, k_start : q_start + c_end]
+                vc = v[:, :, k_start : q_start + c_end]
+                qi = torch.arange(
+                    q_start + c_start, q_start + c_end, device=q.device
+                )[:, None]
+                ki = torch.arange(k_start, q_start + c_end, device=q.device)[
+                    None, :
+                ]
+                mask = (ki <= qi) & (ki > qi - self.window)
+                outs.append(
+                    F.scaled_dot_product_attention(
+                        qc, kc, vc, attn_mask=mask, scale=self.sdpa_scale
+                    )
+                )
+            return torch.cat(outs, dim=2)
+
         mask = None
         if not causal or self.window is not None:
             qi = torch.arange(q_start, q_start + Tq, device=q.device)[:, None]

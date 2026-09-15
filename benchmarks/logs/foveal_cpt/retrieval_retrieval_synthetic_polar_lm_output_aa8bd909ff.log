@@ -1,0 +1,11 @@
+[run] benchmark=retrieval model=/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/lm_output/cpt tasks=['passkey', 'niah'] lengths=['2k', '4k', '8k', '16k', '32k'] samples=10 gamma_clamp=None
+[retrieval] passkey len=  2k depth= 0.1: token_acc=92.0% exact=60.0% nll=0.9267
+[retrieval] passkey len=  2k depth= 0.5: token_acc=88.0% exact=50.0% nll=0.9217
+[retrieval] passkey len=  2k depth= 0.9: token_acc=100.0% exact=100.0% nll=0.2209
+[retrieval] passkey len=  4k depth= 0.1: token_acc=18.0% exact=0.0% nll=3.2123
+[retrieval] passkey len=  4k depth= 0.5: token_acc=4.0% exact=0.0% nll=3.8675
+[retrieval] passkey len=  4k depth= 0.9: token_acc=96.0% exact=80.0% nll=0.2303
+[retrieval] passkey len=  8k depth= 0.1: token_acc=40.0% exact=10.0% nll=2.7543
+[retrieval] passkey len=  8k depth= 0.5: token_acc=12.0% exact=0.0% nll=3.5290
+[retrieval] passkey len=  8k depth= 0.9: token_acc=6.0% exact=0.0% nll=3.9706
+[retrieval] passkey len= 16k depth= 0.1: token_acc=14.0% exact=0.0% nll=3.7480

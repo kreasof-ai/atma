@@ -34,6 +34,14 @@ NoPE, RoPE, and Polar models are trained for 18,722 optimizer steps—**9.816B t
 
 Atma-Raven-Titans (382.37M) and Raven Native (388.54M) use the same data, tokenizer, token budget, and device class, but use a different model family and AdamW optimizer. They are useful operating points, not optimizer-matched architectural ablations.
 
+### Stage III: Foveal sparse-attention CPT sweep (12 models)
+
+The three 10B base checkpoints (Polar, NoPE, RoPE) undergo **1B tokens** of continuous pre-training (CPT) at 32K context across four sparse adaptation modes: `local` (SWA-512), `lm_output` (16D MQA indexer with continuous residual reading), `kl` (16D MQA indexer trained via teacher KL distillation), and `lm_output_kl` (dual-loss). Complete evaluation up to 256K across Downstream tasks, Synthetic/Real retrieval, BABILong QA1–QA10, Longdoc BPB, and Serving is documented in [`foveal_cpt/BENCHMARK_RESULTS.md`](../foveal_cpt/BENCHMARK_RESULTS.md). The aggregated 7,146-row matrix lives under [`benchmarks/logs/foveal_cpt/`](../benchmarks/logs/foveal_cpt/).
+
+A full audit across all 384 Titans memory layer-heads confirms **zero new or suspicious gamma retention outliers** were introduced during 32K CPT: 31 of 32 heads per checkpoint maintain bounded short half-lives (median 22–26 tokens, 2nd max $<260$ tokens across all models), and the pre-existing Stage II base operating points (L2H5 in NoPE, L2H6 in Polar) remained stable. Full parameters are recorded in [`benchmarks/logs/foveal_cpt/gamma_parameters.json`](../benchmarks/logs/foveal_cpt/gamma_parameters.json).
+
+An inference-only re-evaluation capping the Layer 2 outliers to $H \le 256$ tokens (`hl-256`) on the promoted checkpoints (`polar_lm_output_kl` and `nope_lm_output_kl`) completely prevents NoPE's 256K Proof-Pile likelihood regression (recovering by **0.365 BPB** to 2.297) and boosts NoPE's 256K BABILong reasoning by **+10 percentage points** (24% $\rightarrow$ 34%), while preserving downstream zero-shot accuracy ($\pm 0.1\%$). Complete clamped results are documented in [`foveal_cpt/BENCHMARK_RESULTS.md`](../foveal_cpt/BENCHMARK_RESULTS.md).
+
 ## Long-context endpoints
 
 | Group | Model | Retrieval token 2K | Retrieval token 256K | Exact 256K | BABILong 256K | Mean BPB 2K | Mean BPB 256K |
@@ -78,6 +86,7 @@ On one L40S at 128K, the attention variants decode at about 16.3–16.5 ms/token
 | [`ablation/results.json`](../ablation/results.json) | Complete Stage I grid |
 | [`benchmarks/logs/atma_10b/benchmark_matrix.json`](../benchmarks/logs/atma_10b/benchmark_matrix.json) | Stage II retrieval, base-task, long-document, and serving rows |
 | [`benchmarks/logs/babilong_2k_ft/benchmark_matrix.json`](../benchmarks/logs/babilong_2k_ft/benchmark_matrix.json) | Adapted BABILong rows |
+| [`benchmarks/logs/foveal_cpt/benchmark_matrix.json`](../benchmarks/logs/foveal_cpt/benchmark_matrix.json) | Stage III Foveal CPT 12-model complete benchmark rows |
 | [`scaled_ablation/logs_stress/checkpoint_stress.json`](../scaled_ablation/logs_stress/checkpoint_stress.json) | Checkpoint stress diagnostics |
 
 For protocol details and commands, see [`benchmarks/README.md`](../benchmarks/README.md). For the post-hoc checkpoint audit, see [checkpoint variability](research/checkpoint-variability.md).

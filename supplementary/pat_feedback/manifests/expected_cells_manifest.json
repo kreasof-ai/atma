@@ -1,0 +1,18 @@
+{
+  "expected_cells": {
+    "e1_runs": 9,
+    "e1_distinct_prompts": 16200,
+    "e2_conditions": 8,
+    "e2_bpb_cells": 48,
+    "e2_retrieval_prompts": 17280,
+    "e3_telemetry_cells": 24,
+    "e4_model_conditions": 6,
+    "e4_distinct_prompts": 12960
+  },
+  "execution_rules": {
+    "atomic_claiming": "O_CREAT | O_EXCL unique worker claims",
+    "strict_failure": "Exit code 0 required + non-null metrics + finite float check",
+    "resumable_execution": "Atomic latest-pointer checkpoint swapping with full optimizer/RNG state",
+    "zero_filling_forbidden": "Missing or failed cells are recorded as failed, never filled with zero accuracy"
+  }
+}

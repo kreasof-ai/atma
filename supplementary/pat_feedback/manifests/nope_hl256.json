@@ -1,0 +1,13 @@
+{
+  "format": "atma-gamma-clamp-v1",
+  "label": "hl-256",
+  "targets": [
+    {
+      "layer": 2,
+      "heads": [
+        5
+      ],
+      "max_half_life_tokens": 256.0
+    }
+  ]
+}

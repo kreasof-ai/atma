@@ -1,0 +1,81 @@
+{
+  "run_id": "pat_e1_temperature_softmax_memory_20270914",
+  "arm": "temperature_softmax_memory",
+  "seed": 20270914,
+  "elapsed_sec": 364.82,
+  "primary_natural_text_exact_mean_8k_to_64k": 44.166666666666664,
+  "retrieval": {
+    "synthetic": {
+      "2048": {
+        "exact_accuracy_percent": 73.33333333333333,
+        "token_accuracy_percent": 93.88888888888889,
+        "prompts": 180
+      },
+      "8192": {
+        "exact_accuracy_percent": 63.33333333333333,
+        "token_accuracy_percent": 90.44444444444444,
+        "prompts": 180
+      },
+      "16384": {
+        "exact_accuracy_percent": 67.77777777777779,
+        "token_accuracy_percent": 91.77777777777779,
+        "prompts": 180
+      },
+      "32768": {
+        "exact_accuracy_percent": 63.33333333333333,
+        "token_accuracy_percent": 90.0,
+        "prompts": 180
+      },
+      "65536": {
+        "exact_accuracy_percent": 66.66666666666666,
+        "token_accuracy_percent": 91.33333333333333,
+        "prompts": 180
+      }
+    },
+    "real": {
+      "2048": {
+        "exact_accuracy_percent": 72.77777777777777,
+        "token_accuracy_percent": 94.22222222222221,
+        "prompts": 180
+      },
+      "8192": {
+        "exact_accuracy_percent": 62.77777777777778,
+        "token_accuracy_percent": 90.55555555555556,
+        "prompts": 180
+      },
+      "16384": {
+        "exact_accuracy_percent": 47.77777777777778,
+        "token_accuracy_percent": 84.88888888888889,
+        "prompts": 180
+      },
+      "32768": {
+        "exact_accuracy_percent": 36.11111111111111,
+        "token_accuracy_percent": 80.33333333333333,
+        "prompts": 180
+      },
+      "65536": {
+        "exact_accuracy_percent": 30.0,
+        "token_accuracy_percent": 77.55555555555556,
+        "prompts": 180
+      }
+    }
+  },
+  "bpb": {
+    "2048": {
+      "mean_bpb": 1.4766278504132078,
+      "per_corpus": {
+        "pg19": 1.3122538703831872,
+        "proof_pile": 2.0432161467829477,
+        "finepdfs": 1.074413534073488
+      }
+    },
+    "65536": {
+      "mean_bpb": 1.4561888691607077,
+      "per_corpus": {
+        "pg19": 1.3386998504599719,
+        "proof_pile": 1.9997678809685802,
+        "finepdfs": 1.030098876053571
+      }
+    }
+  }
+}

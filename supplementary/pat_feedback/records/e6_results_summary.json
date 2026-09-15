@@ -1,0 +1,164 @@
+{
+  "status": "completed",
+  "summary_table": {
+    "nope": {
+      "2048": {
+        "prefill_ttft_median_s": 0.024127599716186523,
+        "prefill_tok_per_s_median": 84884.62564344436,
+        "decode_latency_ms_median": 2.2036763852642425,
+        "decode_tok_per_s_median": 453.7871482520069,
+        "peak_reserved_gib": 0.861328125,
+        "backend": "BaselineLLM"
+      },
+      "32768": {
+        "prefill_ttft_median_s": 0.22657733917236328,
+        "prefill_tok_per_s_median": 144621.70235008828,
+        "decode_latency_ms_median": 5.242041249429026,
+        "decode_tok_per_s_median": 190.76538178825075,
+        "peak_reserved_gib": 2.330078125,
+        "backend": "BaselineLLM"
+      },
+      "131072": {
+        "prefill_ttft_median_s": 1.4874849853515624,
+        "prefill_tok_per_s_median": 88116.52131915229,
+        "decode_latency_ms_median": 14.814061903184461,
+        "decode_tok_per_s_median": 67.5034311553149,
+        "peak_reserved_gib": 7.013671875,
+        "backend": "BaselineLLM"
+      }
+    },
+    "polar": {
+      "2048": {
+        "prefill_ttft_median_s": 0.025094608306884765,
+        "prefill_tok_per_s_median": 10201.640483974586,
+        "decode_latency_ms_median": 2.271780644693682,
+        "decode_tok_per_s_median": 440.1837156750495,
+        "peak_reserved_gib": 0.8671875,
+        "backend": "LLM"
+      },
+      "32768": {
+        "prefill_ttft_median_s": 0.028987263679504396,
+        "prefill_tok_per_s_median": 8831.483423377405,
+        "decode_latency_ms_median": 5.453627840165169,
+        "decode_tok_per_s_median": 183.36418702597047,
+        "peak_reserved_gib": 2.333984375,
+        "backend": "LLM"
+      },
+      "131072": {
+        "prefill_ttft_median_s": 0.06496905517578125,
+        "prefill_tok_per_s_median": 3940.3880095640634,
+        "decode_latency_ms_median": 15.505401857437622,
+        "decode_tok_per_s_median": 64.49365348066297,
+        "peak_reserved_gib": 7.271484375,
+        "backend": "LLM"
+      }
+    },
+    "rope": {
+      "2048": {
+        "prefill_ttft_median_s": 0.02325345516204834,
+        "prefill_tok_per_s_median": 88086.76981272426,
+        "decode_latency_ms_median": 2.3108799803641538,
+        "decode_tok_per_s_median": 432.73559649444815,
+        "peak_reserved_gib": 0.861328125,
+        "backend": "BaselineLLM"
+      },
+      "32768": {
+        "prefill_ttft_median_s": 0.23104029846191404,
+        "prefill_tok_per_s_median": 141828.0716799158,
+        "decode_latency_ms_median": 5.347822443131478,
+        "decode_tok_per_s_median": 186.9920065743368,
+        "peak_reserved_gib": 2.330078125,
+        "backend": "BaselineLLM"
+      },
+      "131072": {
+        "prefill_ttft_median_s": 1.504883056640625,
+        "prefill_tok_per_s_median": 87097.96973626403,
+        "decode_latency_ms_median": 14.961819817942958,
+        "decode_tok_per_s_median": 66.8367951702153,
+        "peak_reserved_gib": 7.013671875,
+        "backend": "BaselineLLM"
+      }
+    },
+    "raven_native": {
+      "2048": {
+        "prefill_ttft_median_s": 0.045424591064453124,
+        "prefill_tok_per_s_median": 45085.7993599929,
+        "decode_latency_ms_median": 3.2747685140179046,
+        "decode_tok_per_s_median": 305.36509553214165,
+        "peak_reserved_gib": 0.923828125,
+        "backend": "BaselineLLM"
+      },
+      "32768": {
+        "prefill_ttft_median_s": 0.31365968322753907,
+        "prefill_tok_per_s_median": 104469.91397840515,
+        "decode_latency_ms_median": 3.2830513561925576,
+        "decode_tok_per_s_median": 304.5946880941503,
+        "peak_reserved_gib": 2.791015625,
+        "backend": "BaselineLLM"
+      },
+      "131072": {
+        "prefill_ttft_median_s": 1.3331510009765624,
+        "prefill_tok_per_s_median": 98317.44676820555,
+        "decode_latency_ms_median": 3.3235917437461113,
+        "decode_tok_per_s_median": 300.8793247036326,
+        "peak_reserved_gib": 8.7421875,
+        "backend": "BaselineLLM"
+      }
+    },
+    "atma_raven_titans": {
+      "2048": {
+        "prefill_ttft_median_s": 0.02904809665679932,
+        "prefill_tok_per_s_median": 70503.78017976996,
+        "decode_latency_ms_median": 2.2537873560382478,
+        "decode_tok_per_s_median": 443.697609600079,
+        "peak_reserved_gib": 0.90625,
+        "backend": "BaselineLLM"
+      },
+      "32768": {
+        "prefill_ttft_median_s": 0.24327889251708984,
+        "prefill_tok_per_s_median": 134693.14916929096,
+        "decode_latency_ms_median": 2.2520046503313123,
+        "decode_tok_per_s_median": 444.04906985119663,
+        "peak_reserved_gib": 2.904296875,
+        "backend": "BaselineLLM"
+      },
+      "131072": {
+        "prefill_ttft_median_s": 0.9986060485839844,
+        "prefill_tok_per_s_median": 131255.1840291035,
+        "decode_latency_ms_median": 2.3037233429570354,
+        "decode_tok_per_s_median": 434.0831108516086,
+        "peak_reserved_gib": 9.2734375,
+        "backend": "BaselineLLM"
+      }
+    },
+    "tda_hybrid": {
+      "2048": {
+        "prefill_ttft_median_s": 0.02366749600332696,
+        "prefill_tok_per_s_median": 86532.37158963135,
+        "decode_latency_ms_median": null,
+        "decode_tok_per_s_median": null,
+        "peak_reserved_gib": 0.845703125,
+        "backend": "direct_full_recompute"
+      },
+      "32768": {
+        "prefill_ttft_median_s": 0.5748268199968152,
+        "prefill_tok_per_s_median": 57004.99518957229,
+        "decode_latency_ms_median": null,
+        "decode_tok_per_s_median": null,
+        "peak_reserved_gib": 2.30859375,
+        "backend": "direct_full_recompute"
+      },
+      "131072": {
+        "prefill_ttft_median_s": 6.602904450002825,
+        "prefill_tok_per_s_median": 19850.65960728847,
+        "decode_latency_ms_median": null,
+        "decode_tok_per_s_median": null,
+        "peak_reserved_gib": 6.994140625,
+        "backend": "direct_full_recompute"
+      }
+    }
+  },
+  "artifacts": {
+    "evaluation_json": "supplementary/pat_feedback/work/evaluation/e6_serving_repeatability.json"
+  }
+}

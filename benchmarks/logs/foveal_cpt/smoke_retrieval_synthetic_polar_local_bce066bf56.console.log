@@ -1,0 +1,17 @@
+You are using version 1 of 'kernels-community/causal-conv1d', but version 2 is available.
+[run] benchmark=retrieval model=/home/sagemaker-user/.cache/huggingface/hub/models--ChavyvAkvar--atma-foveal-cpt-all/snapshots/e4cf2558793646c26d9e5a6c6eeadb4e1011cad3/polar/local/cpt tasks=['passkey', 'niah'] lengths=['2k', '8k'] samples=5 gamma_clamp=None
+
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]
+Fetching 8 files: 100%|██████████| 8/8 [00:00<00:00, 1802.35it/s]
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1909.11it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1904.34it/s]
+[retrieval] passkey len=  2k depth= 0.5: token_acc=0.0% exact=0.0% nll=4.9529
+[retrieval] passkey len=  8k depth= 0.5: token_acc=0.0% exact=0.0% nll=4.9386
+[retrieval]    niah len=  2k depth= 0.5: token_acc=0.0% exact=0.0% nll=3.9211
+[retrieval]    niah len=  8k depth= 0.5: token_acc=0.0% exact=0.0% nll=4.2758
+[run] done in 6.0s -> /home/sagemaker-user/atma/benchmarks/logs/foveal_cpt/smoke_retrieval_synthetic_polar_local_bce066bf56.log

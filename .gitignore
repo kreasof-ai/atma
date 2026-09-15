@@ -9,8 +9,10 @@ ablation/shards
 scaled_ablation/eval_manifests
 scaled_ablation/cross_eval_*.json
 gamma_diagnostics/manifests/
-/tmp/training_artifact_diag/
+/tmp/
 /checkpoints/babilong_2k_ft/
+/checkpoints/foveal_babilong_2k_ft/
+/checkpoints/**/weights.pt
 /foveal_cpt/output/
 /third_party/flash-linear-attention/
 /third_party/mamba/
@@ -31,6 +33,10 @@ paper/**/*.toc
 .DS_Store
 Thumbs.db
 .vscode/
+finewebedu10B/
+checkpoints/
+*.pt
+
 
 # Local TDA benchmark runtime lock and large adapted checkpoint binary.
 /supplementary/robustness/work/evaluation/tda_pipeline/.lock

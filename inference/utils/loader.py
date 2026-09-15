@@ -17,12 +17,20 @@ def load_model(model: nn.Module, path_or_state_dict, *, strict: bool = False) ->
         state_dict = path_or_state_dict
 
     # Clean compiled/wrapped state dict prefixes
+    model_param_names = set(model.state_dict().keys())
     cleaned_state = {}
     for k, v in state_dict.items():
         name = k
         # Strip torch.compile wrapper prefix
         if name.startswith("_orig_mod."):
             name = name[len("_orig_mod."):]
+        if name not in model_param_names and (
+            ".attn.base." in name or ".index_" in name or ".route_" in name
+        ):
+            raise ValueError(
+                "Foveal checkpoint cannot be loaded into an ordinary serving model; "
+                "use FovealLLM to preserve its routing and index output"
+            )
         cleaned_state[name] = v
 
     # Perform weight loading

@@ -25,6 +25,7 @@ class AtmaConfig:
     # Attention core for the 4 attention layers:
     #   "polar" -> PolarAttention (length-invariant direction+count, canon)   [default, shipping]
     #   "nope"  -> softmax CausalSelfAttention, canon, no positional encoding
+    #   "temperature_softmax" -> NoPE softmax with learned length-temperature t(n)=1+softplus(alpha)*log(n)
     #   "rope"  -> softmax CausalSelfAttention, rotary positions, no canon
     #   "wall"  -> softmax CausalSelfAttention, canon + Wall Attention per-channel log-decay gates
     # softmax cores share the SAME GQA + output-gate surround; memory/window/distractor apply to all.

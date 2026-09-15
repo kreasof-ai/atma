@@ -1,0 +1,82 @@
+{
+  "protocol_id": "pat_feedback_v1_e4",
+  "timestamp_iso": "2026-09-12T20:24:13Z",
+  "total_elapsed_sec": 1391.51,
+  "primary_lengths": [
+    8192,
+    16384,
+    32768,
+    65536
+  ],
+  "pairs": {
+    "primary": {
+      "nope_model": "primary_nope",
+      "polar_model": "primary_polar",
+      "real_text_exact_mean_8k_to_64k": {
+        "nope": 0.9722222222222222,
+        "polar": 36.25,
+        "contrast_polar_minus_nope": 35.27777777777778,
+        "bootstrap_95_ci": [
+          35.27777777777779,
+          35.27777777777779
+        ]
+      },
+      "synthetic_exact_mean_8k_to_64k": {
+        "nope": 44.44444444444444,
+        "polar": 79.72222222222223,
+        "contrast_polar_minus_nope": 35.277777777777786
+      },
+      "exact_at_256k": {
+        "nope": 0.0,
+        "polar": 3.3333333333333335,
+        "contrast": 3.3333333333333335
+      }
+    },
+    "replication_seed1": {
+      "nope_model": "repl_seed1_nope",
+      "polar_model": "repl_seed1_polar",
+      "real_text_exact_mean_8k_to_64k": {
+        "nope": 1.25,
+        "polar": 37.916666666666664,
+        "contrast_polar_minus_nope": 36.666666666666664,
+        "bootstrap_95_ci": [
+          36.666666666666664,
+          36.666666666666664
+        ]
+      },
+      "synthetic_exact_mean_8k_to_64k": {
+        "nope": 57.22222222222222,
+        "polar": 37.083333333333336,
+        "contrast_polar_minus_nope": -20.138888888888886
+      },
+      "exact_at_256k": {
+        "nope": 0.0,
+        "polar": 0.0,
+        "contrast": 0.0
+      }
+    },
+    "replication_seed2": {
+      "nope_model": "repl_seed2_nope",
+      "polar_model": "repl_seed2_polar",
+      "real_text_exact_mean_8k_to_64k": {
+        "nope": 2.638888888888889,
+        "polar": 42.22222222222222,
+        "contrast_polar_minus_nope": 39.583333333333336,
+        "bootstrap_95_ci": [
+          39.58333333333333,
+          39.58333333333333
+        ]
+      },
+      "synthetic_exact_mean_8k_to_64k": {
+        "nope": 58.33333333333333,
+        "polar": 62.5,
+        "contrast_polar_minus_nope": 4.166666666666671
+      },
+      "exact_at_256k": {
+        "nope": 0.0,
+        "polar": 0.0,
+        "contrast": 0.0
+      }
+    }
+  }
+}

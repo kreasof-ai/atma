@@ -1,0 +1,28 @@
+{
+  "item_id": "capacity_and_storage",
+  "status": "satisfied",
+  "timestamp_iso": "2026-09-12T16:40:32Z",
+  "device": "cuda",
+  "device_name": "NVIDIA L40S",
+  "device_memory_mib": 45459,
+  "measured_timings": {
+    "training_step_sec": 9.32,
+    "training_tokens_per_sec": 56254.1,
+    "single_run_hours": 4.92,
+    "nine_run_total_hours": 44.27,
+    "eval_latency_2k_sec": 0.05,
+    "eval_latency_64k_sec": 1.25,
+    "eval_latency_256k_sec": 6.8
+  },
+  "resources": {
+    "allocated_gpu_hours": 48.0,
+    "training_retry_token_reserve": 1000000000,
+    "checkpoint_storage_bytes": 50000000000
+  },
+  "storage_breakdown": {
+    "weights_per_model_bytes": 1410000000,
+    "total_checkpoints_bytes": 12690000000,
+    "logs_and_artifacts_bytes": 500000000,
+    "free_disk_space_bytes": 57000000000
+  }
+}

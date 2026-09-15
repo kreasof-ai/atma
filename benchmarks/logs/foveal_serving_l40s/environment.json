@@ -1,0 +1,41 @@
+{
+  "gpu": "NVIDIA L40S",
+  "cuda": "13.0",
+  "gpu_total_bytes": 47667740672,
+  "python": "3.12.14",
+  "platform": "Linux-6.12.103-127.188.amzn2023.x86_64-x86_64-with-glibc2.39",
+  "packages": {
+    "torch": "2.14.0",
+    "triton": "3.8.0",
+    "flash-linear-attention": "0.5.2",
+    "transformers": "5.17.0",
+    "huggingface-hub": "1.31.0",
+    "pytest": "9.1.1",
+    "datasets": "5.0.1",
+    "kernels": "0.16.1"
+  },
+  "torch_build": "2.14.0+cu130",
+  "driver": "595.91.07",
+  "nvidia_smi_total_mib": 46068,
+  "causal_conv_revision": "19d5632c27565e020a0aa0169bc7ad44a2c7080b",
+  "base_refs_at_check": {
+    "polar": "faa10ea68590d57c0869c9dd6d38f40c476cff5d",
+    "nope": "d2974b46bf1be80fe0285ed7c15903b8079f615a",
+    "rope": "de0a2f1c63b0631a040a2d6adac9e2d43fd5c581"
+  },
+  "numeric_settings": {
+    "float32_matmul_precision": "highest",
+    "matmul_allow_tf32": false,
+    "cudnn_allow_tf32": true,
+    "allow_bf16_reduced_precision_reduction": true,
+    "cudnn_deterministic": false
+  },
+  "tokenizer_cache_revisions": {
+    "models--gpt2": "607a30d783dfa663caf39e06633721c8d4cfcd7e"
+  },
+  "activation_dtype": "torch.bfloat16",
+  "parameter_dtype_note": "FovealLLM retains mixed parameters: BF16 embedding, FP32 linear/norm parameters cast to the activation dtype during forward. The verifier parameter_dtype field reports the embedding dtype.",
+  "OMP_NUM_THREADS": 4,
+  "HF_HUB_OFFLINE": false,
+  "environment_record_origin": "Same L40S session and unchanged dependency installation as the cached-decoder audit."
+}

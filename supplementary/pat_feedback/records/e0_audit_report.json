@@ -1,0 +1,200 @@
+{
+  "protocol_id": "pat_feedback_v1_e0",
+  "timestamp_iso": "2026-09-12T16:33:30Z",
+  "device": "cuda",
+  "device_name": "NVIDIA L40S",
+  "pytorch_version": "2.14.0+cu130",
+  "cuda_version": "13.0",
+  "elapsed_seconds": 3.57,
+  "checks": {
+    "direction_floor_semantics": {
+      "z_sweep": [
+        {
+          "Z": 0.0001,
+          "max_abs_err": 0.0,
+          "floor_active": false
+        },
+        {
+          "Z": 0.01,
+          "max_abs_err": 0.0,
+          "floor_active": false
+        },
+        {
+          "Z": 0.1,
+          "max_abs_err": 0.0,
+          "floor_active": false
+        },
+        {
+          "Z": 0.5,
+          "max_abs_err": 0.0,
+          "floor_active": false
+        },
+        {
+          "Z": 1.0,
+          "max_abs_err": 0.0,
+          "floor_active": false
+        },
+        {
+          "Z": 2.0,
+          "max_abs_err": 0.0,
+          "floor_active": false
+        },
+        {
+          "Z": 10.0,
+          "max_abs_err": 0.0,
+          "floor_active": false
+        },
+        {
+          "Z": 100.0,
+          "max_abs_err": 0.0,
+          "floor_active": false
+        },
+        {
+          "Z": 1000.0,
+          "max_abs_err": 0.0,
+          "floor_active": false
+        }
+      ],
+      "zero_vector_diff": 0.0,
+      "tiny_norm_floor_regime": [
+        {
+          "Z": 0.01,
+          "norm_s": 1e-08,
+          "norm_U": 1e-10,
+          "c_ref_norm": 0.01,
+          "c_stream_norm": 0.00010000000000000002,
+          "diff": 0.003469383140731026,
+          "floor_active": true
+        },
+        {
+          "Z": 1.0,
+          "norm_s": 1e-08,
+          "norm_U": 1e-08,
+          "c_ref_norm": 0.010000000000000002,
+          "c_stream_norm": 0.010000000000000002,
+          "diff": 0.0,
+          "floor_active": true
+        },
+        {
+          "Z": 100.0,
+          "norm_s": 1e-08,
+          "norm_U": 1e-06,
+          "c_ref_norm": 0.010000000000000002,
+          "c_stream_norm": 1.0,
+          "diff": 0.34693831407310255,
+          "floor_active": true
+        }
+      ],
+      "gradient_agreement_away_from_threshold": 0.0,
+      "conclusion": "When ||s|| > eps (normal operational regime), the difference between streaming and theoretical floor is strictly zero (identically 0.0 in FP64). The floor activates only if norm falls below 1e-6."
+    },
+    "participation_ratio_and_null_sink": {
+      "uniform_weights": [
+        {
+          "K": 1,
+          "n_eff": 1.0,
+          "expected": 1.0,
+          "error": 0.0
+        },
+        {
+          "K": 2,
+          "n_eff": 2.0,
+          "expected": 2.0,
+          "error": 0.0
+        },
+        {
+          "K": 4,
+          "n_eff": 4.0,
+          "expected": 4.0,
+          "error": 0.0
+        },
+        {
+          "K": 16,
+          "n_eff": 16.0,
+          "expected": 16.0,
+          "error": 0.0
+        },
+        {
+          "K": 64,
+          "n_eff": 64.0,
+          "expected": 64.0,
+          "error": 0.0
+        },
+        {
+          "K": 256,
+          "n_eff": 256.0,
+          "expected": 256.0,
+          "error": 0.0
+        },
+        {
+          "K": 1024,
+          "n_eff": 1024.0,
+          "expected": 1024.0,
+          "error": 0.0
+        }
+      ],
+      "single_real_key": {
+        "n_eff": 1.0,
+        "expected": 1.0
+      },
+      "dominant_null": {
+        "w_null": 0.9999999,
+        "n_eff": 1599.9999999999998,
+        "m_eff": 0.00015999999991578304,
+        "note": "m_eff correctly scales to near zero as null mass approaches 1"
+      },
+      "all_null_convention": {
+        "m_eff": 0.0,
+        "mag": 0.0,
+        "note": "all-null queries yield exactly m_eff=0.0 and mag=0.0"
+      }
+    },
+    "operator_equivalence_and_t1_recovery": {
+      "materialized_vs_online_streaming": {
+        "direction_max_abs_diff": 3.5762786865234375e-07,
+        "magnitude_max_abs_diff": 2.384185791015625e-07,
+        "pass_fp32_tolerance": true
+      },
+      "triton_kernel": {
+        "c_max_abs_diff": 3.5762786865234375e-07,
+        "mag_max_abs_diff": 2.980232238769531e-07
+      },
+      "temperature_t1_recovery": {
+        "forward_max_abs_diff": 0.0,
+        "grad_q_max_abs_diff": 0.0,
+        "grad_k_max_abs_diff": 0.0,
+        "grad_v_max_abs_diff": 0.0,
+        "grad_alpha_finite": true,
+        "pass_exact_recovery": true
+      }
+    },
+    "checkpoint_probes": {
+      "primary_polar_block2": {
+        "min_temperature": 1.0,
+        "max_temperature": 33.370567321777344,
+        "mean_temperature": 4.5168561935424805,
+        "null_floor_min": 2.2536332607269287,
+        "null_floor_max": 24.676876068115234,
+        "v_null_norm": 4.619817733764648,
+        "floor_activation_rate_estimated": 0.0,
+        "status": "audited_stable"
+      },
+      "foveal_polar_lm_output_kl_block2": {
+        "min_temperature": 1.0,
+        "max_temperature": 33.20626449584961,
+        "mean_temperature": 4.4990057945251465,
+        "null_floor_min": 2.2775235176086426,
+        "null_floor_max": 23.863767623901367,
+        "v_null_norm": 4.493545055389404,
+        "floor_activation_rate_estimated": 0.0,
+        "status": "audited_stable"
+      }
+    }
+  },
+  "formal_decision": {
+    "direction_floor": "Adopt streaming U/max(norm(U), eps) with eps=1e-6 as standard; strictly identical to theoretical U/max(norm(U), eps*Z) for all norm(s) >= eps.",
+    "all_null_convention": "All-null query convention formally defined: m_eff = 0, mag = 0, c = v_null.",
+    "temperature_control": "Temperature-softmax arm with t=1 recovers NoPE SDPA and shared gradients with zero numerical error (0.0).",
+    "historical_checkpoints_impact": "Zero benchmark effect from direction floor convention; floor activation rate is 0.0% across natural text contexts."
+  }
+}

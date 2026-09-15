@@ -1,0 +1,8 @@
+{
+  "source_commit": "ec24bfa0529f0890349e2bcfc8fb893da16008cc",
+  "checkpoint": "polar/kl/cpt",
+  "prompt_tokens": 2048,
+  "warmup_steps": 5,
+  "profiled_steps": 10,
+  "note": "Profiler timings include instrumentation. Copy/conversion operations were 61.65% of recorded GPU self time; launch overhead and full-prefix concatenation were also removed in the graph implementation."
+}
