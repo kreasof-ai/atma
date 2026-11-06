@@ -1,0 +1,63 @@
+# Rebuttal Strategy, Manuscript Reframing & Draft Responses
+
+## 1. Core Strategic Pivot: How We Frame the Paper to Win Over `birj`, `HE3D`, and `ihsT`
+
+All three reviewers respected the paper's empirical honesty on negative results, but pushed back hard on **three tensions between the claims and the data**:
+1. **The 256K Headline Tension (`birj` W1, `ihsT` W3/W4):** The abstract highlights the primary Polar checkpoint's `34.4%` token / `9.0%` exact retrieval at 256K, even though (a) all `9.0%` is on synthetic filler (`0.0%` on natural text from 32K onward), (b) the two fresh 9.8B replications reach `16.97%`/`20.90%` token and `0.00%`/`3.83%` exact at 256K, and (c) once NoPE's single saturating memory head is capped (`hl:256`), **capped NoPE (`1.506 / 1.490` BPB) beats Polar (`1.644 / 1.762` BPB) at 256K** while also having better 2K short-context quality (`45.15%` vs `43.29%`).
+2. **The Component Attribution Tension (`HE3D` W1, `ihsT` W2/Q2):** Sections 5.2 and 6.4 claim E1 establishes the necessity of both direction normalization and the null competitor, even though 3-arm E1 only compared full Polar to Temp-Softmax, and Table 7 showed that fixing the null slope near zero improved 64K retrieval (`91.25%` vs `77.50%`).
+3. **The Numerical Consistency Tension (`HE3D` W2/Q1, `ihsT` W6/Q2):** Unexplained discrepancies between Table 20 (`1.619 s`) and Table 33 (`0.065 s`), between Table 2 (`1.825 -> 1.501`) and E2 (`1.855 -> 1.520`), and between Figure 4 (`10.77`) and Table 23 (`12.003`).
+
+### The Winning Reframing (Revised Abstract & Thesis)
+We resolve Tension #1 by **making the decoupling between 256K likelihood stability and 8K–64K natural-text retrieval the central thesis of the paper**, rather than overselling 256K synthetic retrieval:
+
+> **Proposed Revised Abstract:**
+> What determines whether a hybrid language model extrapolates beyond its training length? Using **ATMA**—a 378M-parameter hybrid combining local gated convolutions, global attention (NoPE, RoPE, or **Polar Attention**), and gated-delta recurrent memory—we show that long-context sequence likelihood and associative retrieval are governed by two distinct mechanisms. In a complete 120-cell, 1B-token factorial trained at 2K, adding recurrent memory improves Polar's 64K retrieval in all 20 matched cells (+47.8 percentage points on average), whereas RoPE remains at 0.0%. Across three matched 9.816B-token NoPE/Polar training pairs evaluated on 30 independent natural documents, Polar consistently delays the loss of exact natural-text retrieval across 8K–64K, outperforming NoPE by **+37.18 percentage points on average** (with +35.28, +36.67, and +39.58 points across the three pairs). By contrast, at extreme lengths (256K), exact natural-text retrieval falls to 0.0% for all unadapted models, and synthetic exact retrieval varies substantially across runs (9.00% primary vs. 0.00% and 3.83% in fresh seed-paired replications; 16.97%–34.37% token accuracy).
+>
+> Conversely, we find that **256K likelihood degradation is primarily a recurrent retention-boundary failure rather than an attention failure**. Checkpoints with nearly identical 2K validation loss diverge sharply in 256K bits per byte (BPB) when isolated gated-delta heads learn near-unit retention gates ($\gamma_0 \to 1$, implying $10^5$–$10^7$ token half-lives). An inference-only 256-token half-life cap on the single most retentive head repairs NoPE's 256K BPB across all three runs (`8.098 -> 1.595` primary; `3.898/5.256 -> 1.506/1.490` replications, matching or outperforming Polar's `1.644–1.855` BPB), while alternative-head controls yield 0.0 recovery. Crucially, however, repairing NoPE's retention horizon does not rescue its natural-text retrieval (which remains 0.0% from 16K onward). Multi-seed component ablations against learned-temperature (Scalable-Softmax) controls (+22.18 points) and training-free RoPE extensions (Dynamic-NTK, YaRN) further isolate the contributions of direction normalization and null-sink calibration alongside Polar's 1.86-point short-context accuracy trade-off and KV-cache decode cost.
+
+---
+
+## 2. Draft Response Structure per Reviewer
+
+### Global Response (To Area Chair and All Reviewers)
+1. **Summary of New Experiments & Fixes Completed During Rebuttal:**
+   - **Resolved all numerical discrepancies (`HE3D` W2/Q1, `ihsT` W6/Q2):** Identified and fixed the prefix-cache warm-hit bug in E6 (`0.065 s` was timing only the uncached 256-token tail block after warmup; cold-cache 128K TTFT is `1.62 s`, matching Table 4 and Table 20), unified the post-E0 `Q2`-floor BPB numbers (`1.855 -> 1.520` vs pre-E0 `1.825 -> 1.501`), and labeled the evaluation corpora for the three NLL/BPB metrics (`10.77` FineWeb-Edu val NLL, `12.003` FinePDFs clean NLL, `8.098` 3-corpus fixed-target BPB).
+   - **Multi-seed component isolation (`HE3D` W1, `ihsT` W2/Q2):** Extended the 3-seed E1 suite (`20270912–14`) with `polar_direction_only_memory` and `polar_fixed_null_slope_memory`, plus full length-wise breakdowns and paired bootstrap 95% CIs, explaining the Triplet 1 `5.69%` tie (`37+4+0+0 = 41/720` vs `35+6+0+0 = 41/720`).
+   - **Established length-extrapolation baselines (`ihsT` W1/Q1, `HE3D` Q3):** Evaluated **Dynamic-NTK** and **YaRN** on the 9.816B RoPE checkpoint across 2K–256K, alongside the 3-seed learned-temperature (**Scalable-Softmax**) control.
+   - **Full 18-document E5 sweep & free-generation verification (`HE3D` Q2/Q3, `ihsT` W3/W5):** Re-ran E5 across all 18 documents for both primary NoPE and primary Polar (including `p90` vs `hl:256`), and verified both mathematically and empirically that 5-token greedy free-generation Exact Match is bit-for-bit identical to teacher-forced `greedy_exact`.
+   - **8K pretraining length control & manuscript reframing (`birj` W1/W2/Q1/Q2, `HE3D` Q3, `ihsT` W3/W4/W5):** Added 8K pretraining length controls and reframed the abstract/main text around the reproducible 8K–64K natural-text retrieval gain (`+37.18%`) vs. 256K retention-gate stability.
+
+---
+
+### Point-by-Point Key Answers for **Reviewer birj** (Current: 2 $\rightarrow$ Target: 3)
+* **Q1 (What 256K performance should a new training run expect, given the primary and fresh-pair gap?):**
+  - A new 2K-pretrained 9.8B run should expect **zero exact natural-text retrieval at 256K** (all three runs score `0.0%` on FinePDFs from 32K/64K onward), **17%–34% teacher-forced token retrieval** (`16.97%`, `20.90%`, `34.37%`), and **0%–9% synthetic exact retrieval** (`0.00%`, `3.83%`, `9.00%`).
+  - Conversely, across **8K–64K on 30 independent natural documents**, a new Polar run reliably achieves **36.3%–42.2% exact retrieval** (`36.25%`, `37.92%`, `42.22%`), beating paired NoPE (`0.97%`, `1.25%`, `2.64%`) by **`+35.3` to `+39.6` percentage points** in every run. We have revised the Abstract to report the full 3-run range rather than single-run 256K numbers as the headline.
+* **Q2 (Seed-matched RoPE replication and larger model or longer pretraining length):**
+  - Present the new seed-matched RoPE runs and the **8K pretraining length control** (`nope`, `rope`, `temperature_softmax`, `polar`), showing how the Polar + memory interaction scales when the training horizon is extended $4\times$.
+* **Q3 (Is the retention outlier a training artifact or a structural property of gated-delta memory?):**
+  - It is an **interaction between the unbounded sigmoid parameterization $\gamma_t = \sigma(W_\gamma x_t + b_\gamma + b_{\text{init}})$ and finite-horizon pretraining**: because sequences are truncated at $T_{\text{train}} = 2048$, any gate with $\gamma > 0.9995$ ($H_{1/2} > 1400$ tokens) acts as an almost-lossless integrator within the 2K window and receives near-zero gradient penalty for failing to forget beyond 2K. Thus, while the *magnitude* of the outlier varies stochastically across runs (`135k`, `5.78M`, `21.01M` tokens in NoPE; `231`, `272`, `3.07M` in Polar), the *vulnerability* is a structural property of unconstrained sigmoid retention gates trained on short sequences.
+
+---
+
+### Point-by-Point Key Answers for **Reviewer HE3D** (Current: 1 $\rightarrow$ Target: 2–3)
+* **Q1 (Check Polar TTFT `0.029 s` / `0.065 s` in Table 33 vs `1.619 s` in Table 20, and Polar BPB `1.855 -> 1.520` in E2 vs `1.825 -> 1.501` in Table 2, and `10.77` vs `12.003` NLL):**
+  - Provide the exact root-cause audit (Bug 1: 256-token tail-block prefix cache hit in `LLM` after warmup in E6; Bug 2: `Q2` floor change from `1e-6` to `1e-30` in E0; Bug 3: FineWeb-Edu validation NLL `10.77` vs FinePDFs clean NLL `12.003` vs 3-corpus BPB `8.098`) and the corrected, unified tables.
+* **W1 (Attribution claims in E1: per-seed spread `+30.56, +31.53, +4.44`, why Triplet 1 NoPE and Temp-Softmax both score `5.69%`, and separating direction normalization from the null competitor):**
+  - Provide the complete length-wise E1 table (showing Triplet 1's `37+4+0+0 = 41/720` vs `35+6+0+0 = 41/720` exact prompt counts on real text and their divergence at 2K real text `57.2%` vs `72.2%` and 64K synthetic `10.6%` vs `47.2%`), point out that Polar is stable across all 3 seeds (`36.25%`, `44.86%`, `48.61%`) whereas Temp-Softmax is seed-fragile on natural text (`5.69%`, `13.33%`, `44.17%`), and report the new 3-seed `polar_direction_only_memory` and `polar_fixed_null_slope_memory` ablations.
+* **Q2 (Rerun E5 ceiling sweep and alternative-head control on the full 18-document panel including primary Polar; explain basis for `hl-256` over `p90`):**
+  - Present the full 18-document E5 table for both NoPE and Polar. Explain that `p90` is a checkpoint-dependent empirical weight quantile (which maps to different half-lives in every model: `70.6` tokens in NoPE, `139.2` tokens in Polar, and `44.5` tokens in RoPE). Because `p90` clips NoPE down to `70.6` tokens, it degrades 2K short-context needle cross-entropy to `0.428` nats ($4.15\times$ baseline `0.103`), whereas `hl:256` ($\gamma_{\max} = 2^{-1/256} = 0.997296$) is a model-agnostic physical timescale bound ($1/8$ of the 2K training window) that keeps NoPE 2K needle CE nearly twice as low (`0.245` nats) while achieving lower 256K needle cross-entropy than `p90` on both NoPE (`6.051` vs `6.060`) and Polar (`1.707` vs `1.713`).
+* **Q3 (Free-generation passkey results 8K–32K, Scalable-Softmax / YaRN baselines, and 8K training length):**
+  - Provide the mathematical proof + empirical table showing 5-token greedy free generation (`model.generate`) matches `greedy_exact` identically (0.0% difference) while reporting free-generation partial token accuracy, the 9.8B RoPE + YaRN / Dynamic-NTK results, and the 8K training-length control.
+
+---
+
+### Point-by-Point Key Answers for **Reviewer ihsT** (Current: 1 $\rightarrow$ Target: 2–3)
+* **W1 & Q1 (Missing length-extrapolation baselines: ReRoPE, YaRN, Scalable-Softmax under matched budgets):**
+  - Present the new training-free **YaRN** and **Dynamic-NTK** evaluations on the 9.816B-token RoPE checkpoint across 2K–256K, clarify that E1's `Temp-Softmax` is the per-head learned-scale formulation of **Scalable-Softmax**, and show the matched adaptation/length comparisons.
+* **W2 & Q2 (Component-level necessity & Table 7 `Fixed null slope` 91.25% vs `Full Polar` 77.50%, plus latency/BPB reconciliation):**
+  - Present the 3-seed E1 component ablations (`polar_direction_only_memory` and `polar_fixed_null_slope_memory` on the 30-document panel), narrow the component claims to match what is multi-seed verified, and provide the exact reconciliation of the E6 prefix-cache bug (`0.065 s` vs `1.619 s`) and E0 `Q2`-floor shift (`1.855` vs `1.825`).
+* **W3 & W4 (Extreme-length retrieval checkpoint dependence, synthetic-only 256K exact matches, and capped NoPE `1.506/1.490` beating capped Polar `1.644/1.762` at 256K BPB):**
+  - Fully embrace this insight in the revised Abstract and Section 5/6: explicitly state that **capping NoPE's outlier head resolves its 256K likelihood collapse and enables capped NoPE to outperform Polar on 256K BPB (`1.506/1.490` vs `1.644/1.762`) while retaining NoPE's `+1.86` point short-context advantage**. Emphasize that this makes the scientific separation even sharper: *retention capping fixes NoPE's 256K likelihood, but leaves NoPE's 8K–64K natural-text retrieval near zero (`0.0%` from 16K onward), whereas Polar provides a reproducible `+37.18` point natural-text retrieval advantage across 8K–64K.*
+* **W5 (Independent evaluation coverage, missing CIs and length-wise breakdown in E4):**
+  - Provide the complete length-wise E4 and E1 tables and the fixed 10,000-resample document-cluster paired bootstrap 95% confidence intervals.
