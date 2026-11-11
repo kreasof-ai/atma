@@ -199,29 +199,51 @@ def main():
     args = parser.parse_args()
 
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
+
+    # Load any previously-saved partial results so completed models are never re-run.
     results = {}
+    if args.output.is_file():
+        try:
+            results = json.loads(args.output.read_text(encoding="utf-8")).get("results", {})
+        except Exception:
+            results = {}
+
+    def _save() -> None:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps({"results": results}, indent=2) + "\n", encoding="utf-8")
 
     for model_name in args.models:
+        # Skip models already fully evaluated (all LENGTHS present).
+        if model_name in results and all(str(l) in results[model_name] for l in LENGTHS):
+            print(f"\n[E6 Cold-Cache Fix] {model_name} already complete, skipping.", flush=True)
+            continue
         model_path = SNAPSHOTS[model_name]
         print(f"\n[E6 Cold-Cache Fix] Evaluating {model_name}...", flush=True)
-        results[model_name] = {}
-        for length in LENGTHS:
-            if model_name == "tda_hybrid":
-                cell = benchmark_tda_length(model_path, length, tokenizer)
-            else:
-                cell = benchmark_eval_model_cold_cache(model_name, model_path, length, tokenizer)
-            results[model_name][str(length)] = cell
-            ttft = cell["prefill_latency_s"]["median"]
-            ptok = cell["prefill_tokens_per_s"]["median"]
-            dlat = cell["decode_latency_s_per_token"]["median"]
-            dlat_str = f"{dlat * 1000.0:.2f} ms/tok" if dlat is not None else "Skipped"
-            print(
-                f"  Length {length:>6}: Cold TTFT = {ttft:.4f}s ({ptok:,.1f} tok/s) | Decode = {dlat_str}",
-                flush=True,
-            )
+        results.setdefault(model_name, {})
+        try:
+            for length in LENGTHS:
+                if model_name == "tda_hybrid":
+                    cell = benchmark_tda_length(model_path, length, tokenizer)
+                else:
+                    cell = benchmark_eval_model_cold_cache(model_name, model_path, length, tokenizer)
+                results[model_name][str(length)] = cell
+                results[model_name].pop("error", None)  # clear any stale error now that it succeeds
+                _save()  # persist incrementally so a later crash loses nothing
+                ttft = cell["prefill_latency_s"]["median"]
+                ptok = cell["prefill_tokens_per_s"]["median"]
+                dlat = cell["decode_latency_s_per_token"]["median"]
+                dlat_str = f"{dlat * 1000.0:.2f} ms/tok" if dlat is not None else "Skipped"
+                print(
+                    f"  Length {length:>6}: Cold TTFT = {ttft:.4f}s ({ptok:,.1f} tok/s) | Decode = {dlat_str}",
+                    flush=True,
+                )
+        except Exception as exc:
+            # Record the failure but keep partial results and continue to next model.
+            print(f"  [E6] {model_name} failed: {exc!r}", flush=True)
+            results[model_name]["error"] = repr(exc)
+            _save()
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps({"results": results}, indent=2) + "\n", encoding="utf-8")
+    _save()
     print(f"\nSaved cold-cache E6 serving results to {args.output}")
 
 

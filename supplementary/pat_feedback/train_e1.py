@@ -58,8 +58,13 @@ def _emit_block(fh, name: str, obj: Any) -> None:
     fh.flush()
 
 
-def init_triplet_models(seed: int, device: torch.device) -> Dict[str, Model]:
-    """Instantiate the three models in a triplet with byte-identical common tensors."""
+def init_triplet_models(seed: int, device: torch.device, extra_arms: Dict[str, AtmaConfig] | None = None) -> Dict[str, Model]:
+    """Instantiate matched-init models for a triplet with byte-identical common tensors.
+
+    Builds the three canonical E1 arms plus any ``extra_arms`` (the rebuttal's
+    component-isolation and RoPE arms) from a single shared random base state, so all
+    arms within a seed triplet remain initialisation-matched.
+    """
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
 
@@ -71,14 +76,16 @@ def init_triplet_models(seed: int, device: torch.device) -> Dict[str, Model]:
             p.data.zero_()
     base_state = dict(m_base.named_parameters())
 
-    # 2. Build the three arms
-    models = {}
-    arm_configs = {
+    # 2. Build the three canonical arms plus any requested component/RoPE arms
+    arm_configs: Dict[str, AtmaConfig] = {
         "nope_memory": AtmaConfig(attn_type="nope", mem_enabled=True, attn_window=None),
         "temperature_softmax_memory": AtmaConfig(attn_type="temperature_softmax", mem_enabled=True, attn_window=None),
         "polar_memory": AtmaConfig(attn_type="polar", mem_enabled=True, attn_window=None),
     }
+    if extra_arms:
+        arm_configs.update(extra_arms)
 
+    models = {}
     for arm, cfg in arm_configs.items():
         m = Model(cfg).to(device)
         with torch.no_grad():
@@ -209,13 +216,26 @@ def evaluate_e1_checkpoints(ckpt_path: Path, arm: str, seed: int, device: torch.
 def train_single_run(config_path: Path, max_updates: int | None = None, save_checkpoint: bool = True) -> Dict[str, Any]:
     cfg = json.loads(config_path.read_text(encoding="utf-8"))
     run_id = cfg["run_id"]
-    arm = cfg["attn_type"]
-    if arm == "nope":
+    attn_type = cfg["attn_type"]
+    polar_variant = cfg.get("polar_variant", "full")
+
+    # Derive a unique arm key. Canonical E1 arms keep their original names; the
+    # rebuttal's component-isolation and RoPE arms get their own matched-init entries.
+    extra_arms: Dict[str, AtmaConfig] = {}
+    if attn_type == "polar" and polar_variant in ("direction_only", "constant_magnitude", "fixed_null", "fixed_temperature"):
+        arm = f"polar_{polar_variant}_memory"
+        extra_arms[arm] = AtmaConfig(attn_type="polar", polar_variant=polar_variant, mem_enabled=True, attn_window=None)
+    elif attn_type == "rope":
+        arm = "rope_memory"
+        extra_arms[arm] = AtmaConfig(attn_type="rope", mem_enabled=True, attn_window=None)
+    elif attn_type == "nope":
         arm = "nope_memory"
-    elif arm == "temperature_softmax":
+    elif attn_type == "temperature_softmax":
         arm = "temperature_softmax_memory"
-    elif arm == "polar":
+    elif attn_type == "polar":
         arm = "polar_memory"
+    else:
+        raise ValueError(f"unsupported attn_type={attn_type!r} in {config_path}")
 
     seed = cfg["seed"]
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -245,7 +265,7 @@ def train_single_run(config_path: Path, max_updates: int | None = None, save_che
 
     # 2. Model with matched initialization
     p0(f"[E1 Training] Initializing matched model for arm={arm} with seed={seed}...")
-    triplet = init_triplet_models(seed, device)
+    triplet = init_triplet_models(seed, device, extra_arms=extra_arms)
     model = triplet[arm]
     num_params = sum(p.numel() for p in model.parameters())
     p0(f"[E1 Training] Model parameters: {num_params:,} ({num_params/1e6:.2f}M)")

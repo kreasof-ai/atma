@@ -1,0 +1,81 @@
+{
+  "run_id": "pat_e1_rope_memory_20270913",
+  "arm": "rope_memory",
+  "seed": 20270913,
+  "elapsed_sec": 386.14,
+  "primary_natural_text_exact_mean_8k_to_64k": 0.0,
+  "retrieval": {
+    "synthetic": {
+      "2048": {
+        "exact_accuracy_percent": 16.666666666666664,
+        "token_accuracy_percent": 76.66666666666667,
+        "prompts": 180
+      },
+      "8192": {
+        "exact_accuracy_percent": 1.1111111111111112,
+        "token_accuracy_percent": 28.999999999999996,
+        "prompts": 180
+      },
+      "16384": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 4.666666666666667,
+        "prompts": 180
+      },
+      "32768": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 1.6666666666666667,
+        "prompts": 180
+      },
+      "65536": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 0.0,
+        "prompts": 180
+      }
+    },
+    "real": {
+      "2048": {
+        "exact_accuracy_percent": 21.666666666666668,
+        "token_accuracy_percent": 67.11111111111111,
+        "prompts": 180
+      },
+      "8192": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 2.4444444444444446,
+        "prompts": 180
+      },
+      "16384": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 0.0,
+        "prompts": 180
+      },
+      "32768": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 0.0,
+        "prompts": 180
+      },
+      "65536": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 0.0,
+        "prompts": 180
+      }
+    }
+  },
+  "bpb": {
+    "2048": {
+      "mean_bpb": 1.5548047471338124,
+      "per_corpus": {
+        "pg19": 1.335571316276597,
+        "proof_pile": 2.1356667590108507,
+        "finepdfs": 1.1931761661139895
+      }
+    },
+    "65536": {
+      "mean_bpb": 1.7913977968281907,
+      "per_corpus": {
+        "pg19": 1.4824747220966756,
+        "proof_pile": 2.368371224772206,
+        "finepdfs": 1.5233474436156902
+      }
+    }
+  }
+}

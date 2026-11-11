@@ -95,15 +95,19 @@ def score_teacher_forced_and_free_gen(
             "freegen_token_acc": None,
         }
 
+    # 5-step greedy autoregressive free generation via the model's own forward,
+    # mirroring DirectScorer.generate but keeping token IDs for exact comparison.
     generated: List[int] = []
     cur_ids = list(prompt_ids)
     for _ in range(n_toks):
-        inp = torch.tensor([cur_ids], dtype=torch.long, device=scorer.device)
+        inp = torch.tensor([cur_ids], dtype=torch.int32, device=scorer.device)
         hidden = scorer._forward_hidden(inp)
-        logits = scorer._OutputLogits(scorer.model, hidden[:, -1:, :])
-        next_tok = int(logits[0, -1].argmax().item())
+        last = scorer.model.norm(hidden[:, -1:])
+        logits = scorer.model.proj(last).float()
+        next_tok = int(logits[0, 0].argmax().item())
         generated.append(next_tok)
         cur_ids.append(next_tok)
+        del inp, hidden, last, logits
 
     fg_correct = sum(int(g == t) for g, t in zip(generated, target_ids))
     fg_exact = int(generated == list(target_ids))

@@ -1,0 +1,81 @@
+{
+  "run_id": "pat_e1_rope_memory_20270912",
+  "arm": "rope_memory",
+  "seed": 20270912,
+  "elapsed_sec": 390.72,
+  "primary_natural_text_exact_mean_8k_to_64k": 0.6944444444444444,
+  "retrieval": {
+    "synthetic": {
+      "2048": {
+        "exact_accuracy_percent": 1.1111111111111112,
+        "token_accuracy_percent": 60.55555555555555,
+        "prompts": 180
+      },
+      "8192": {
+        "exact_accuracy_percent": 0.5555555555555556,
+        "token_accuracy_percent": 47.44444444444444,
+        "prompts": 180
+      },
+      "16384": {
+        "exact_accuracy_percent": 1.6666666666666667,
+        "token_accuracy_percent": 45.44444444444444,
+        "prompts": 180
+      },
+      "32768": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 15.333333333333332,
+        "prompts": 180
+      },
+      "65536": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 13.444444444444445,
+        "prompts": 180
+      }
+    },
+    "real": {
+      "2048": {
+        "exact_accuracy_percent": 7.777777777777778,
+        "token_accuracy_percent": 60.0,
+        "prompts": 180
+      },
+      "8192": {
+        "exact_accuracy_percent": 1.6666666666666667,
+        "token_accuracy_percent": 35.22222222222222,
+        "prompts": 180
+      },
+      "16384": {
+        "exact_accuracy_percent": 1.1111111111111112,
+        "token_accuracy_percent": 32.77777777777778,
+        "prompts": 180
+      },
+      "32768": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 7.111111111111111,
+        "prompts": 180
+      },
+      "65536": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 2.7777777777777777,
+        "prompts": 180
+      }
+    }
+  },
+  "bpb": {
+    "2048": {
+      "mean_bpb": 1.7595128569452854,
+      "per_corpus": {
+        "pg19": 1.3683567929773313,
+        "proof_pile": 2.403249427041854,
+        "finepdfs": 1.5069323508166705
+      }
+    },
+    "65536": {
+      "mean_bpb": 1.801172635651815,
+      "per_corpus": {
+        "pg19": 1.3502655292566959,
+        "proof_pile": 2.4112919485175888,
+        "finepdfs": 1.64196042918116
+      }
+    }
+  }
+}
