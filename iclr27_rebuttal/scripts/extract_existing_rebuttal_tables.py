@@ -422,6 +422,109 @@ def build_p90_vs_hl256_table() -> None:
     (OUT_DIR / "p90_vs_hl256_comparison.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def build_rope_extrapolation_table() -> None:
+    payload = json.loads((OUT_DIR / "rope_extrapolation_baselines.json").read_text(encoding="utf-8"))
+    rope = payload["results"]
+    e4_orig = json.loads((PAT_EVAL / "e4_replication_retrieval.json").read_text(encoding="utf-8"))["results"]
+
+    modes = [
+        ("vanilla", "RoPE (`vanilla`, checkpoint-exact)"),
+        ("pi", "RoPE + Linear PI (`inv_freq / s`)"),
+        ("dynamic_ntk", "RoPE + Dynamic-NTK"),
+        ("rerope", "RoPE + ReRoPE (`w = 1024`, no $\\log n$)"),
+        ("yarn", "RoPE + YaRN (`NTK-by-parts` + `mscale`)"),
+        ("rerope_log", "RoPE + ReRoPE + $\\log n$ (`w = 1024`)"),
+    ]
+    lengths = ["2048", "8192", "16384", "32768", "65536"]
+
+    lines = [
+        "# Training-Free RoPE Extrapolation Baselines on the 9.816B RoPE+Memory Checkpoint",
+        "",
+        f"Evaluated under checkpoint-faithful half-truncated RoPE (`rotary_spec = {payload.get('rotary_spec')}`, `base = {payload.get('base_theta')}`, `max_abs_diff = 0.0` at `vanilla` vs `train.model.Rotary`) on the frozen 30-document retrieval and 18-document fixed-target BPB panels.",
+        "",
+        "## 1. Natural-Text (FinePDFs, 30 Documents) Exact 5-Token Retrieval (%) & Fixed-Target BPB",
+        "",
+        "| Method (`9.816B` Checkpoint) | Phase Fix | $\\log n$ Temp | 2K | 8K | 16K | 32K | 64K | 8K–64K Mean | 2K BPB | 64K BPB |",
+        "| :--- | :---: | :---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+
+    meta = {
+        "vanilla": ("—", "—"),
+        "pi": ("Linear", "—"),
+        "dynamic_ntk": ("NTK", "—"),
+        "rerope": ("Clamp $w$", "—"),
+        "yarn": ("NTK-parts", "Yes (`mscale`)"),
+        "rerope_log": ("Clamp $w$", "Yes (`ln i`)"),
+    }
+
+    for m_key, m_label in modes:
+        rdata = rope[m_key]
+        real = rdata["retrieval"]["real"]
+        bpb = rdata["bpb"]["cross_dataset_mean_bpb"]
+        vals = [real[l]["exact_accuracy_percent"] for l in lengths]
+        mean_8k_64k = rdata["real_text_exact_mean_8k_to_64k"]
+        pf, tf = meta[m_key]
+        lines.append(
+            f"| {m_label} | {pf} | {tf} | {vals[0]:.2f}% | {vals[1]:.2f}% | {vals[2]:.2f}% | "
+            f"{vals[3]:.2f}% | {vals[4]:.2f}% | **{mean_8k_64k:.2f}%** | {bpb['2048']:.3f} | {bpb['65536']:.3f} |"
+        )
+
+    # Add matched 9.816B Primary NoPE and Primary Polar reference rows on the identical 30-doc / 18-doc fixtures
+    e5 = json.loads((OUT_DIR / "e5_full_18doc_results.json").read_text(encoding="utf-8"))["results"]
+    for ref_key, ref_label, pf, tf, e5_key, e5_cond in [
+        ("primary_nope", "ATMA NoPE + Mem (Primary, unadapted)", "Position-free", "—", "primary_nope", "uncapped"),
+        ("primary_polar", "ATMA Polar + Mem (Primary, unadapted)", "Position-free", "Learned ($\\tau_h, \\mu_i, a_{\\text{null}}$)", "primary_polar", "uncapped"),
+    ]:
+        real = e4_orig[ref_key]["real"]
+        vals = [real[l]["exact_accuracy_percent"] for l in lengths]
+        mean_8k_64k = sum(vals[1:]) / 4.0
+        bpb = e5[e5_key][e5_cond]["cross_dataset_mean_bpb"]
+        lines.append(
+            f"| {ref_label} | {pf} | {tf} | **{vals[0]:.2f}%** | **{vals[1]:.2f}%** | {vals[2]:.2f}% | "
+            f"{vals[3]:.2f}% | {vals[4]:.2f}% | **{mean_8k_64k:.2f}%** | {bpb['2048']:.3f} | {bpb['65536']:.3f} |"
+        )
+
+    lines.extend([
+        "",
+        "## 2. Synthetic-Haystack Exact 5-Token Retrieval (%) Across 2K–64K",
+        "",
+        "| Method (`9.816B` Checkpoint) | Synth 2K | Synth 8K | Synth 16K | Synth 32K | Synth 64K | Synth 8K–64K Mean |",
+        "| :--- | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ])
+
+    for m_key, m_label in modes:
+        synth = rope[m_key]["retrieval"]["synthetic"]
+        vals = [synth[l]["exact_accuracy_percent"] for l in lengths]
+        lines.append(
+            f"| {m_label} | {vals[0]:.2f}% | {vals[1]:.2f}% | {vals[2]:.2f}% | "
+            f"{vals[3]:.2f}% | {vals[4]:.2f}% | **{sum(vals[1:]) / 4.0:.2f}%** |"
+        )
+
+    for ref_key, ref_label in [
+        ("primary_nope", "ATMA NoPE + Mem (Primary, unadapted)"),
+        ("primary_polar", "ATMA Polar + Mem (Primary, unadapted)"),
+    ]:
+        synth = e4_orig[ref_key]["synthetic"]
+        vals = [synth[l]["exact_accuracy_percent"] for l in lengths]
+        lines.append(
+            f"| {ref_label} | **{vals[0]:.2f}%** | **{vals[1]:.2f}%** | **{vals[2]:.2f}%** | "
+            f"**{vals[3]:.2f}%** | **{vals[4]:.2f}%** | **{sum(vals[1:]) / 4.0:.2f}%** |"
+        )
+
+    lines.extend([
+        "",
+        "## 3. Mechanistic Takeaways (Directly Answering Reviewers `ihsT` W1/Q1 & `HE3D` Q3)",
+        "",
+        "1. **Phase repair without $\\log n$ logit sharpening fails (`0.00%–1.39%`):** `PI` (`0.00%`), `Dynamic-NTK` (`0.28%`), and unscaled `ReRoPE` (`1.39%`) all collapse on 8K–64K natural text despite eliminating out-of-distribution rotary angles. Adding inference-time $\\log n$ attention logit scaling jumps `YaRN` to **52.78%** (`43.89%` at 64K) and `ReRoPE+log` to **54.17%** (`42.22%` at 64K), proving that softmax entropy dilution is a co-equal bottleneck alongside rotary phase wraparound.",
+        "2. **Why Polar Attention remains distinct from post-hoc RoPE patches:**",
+        "   - **In-distribution & synthetic fidelity + 8K recall:** Because ATMA's RoPE core omits Q/K/V local `canon` convolutions and rotates half the subspace, `RoPE` (+YaRN/ReRoPE) reaches only `63.89%–64.44%` at 2K real text (`32.78%–35.00%` 2K synthetic; `20.00%–30.28%` 8K–64K synthetic), whereas unadapted `Polar` achieves **`96.11%` at 2K real text (`98.33%` 2K synthetic; `79.72%` 8K–64K synthetic)** and leads at 8K natural text (`72.78%–82.22%` across the 3 pairs vs. `63.89%` YaRN / `67.78%` ReRoPE+log).",
+        "   - **Causal streaming & single-KV-cache invariance:** `YaRN` depends on knowing target scale $s = L_{\\text{target}} / L_{\\text{train}}$ up front (mutating token embeddings and invalidating prefix KV caches across target lengths), while `ReRoPE+log` requires dual key evaluations ($R_j k_j$ for $i-j < w$ and $k_j$ for $i-j \\ge w$), breaking standard single-pass FlashAttention/paged-KV serving. Polar extrapolates causally with a single prefix-cacheable KV state (`1.589 s` cold 128K TTFT) and reaches **`54.86%` (8K–64K) / `51.11%` (64K)** natively when pretrained at 8K.",
+        "   - **Orthogonality to 256K retention-gate stability:** Inference-time RoPE scaling does not repair gated-delta retention saturation ($\\gamma_0 \\to 1$; Primary RoPE degrades to `2.572` 256K BPB uncapped vs. `1.663` under `hl:256`, whereas capped Primary Polar reaches **`1.409` BPB at 64K** and **`1.521` BPB at 256K** vs. YaRN `1.588` and ReRoPE+log `1.695` at 64K).",
+    ])
+
+    (OUT_DIR / "rope_extrapolation_baselines.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def build_numerical_reconciliation() -> None:
     lines = [
         "# Complete Reconciliation of All Numerical Discrepancies Flagged by Reviewers HE3D & ihsT",
@@ -442,5 +545,6 @@ if __name__ == "__main__":
     build_e4_lengthwise_table()
     build_e6_serving_table()
     build_p90_vs_hl256_table()
+    build_rope_extrapolation_table()
     build_numerical_reconciliation()
-    print(f"Successfully generated all 6 markdown tables (+ existing e5_full_18doc_panel.md) in {OUT_DIR}")
+    print(f"Successfully generated all 7 markdown tables (+ existing e5_full_18doc_panel.md) in {OUT_DIR}")

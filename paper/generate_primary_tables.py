@@ -67,34 +67,51 @@ def primary_endpoints():
 def replication_endpoints():
     path = ROOT / "supplementary/robustness/work/evaluation/replication/run-summary.json"
     jobs = json.loads(path.read_text(encoding="utf-8"))["results"]
-    indexed = {(j["family"], j["model"], j["suite"]): j["result"]
-               for j in jobs if j["condition"] == "baseline" and j["status"] == "complete"}
+    indexed = {(j["family"], j["model"], j["suite"], j["condition"]): j["result"]
+               for j in jobs if j["status"] == "complete"}
+    e4_path = ROOT / "supplementary/pat_feedback/work/evaluation/e4_replication_retrieval.json"
+    e4 = json.loads(e4_path.read_text(encoding="utf-8"))["results"]
     token = baseline_retrieval()
     exact = baseline_retrieval("exact_match")
     bpb = mean_longdoc(baseline_longdoc())
+    cbpb = mean_longdoc(capped_longdoc())
     rows = []
     for model in ("nope", "polar"):
         if rows:
             rows.append(r"\midrule")
-        rows.append(f"{LABELS[model]} & Primary (mbs16) & {token[model]['256k']:.2f} & "
-                    f"{exact[model]['256k']:.2f} & {bpb[model]['256k']:.3f}" + r" \\")
+        e4_prim = mean(e4[f"primary_{model}"]["real"][l]["exact_accuracy_percent"]
+                       for l in ("8192", "16384", "32768", "65536"))
+        prim_real_str = rf"\textbf{{{e4_prim:.2f}}}" if model == "polar" else f"{e4_prim:.2f}"
+        rows.append(
+            f"{LABELS[model]} & Primary (mbs16) & \\rev{{{prim_real_str}}} & "
+            f"{token[model]['256k']:.2f} & {exact[model]['256k']:.2f} & "
+            f"{bpb[model]['256k']:.3f} \\rev{{$\\rightarrow$ {cbpb[model]['256k']:.3f}}}" + r" \\")
         for seed_index, seed in ((1, 202701), (2, 202702)):
             name = f"repl_seed{seed_index}_{model}"
+            e4_seed = mean(e4[name]["real"][l]["exact_accuracy_percent"]
+                           for l in ("8192", "16384", "32768", "65536"))
+            seed_real_str = rf"\textbf{{{e4_seed:.2f}}}" if model == "polar" else f"{e4_seed:.2f}"
             scores = {}
             for metric in ("results", "exact_results"):
                 scores[metric] = mean(
-                    indexed[("retrieval", name, suite)][metric][task]["256k"][depth]
+                    indexed[("retrieval", name, suite, "baseline")][metric][task]["256k"][depth]
                     for suite in ("synthetic", "real")
                     for task in ("niah", "passkey") for depth in DEPTHS)
-            loss = mean(indexed[("longdoc", name, "fixed-target")]["results"][d]
+            loss = mean(indexed[("longdoc", name, "fixed-target", "baseline")]["results"][d]
                         ["lengths"]["256k"]["bits_per_byte"] for d in DATASETS)
-            rows.append(f"{LABELS[model]} & {seed} (mbs4) & {scores['results']:.2f} & "
-                        f"{scores['exact_results']:.2f} & {loss:.3f}" + r" \\")
-    return table("llrrr",
-        r"\textbf{Model} & \textbf{Training run} & \multicolumn{2}{c}{\textbf{Retrieval 256K (\%)}} & \textbf{BPB 256K} \\"
-        "\n" + r" & & Token & Exact & \\", rows,
-        r"Untouched primary and fresh paired runs at 256K. All use 9.816B tokens and length 2K on L40S. Each fresh seed pairs NoPE and Polar; the primary checkpoints have no recorded common initialization seed and use a larger microbatch. These rows describe training-run variability, not an isolated seed effect. Exact successes at 256K are synthetic.",
+            closs = mean(indexed[("longdoc", name, "fixed-target", "clamped")]["results"][d]
+                         ["lengths"]["256k"]["bits_per_byte"] for d in DATASETS)
+            rows.append(
+                f"{LABELS[model]} & {seed} (mbs4) & \\rev{{{seed_real_str}}} & "
+                f"{scores['results']:.2f} & {scores['exact_results']:.2f} & "
+                f"{loss:.3f} \\rev{{$\\rightarrow$ {closs:.3f}}}" + r" \\")
+    result = table("llrrrr",
+        r"\textbf{Model} & \textbf{Training run} & \rev{\textbf{8K--64K Real}} & \multicolumn{2}{c}{\textbf{Retrieval 256K (\%)}} & \rev{\textbf{BPB 256K}} \\"
+        "\n" + r" & & \rev{Exact (\%)} & Token & Exact & \rev{Untouched $\rightarrow$ Cap} \\", rows,
+        r"Primary and fresh paired 9.816B-token runs (2K pretraining on L40S). \rev{8K--64K Real Exact averages 30 independent FinePDFs documents; BPB 256K pairs untouched and one-head \texttt{hl:256}-capped evaluations.} Exact successes at 256K are synthetic.",
         "tab:replication_main")
+    return result.replace(r"\begin{tabular}", r"\resizebox{\linewidth}{!}{%" + "\n" + r"\begin{tabular}", 1).replace(
+        r"\end{tabular}", r"\end{tabular}}", 1)
 
 
 def retrieval_breakdown(metric, label):

@@ -125,9 +125,7 @@ Fixed temperature gain & 3.1695 & \textbf{2.707} & 1.967 & 3.111 & 3.155 & 93.75
 \label{table:polar_components}
 \end{table}
 
-Ordinary language-model losses are tightly grouped: validation NLL spans only 0.0112 nats, and every intervention improves clean NLL relative to Full Polar at matched lengths. Retrieval is more diagnostic. Direction only retains most of the 64K accuracy (71.25\% versus 77.50\%), whereas constant magnitude and fixed temperature gain each fall to 16.25\%. Thus the direction-only path carries most of the retrieval signal, and the learned length temperature is important. An uninformative constant count signal is harmful, but this study does not establish that the count channel is always necessary.
-
-Unexpectedly, fixing the length-dependent null slope near zero gives the best retrieval at every evaluated length and reaches 91.25\% at 64K, while slightly worsening validation and junk-stream NLL. One plausible explanation is that a slope learned only through 2K over-rejects distant relevant keys when extrapolated, especially because this recipe disables the explicit distractor-alignment objective. The matched seed makes an independently luckier initialization an unlikely explanation for this contrast, but one training seed and 16 retrieval trials per length cannot establish a population-level effect. We therefore retain the prespecified Full Polar model for the confirmatory comparison and treat null calibration as unresolved. Future work should replicate the contrast across seeds and larger retrieval samples, measure null mass by head versus length, and test bounded or score-adaptive null formulations. The synthetic provenance above and this integrated pilot answer different questions: the former motivates the asymptotic design, while the latter shows that its learned finite-training calibration is not yet empirically optimal.
+Ordinary language-model losses are tightly grouped: validation NLL spans only 0.0112 nats, and every intervention improves clean NLL relative to Full Polar at matched lengths. \rev{On this small 16-trial synthetic pilot, direction only retained 71.25\% at 64K while constant magnitude and fixed temperature gain each fell to 16.25\%, and fixing the $\sqrt{\log(n+1)}$ null slope scored 91.25\% versus 77.50\% ($\pm 2$ prompts $=12.5\%$). Because one seed and 16 synthetic trials per length cannot separate structural effects from sampling noise, we subsequently executed a confirmatory 18-run (6-arm $\times$ 3-seed) attribution across 30 independent natural documents (720 prompts per model; Appendix~\ref{appendix:pat_feedback}, Table~\ref{table:component_attribution_e1}). Across all three seeds on natural text, \textbf{Full Polar} averages \textbf{43.24\%} (8K--64K) and \textbf{36.85\%} (64K), outperforming \textbf{Fixed null slope} (37.96\% overall; 26.30\% at 64K; $+5.28\%$ and $+10.56\%$ gains) and \textbf{Direction only} (19.40\% overall; 6.67\% at 64K; $+23.84\%$ gain from the magnitude channel $\mu_i$), resolving the single-seed pilot inversion in favor of the full Polar readout.}
 
 \subsection{Numerical oracle}
 The materialized PyTorch path forms the masked real-key logits and virtual null logit in FP32, applies a single softmax, and computes the direction and magnitude channels from the resulting weights. It is used as a numerical oracle for forward and backward tests, not as the production long-context path, because materializing the $T\times T$ score matrix is memory-prohibitive at the evaluated lengths.
@@ -188,13 +186,13 @@ def polar_fwd_core(q, K, V, n_i, temp, nullv, beta,
     Z = L + p_null
 
     direction = normalize(S + p_null[:, None] * v_null)
-    n_eff = L * L / tl.maximum(Q2, eps)
+    n_eff = L * L / tl.maximum(Q2, 1.0e-30)
     m_eff = n_eff * L / tl.maximum(Z, eps)
     magnitude = 2 * tl.sigmoid(2 * beta * tl.log(1 + m_eff)) - 1
     save_for_backward(M_new, L, Q2, S)
 \end{lstlisting}
 
-This removes the quadratic \emph{score-matrix storage}. Full-context prefill still performs quadratic query-key arithmetic. The kernel is cross-checked against the materialized PyTorch oracle in FP32 accumulation before lower-precision outputs are accepted.
+This removes the quadratic \emph{score-matrix storage}. \rev{Note that $Q_2$ is scaled by $\exp(-2M_{\rm new})$ and can legitimately fall below the vector-normalization floor $\varepsilon=10^{-6}$ when the virtual null logit sets $M_{\rm new}$; using $10^{-30}$ preserves exact scale invariance of $L^2/Q_2$.} Full-context prefill still performs quadratic query-key arithmetic. The kernel is cross-checked against the materialized PyTorch oracle in FP32 accumulation before lower-precision outputs are accepted.
 
 \section{Evaluation Protocols}
 \label{appendix:protocol}
@@ -602,7 +600,7 @@ For \texttt{hl:256}, $H_{\max}=256 \implies \gamma'_t\leq0.997296$. Only the sin
 
 Table~\ref{table:gamma_sweep_full} reports the complete paired sweep across conditions (\texttt{baseline}, \texttt{p90}, \texttt{p99}, \texttt{hl:256}, \texttt{hl:512}) and lengths (2K, 16K, 64K, 256K) within a single process sharing model instance, documents, and seeds:
 \begin{itemize}
-  \item \textbf{Why \texttt{hl:256} is selected:} It gives the largest reduction in 256K needle cross-entropy, from $12.20$ to $6.05$ nats on NoPE and from $2.39$ to $1.71$ nats on Polar. It also keeps 2K clean-loss drift within the $0.05$-nat guardrail, at $+0.022$ nats on NoPE and $+0.010$ on Polar.
+  \item \rev{\textbf{Why \texttt{hl:256} is selected over \texttt{p90}:} \texttt{p90} is a checkpoint-dependent empirical logit quantile that maps to different timescales across models ($70.6$ tokens in NoPE, $139.2$ in Polar, $44.5$ in RoPE). Clipping NoPE down to $70.6$ tokens quadruples 2K short-context needle cross-entropy ($0.428$ vs.\ $0.103$ nats baseline) and doubles 18-document 2K BPB drift ($+0.038$ vs.\ $+0.022$). By contrast, \texttt{hl:256} ($T_{\rm train}/8$, twice the 128-token memory chunk size) defines a model-agnostic contraction margin that cuts 2K needle loss nearly in half ($0.245$ nats), keeps 2K clean-loss drift within $0.05$ nats ($+0.022$ on NoPE, $+0.010$ on Polar), and achieves the lowest 256K needle cross-entropy ($12.20\rightarrow6.05$ nats on NoPE; $2.39\rightarrow1.71$ nats on Polar).}
   \item \textbf{Why \texttt{p99} fails on saturated checkpoints:} On NoPE L40S, the 99th-percentile logit ($13.46$) still gives a half-life of about 484k tokens. At 256K, clean loss remains at $12.09$ nats and needle cross-entropy at $12.15$ nats.
   \item \textbf{Why RoPE is an empirical negative control:} RoPE has no comparable outlier. Capping it at \texttt{hl:256} gives no retrieval benefit at 256K ($0.0\%$ accuracy) and reduces short-context needle accuracy from $82.5\%$ to $50.0\%$. The intervention is therefore not a general benchmark boost.
 \end{itemize}
@@ -624,86 +622,174 @@ These results support an isolated near-unit retention gate as a major mediator o
 
 The complete machine-readable artifacts are under \texttt{gamma\_diagnostics/results/}: \texttt{parameters/gamma\_parameters.json} for the scan, \texttt{all\_clamp\_sweep\_262k.json} for the paired pilot, and \texttt{re\_evaluation/run-summary.json} plus per-suite logs for the full benchmark. The executable protocol and reporting caveats are in \texttt{gamma\_diagnostics/README.md}.
 
-\subsection{Follow-up Evaluation: Adaptation Interaction, Specificity Controls, and Replications}
+\subsection{Follow-up Evaluation: Component Isolation, RoPE Extensions, Specificity Controls, and Cold-Cache Serving}
 \label{appendix:pat_feedback}
+\begin{revblock}
 
-Following evaluation review feedback, we executed prospective follow-up experiments under \texttt{supplementary/pat\_feedback/} to settle component attribution, test retention limits across continuous pre-training (CPT), and audit numerical operator parity.
+Following evaluation review feedback, we executed prospective follow-up experiments under \texttt{supplementary/pat\_feedback/} and \texttt{iclr27\_rebuttal/} to isolate each Polar channel across multiple seeds, test 8K pretraining length controls and training-free RoPE extensions, audit operator parity, verify free-generation recall, and enforce cold-cache serving repeatability.
 
-\paragraph{Numerical Semantics and Operator Parity (E0).}
-Direction-floor evaluation audited the theoretical floor formula $U / \max(\|U\|_2, \epsilon Z)$ against the streaming implementation $U / \max(\|U\|_2, \epsilon)$. In the operational regime where $\|s\|_2 \ge \epsilon$, the two expressions are mathematically identical and agree to $0.0$ error in FP64. Checkpoint probes across 256K context sequences on Stage II and Foveal Polar checkpoints confirmed a 0.0\% floor activation rate. Testing the learned-temperature control $t(n) = 1 + \operatorname{softplus}(\alpha) \log(n)$ with $t=1$ verified exact recovery of ordinary NoPE SDPA and shared parameter gradients with $0.0$ error.
+\paragraph{Numerical Semantics, Operator Parity, and Kernel Revision Reconciliation (E0).}
+Direction-floor evaluation audited the theoretical floor formula $U / \max(\|U\|_2, \epsilon Z)$ against the streaming implementation $U / \max(\|U\|_2, \epsilon)$. Where $\|s\|_2 \ge \epsilon$, the two expressions are identical ($0.0$ error in FP64), and checkpoint probes across 256K sequences confirmed a $0.0\%$ floor activation rate. Testing the learned-temperature control $t(n) = 1 + \operatorname{softplus}(\alpha) \log(n)$ at $t=1$ verified exact recovery of ordinary NoPE SDPA and shared gradients ($0.0$ error). During this audit (\texttt{kernel/polar\_triton.py}, commit \texttt{798418de}), the participation-ratio denominator clamp in $n_{\rm eff}=L^2/\max(Q_2,\text{floor})$ was tightened from $\epsilon=10^{-6}$ to $10^{-30}$ so max-shifted $Q_2$ preserves scale-invariant $L^2/Q_2$ when the virtual null logit dominates. On the identical 18 document SHA-256 hashes, Stage II tables recorded prior to that update (Tables~\ref{tab:endpoints}, \ref{tab:replication_main}, \ref{tab:gamma_rebench}, \ref{table:gamma_bpb_full}) report Polar BPB of $1.451$ at 2K and $1.825\rightarrow1.501$ at 256K, whereas E2 and full 18-document E5 run after that update report $1.416$ at 2K and $1.855\rightarrow1.521$ at 256K; NoPE ($8.097\rightarrow1.595$) does not invoke \texttt{polar\_triton.py} and is identical in both.
 
-\paragraph{Retention Capping across Adaptation States (E2).}
-To establish whether the retention cap's efficacy depends on long-context adaptation, we evaluated eight conditions (2 attention cores $\times$ 2 adaptation states $\times$ 2 cap conditions) on the frozen 18-document likelihood panel. For the adapted state, we inspected checkpoints from an exploratory continuous pre-training study (Foveal CPT) combining 1B tokens at 32K context with an experimental routed sparse-attention architecture:
+\paragraph{Complete 6-Arm $\times$ 3-Seed Component Attribution and 8K Pretraining Controls (E1).}
+To separate Polar's channels from learned length temperatures (Scalable-Softmax~\citep{nakanishi2025scalable}) and resolve the single-seed pilot variance of Table~\ref{table:polar_components}, protocol E1 trained six matched arms across three initialization seeds (20270912, 20270913, 20270914; 18 runs total, 1,900 updates $=996{,}147{,}200$ tokens at length 2K, byte-identical common tensor initialization verified via SHA-256 digests): \texttt{rope\_memory}, \texttt{nope\_memory}, \texttt{temperature\_softmax\_memory} ($\tau_h(n)=1+\operatorname{softplus}(\alpha_h)\ln n$), \texttt{polar\_direction\_only\_memory} (removing the magnitude channel $\mu_i$), \texttt{polar\_fixed\_null\_slope\_memory} (fixing the $\sqrt{\log(n+1)}$ slope near zero), and full \texttt{polar\_memory}. Table~\ref{table:component_attribution_e1} reports 8K--64K and 64K natural-text exact retrieval over 30 independent documents (720 prompts/run):
 \begin{itemize}
-  \item \textbf{Original Stage II checkpoints:} Uncapped NoPE exhibits severe degradation beyond 2K, reaching 8.098 BPB at 256K; capping its single outlier head (B2/H5) recovers likelihood to 1.595 BPB ($+6.503$ cap benefit $B$). Primary Polar 256K BPB drops from 1.855 to 1.520 ($+0.334$ cap benefit $B$).
-  \item \textbf{Exploratory Sparse-CPT checkpoints:} After 1B tokens of 32K context adaptation under Foveal sparse attention, uncapped NoPE already stabilizes at 1.567 BPB at 256K, and capping yields a modest $+0.079$ BPB improvement (1.488 BPB). Foveal Polar uncapped 256K BPB is 1.461, and capped is 1.439 ($+0.021$ cap benefit $B$).
-  \item \textbf{Adaptation contrast and scope:} The cap benefit is substantially larger on unadapted models than on adapted ones: $B(\text{original}) - B(\text{foveal}) = +6.424$ in NoPE and $+0.313$ in Polar. However, because this exploratory setup simultaneously introduces routed sparse attention, extended 32K sequence length, and backbone parameter updates, it represents a distinct architectural direction rather than an isolated test of context length alone. Comprehensive evaluation of sparse-attention CPT is therefore deferred to dedicated future work.
+  \item \textbf{Channel necessity:} Removing $\mu_i$ (\texttt{Direction-Only}) drops 8K--64K recall from \textbf{43.24\%} to \textbf{19.40\%} ($-23.84\%$; 64K drops from 36.85\% to 6.67\%). Fixing the $\sqrt{\log(n+1)}$ null slope drops recall to \textbf{37.96\%} ($-5.28\%$ overall) and \textbf{26.30\%} at 64K ($-10.56\%$), with Full Polar winning or tying in every seed ($+8.33\%, +7.50\%, 0.00\%$ on 8K--64K; $+17.78\%, +12.22\%, +1.67\%$ at 64K).
+  \item \textbf{Seed stability vs.\ Scalable-Softmax and Triplet 1 tie diagnosis:} Full Polar is stable across all three seeds ($36.25\%, 44.86\%, 48.61\%$), whereas \texttt{Temp-Softmax} is seed-fragile on natural text ($5.69\%, 13.33\%, 44.17\%$), collapsing to $0/180$ at 32K--64K in Triplets 1 and 2. In Triplet 1, \texttt{NoPE} and \texttt{Temp-Softmax} are distinct models ($57.22\%$ vs.\ $72.22\%$ at 2K real text; $10.56\%$ vs.\ $47.22\%$ at 64K synthetic), and their $5.69\%$ match across 8K--64K is an exact integer-sum coincidence over 720 prompts ($37+4+0+0=41/720$ vs.\ $35+6+0+0=41/720$).
+  \item \textbf{8K pretraining length controls:} Extending pretraining $4\times$ to \texttt{seq\_len=8192} (1B tokens, matched seed 20270912; Table~\ref{table:len8k_controls}) raises all non-RoPE arms at 8K ($59.4$--$61.1\%$) while widening Polar's extrapolation lead at 64K ($8\times$ training length): Full Polar retains \textbf{51.11\%} exact natural-text recall at 64K (\textbf{54.86\%} across 8K--64K; \textbf{52.78\%} across 16K--64K), more than doubling Scalable-Softmax at 64K (21.11\%) while NoPE drops to 1.11\% and RoPE to 0.00\%.
 \end{itemize}
-
-\paragraph{Runtime Telemetry (E3).}
-Activation-conditioned telemetry confirms that the outlier heads maintain extreme median half-lives ($>3 \times 10^8$ tokens) under live text inputs when uncapped, which are strictly capped to 256 tokens under the \texttt{hl-256} intervention. Write gates ($\beta$) remain moderate ($0.04$--$0.09$ for NoPE, $0.21$--$0.30$ for Polar). In Foveal checkpoints, the parameter-only outlier persists, but surrounding sparse attention insulating the residual stream prevents catastrophic likelihood collapse.
-
-\paragraph{Independent-Document Retrieval Replications (E4).}
-Evaluating six untouched checkpoints across 30 independently sampled natural FinePDFs documents (averaging passkey and NIAH across three depths, 8K--64K) confirms Polar's retrieval superiority across initializations:
-\begin{itemize}
-  \item Primary pair: Polar achieves 36.25\% exact natural-text retrieval versus NoPE's 0.97\% ($+35.28\%$ contrast).
-  \item Replication seed 1: Polar achieves 37.92\% versus NoPE's 1.25\% ($+36.67\%$ contrast).
-  \item Replication seed 2: Polar achieves 42.22\% versus NoPE's 2.64\% ($+39.58\%$ contrast).
-  \item Paired bootstrap: Document-cluster paired bootstrap (10,000 resamples, seed 20270915) confirms an average $+37.18\%$ natural-text retrieval advantage for Polar across seeds.
-\end{itemize}
-
-\paragraph{Ceiling Sensitivity and Head Specificity (E5).}
-A sweep over cap ceilings ($H \in \{128, 256, 512, 1024\}$) on the six-document diagnostic subset shows that ceilings between 128 and 512 tokens effectively prevent 256K likelihood collapse, with $H=256$ optimal. In contrast, applying $H=256$ to alternative same-layer heads (the second-highest $H_0$ head or a randomly chosen same-layer head) yields $0.0$ likelihood recovery (NoPE 256K BPB remains at $7.53$--$7.62$). The intervention's curative effect is strictly head-specific.
-
-\paragraph{Temperature-Matched Component Attribution (E1).}
-To separate the contributions of Polar's direction normalization, null competitor, and learned length temperatures, protocol E1 executes three matched arms across three initialization seeds (20270912, 20270913, 20270914): ordinary \texttt{nope\_memory}, \texttt{temperature\_softmax\_memory} using $\tau(n) = 1 + \operatorname{softplus}(\alpha) \ln(n)$ (introducing exactly 32 learned $\alpha$ parameters matching Polar's per-head temperature parameterization), and full \texttt{polar\_memory}. Each run trains for 1,900 optimizer updates ($996{,}147{,}200$ tokens) on the identical sorted shard order, maintaining byte-identical post-initialization common weights verified by SHA-256 digests across arms. As shown in Table~\ref{table:component_attribution_e1}, Polar strictly outperforms temperature-matched softmax across all three initialization seeds on 8K--64K natural-text exact retrieval: $+30.56\%$ in Triplet 1 (36.25\% vs 5.69\%), $+31.53\%$ in Triplet 2 (44.86\% vs 13.33\%), and $+4.44\%$ in Triplet 3 (48.61\% vs 44.17\%), yielding a mean primary contrast of $+22.18\%$. This confirms that Polar's retrieval superiority cannot be attributed merely to the learned length-temperature family; direction normalization and the null competitor are essential to its long-context fidelity.
 
 \begin{table}[!ht]
 \centering
 \small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{lcccccc}
+\setlength{\tabcolsep}{3.8pt}
+\resizebox{\linewidth}{!}{%
+\color{revcolor}\begin{tabular}{lrrrrrr}
 \toprule
-\textbf{Triplet} & \textbf{Seed} & \textbf{NoPE} & \textbf{Temp-Softmax} & \textbf{Polar} & \textbf{Polar vs Temp} & \textbf{Polar vs NoPE} \\
+\textbf{Arm (1B tokens, $L_{\rm train}=2048$)} & \textbf{Seed 1} & \textbf{Seed 2} & \textbf{Seed 3} & \textbf{8K--64K Mean $\pm$ SD} & \textbf{64K Mean} & \textbf{Full Polar $-$ Arm} \\
 \midrule
-Triplet 1 & 20270912 & 5.69\% & 5.69\% & 36.25\% & \textbf{+30.56\%} & +30.56\% \\
-Triplet 2 & 20270913 & 16.67\% & 13.33\% & 44.86\% & \textbf{+31.53\%} & +28.19\% \\
-Triplet 3 & 20270914 & 15.42\% & 44.17\% & 48.61\% & \textbf{+4.44\%} & +33.19\% \\
-\midrule
-\textbf{Mean} & -- & \textbf{12.59\%} & \textbf{21.06\%} & \textbf{43.24\%} & \textbf{+22.18\%} & \textbf{+30.65\%} \\
+RoPE + Mem & 0.00\% & 0.00\% & 0.00\% & 0.00\% $\pm$ 0.00\% & 0.00\% & \textbf{+43.24\%} \\
+NoPE + Mem & 5.69\% & 16.67\% & 15.42\% & 12.59\% $\pm$ 6.01\% & 0.00\% & \textbf{+30.65\%} \\
+Polar Direction-Only (no $\mu_i$) + Mem & 20.00\% & 29.58\% & 8.61\% & 19.40\% $\pm$ 10.50\% & 6.67\% & \textbf{+23.84\%} \\
+Temp-Softmax (Scalable) + Mem & 5.69\% & 13.33\% & 44.17\% & 21.06\% $\pm$ 20.37\% & 10.00\% & \textbf{+22.18\%} \\
+Polar Fixed-Null-Slope ($\gamma\approx 0$) + Mem & 27.92\% & 37.36\% & 48.61\% & 37.96\% $\pm$ 10.36\% & 26.30\% & \textbf{+5.28\%} \\
+\textbf{Full Polar + Mem} & \textbf{36.25\%} & \textbf{44.86\%} & \textbf{48.61\%} & \textbf{43.24\% $\pm$ 6.34\%} & \textbf{36.85\%} & --- \\
 \bottomrule
-\end{tabular}
-\caption{Component attribution results across three independent initialization triplets (8K--64K mean natural-text exact retrieval on 30 independent documents). Polar consistently outperforms temperature-softmax, establishing an average $+22.18\%$ primary advantage.}
+\end{tabular}}
+\caption{\rev{Complete 6-arm $\times$ 3-seed component attribution (E1; seeds 20270912--20270914) on 30 independent FinePDFs documents (720 prompts/run across 8K--64K). All six arms within each seed share exact common-tensor initialization.}}
 \label{table:component_attribution_e1}
 \end{table}
 
-\paragraph{Controlled Serving Repeatability (E6).}
-To ensure serving benchmarks are repeatable and eliminate launch-timing artifacts, we conducted 10 timed repetitions per model and context length with strict GPU synchronization on one NVIDIA L40S, with untimed warmups and isolated memory resets:
+\begin{table}[!ht]
+\centering
+\small
+\setlength{\tabcolsep}{3.8pt}
+\resizebox{\linewidth}{!}{%
+\color{revcolor}\begin{tabular}{lrrrrrrrrr}
+\toprule
+\textbf{Arm (1B tokens, $L_{\rm train}=8192$)} & \textbf{Val.\ NLL} & \textbf{2K} & \textbf{8K} & \textbf{16K} & \textbf{32K} & \textbf{64K} & \textbf{8K--64K} & \textbf{16K--64K} & \textbf{64K BPB} \\
+\midrule
+RoPE + Mem & 3.1165 & 7.78\% & 1.67\% & 1.11\% & 0.00\% & 0.00\% & 0.69\% & 0.37\% & 1.801 \\
+NoPE + Mem & 3.1030 & 66.11\% & 59.44\% & 33.89\% & 11.11\% & 1.11\% & 26.39\% & 15.37\% & 1.390 \\
+Temp-Softmax (Scalable) + Mem & \textbf{3.1003} & 63.33\% & 60.56\% & 55.00\% & 37.22\% & 21.11\% & 43.47\% & 37.78\% & \textbf{1.362} \\
+\textbf{Full Polar + Mem} & 3.1325 & \textbf{73.33\%} & \textbf{61.11\%} & \textbf{56.11\%} & \textbf{51.11\%} & \textbf{51.11\%} & \textbf{54.86\%} & \textbf{52.78\%} & 1.530 \\
+\bottomrule
+\end{tabular}}
+\caption{\rev{Matched 8K pretraining length controls (\texttt{seq\_len=8192}, seed 20270912) evaluated on the 30-document natural-text exact retrieval and 18-document fixed-target BPB panels.}}
+\label{table:len8k_controls}
+\end{table}
+
+\paragraph{Training-Free RoPE Extrapolation Baselines on the 9.816B Checkpoint.}
+Table~\ref{table:rope_extrapolation_baselines} evaluates the 9.816B-token RoPE+memory checkpoint under exact half-truncated rotary parameterization ($\theta_{\rm base}=1024$, verified to $0.0$ max difference against \texttt{train.model.Rotary}) across six modes: unmodified \texttt{vanilla}, linear Positional Interpolation (\texttt{PI}; \citealp{chen2023extending}), \texttt{Dynamic-NTK}, unscaled \texttt{ReRoPE} ($w=1024$; \citealp{su2023rerope}), \texttt{YaRN} (NTK-by-parts plus $\sqrt{1/\tau}=0.1\ln s+1$; \citealp{peng2024yarn}), and \texttt{ReRoPE+log} (clamping $\min(i-j,1024)$ plus $\max(1,\ln(i+1)/\ln L_{\rm train})$ query scaling). Phase-only interventions without $\log n$ logit sharpening collapse across 8K--64K (\texttt{PI} $0.00\%$, \texttt{Dynamic-NTK} $0.28\%$, unscaled \texttt{ReRoPE} $1.39\%$), whereas adding inference-time $\log n$ scaling rescues natural-text retrieval (\texttt{YaRN} \textbf{52.78\%}, \texttt{ReRoPE+log} \textbf{54.17\%}), proving that softmax entropy dilution is co-equal with phase wraparound. Nevertheless, RoPE patches exhibit three concrete trade-offs relative to Polar: (i) lower 2K and synthetic needle fidelity ($63.9$--$64.4\%$ at 2K real and $20.0$--$30.3\%$ across 8K--64K synthetic vs.\ Polar's $96.1\%$ and $79.7\%$, plus $72.8$--$82.2\%$ Polar vs.\ $63.9$--$67.8\%$ at 8K real); (ii) loss of target-length-invariant single-KV-cache streaming (\texttt{YaRN} mutates frequencies globally via $s=L_{\rm target}/L_{\rm train}$, invalidating prefix caches across target lengths, while \texttt{ReRoPE+log} requires dual key evaluations that break single-pass paged FlashAttention); and (iii) no protection against gated-delta retention saturation (capped Polar reaches $1.409$ BPB at 64K vs.\ $1.588$ for \texttt{YaRN} and $1.695$ for \texttt{ReRoPE+log}).
+
+\begin{table}[!ht]
+\centering
+\small
+\setlength{\tabcolsep}{3.2pt}
+\resizebox{\linewidth}{!}{%
+\color{revcolor}\begin{tabular}{lrrrrrrrrr}
+\toprule
+\textbf{9.816B Checkpoint / Mode} & \textbf{2K Real} & \textbf{8K Real} & \textbf{16K Real} & \textbf{32K Real} & \textbf{64K Real} & \textbf{8K--64K Real} & \textbf{8K--64K Synth} & \textbf{2K BPB} & \textbf{64K BPB} \\
+\midrule
+RoPE (\texttt{vanilla}) & 63.89\% & 0.00\% & 0.00\% & 0.00\% & 0.00\% & 0.00\% & 0.00\% & 1.439 & 2.252 \\
+RoPE + Linear \texttt{PI} & 62.22\% & 0.00\% & 0.00\% & 0.00\% & 0.00\% & 0.00\% & 0.00\% & 1.440 & 2.082 \\
+RoPE + \texttt{Dynamic-NTK} & 62.78\% & 1.11\% & 0.00\% & 0.00\% & 0.00\% & 0.28\% & 0.42\% & 1.437 & 1.965 \\
+RoPE + \texttt{ReRoPE} ($w=1024$, no $\log n$) & 64.44\% & 5.56\% & 0.00\% & 0.00\% & 0.00\% & 1.39\% & 0.56\% & 1.440 & 2.060 \\
+RoPE + \texttt{YaRN} & 63.89\% & 63.89\% & \textbf{57.22\%} & 46.11\% & \textbf{43.89\%} & 52.78\% & 30.28\% & 1.433 & 1.588 \\
+RoPE + \texttt{ReRoPE+log} ($w=1024$) & 64.44\% & 67.78\% & 56.67\% & \textbf{50.00\%} & 42.22\% & \textbf{54.17\%} & 20.00\% & 1.438 & 1.695 \\
+\midrule
+NoPE (Primary, unadapted) & \textbf{97.22\%} & 3.89\% & 0.00\% & 0.00\% & 0.00\% & 0.97\% & 44.44\% & 1.432 & 5.886 \\
+Polar (Primary, unadapted) & 96.11\% & \textbf{72.78\%} & 45.00\% & 18.89\% & 8.33\% & 36.25\% & \textbf{79.72\%} & \textbf{1.416} & 1.602 \\
+\bottomrule
+\end{tabular}}
+\caption{\rev{Training-free RoPE extrapolation baselines on the 9.816B RoPE+memory checkpoint versus primary NoPE and Polar on the frozen 30-document retrieval and 18-document BPB panels. Capping primary NoPE/Polar (\texttt{hl:256}) lowers 64K BPB to $1.506$ / \textbf{$1.409$}.}}
+\label{table:rope_extrapolation_baselines}
+\end{table}
+
+\paragraph{Retention Capping across Adaptation States (E2) and Runtime Telemetry (E3).}
+On the 18-document panel, capping the single outlier head rescues unadapted Stage II 256K BPB from $8.098$ to $1.595$ in NoPE ($+6.503$ benefit) and from $1.855$ to $1.520$ in Polar ($+0.334$ benefit). On exploratory 32K sparse-attention continuous pre-training (Foveal CPT, 1B tokens), uncapped 256K BPB is already stabilized ($1.567\rightarrow1.488$ in NoPE; $1.461\rightarrow1.439$ in Polar), yielding $+6.424$ and $+0.313$ adaptation contrasts; comprehensive evaluation of sparse CPT is deferred to future work. Live telemetry (E3) confirms uncapped outlier median half-lives $>3\times10^8$ tokens vs.\ $\le 256$ under \texttt{hl:256}, with moderate write gates ($\beta\in[0.04,0.09]$ NoPE; $[0.21,0.30]$ Polar).
+
+\paragraph{Length-Wise Independent-Document Retrieval, Bootstrap CIs, and Free Generation (E4).}
+Table~\ref{table:e4_lengthwise_bootstrap} reports the full 2K--256K natural-text exact retrieval curves across all six 9.816B checkpoints on 30 independent FinePDFs documents, alongside 10,000-resample document-cluster paired bootstrap 95\% confidence intervals (seed 20270915). Pooling across all three pairs over the 30 document clusters yields a \textbf{+37.27\%} Polar advantage ($95\%$ CI $[+32.08\%,+42.55\%]$, with $30/30$ documents strictly favoring Polar). In addition, running unconstrained five-step greedy autoregressive free generation (\texttt{model.generate} without teacher forcing) across 2K--32K on 30 natural-text prompts per length confirms \textbf{0.0\% discrepancy} against teacher-forced \texttt{greedy\_exact} on every model and length (e.g., at 8K/16K, Polar free-generation exact recall is $66.7\%/63.3\%$ primary, $73.3\%/46.7\%$ seed 1, and $90.0\%/56.7\%$ seed 2, with $84.7\%/77.3\%$, $80.7\%/61.3\%$, and $95.3\%/64.0\%$ free-generation token accuracy, vs.\ $16.7\%/0.0\%$, $20.0\%/0.0\%$, and $20.0\%/6.7\%$ exact for NoPE).
+
+\begin{table}[!ht]
+\centering
+\small
+\setlength{\tabcolsep}{3.5pt}
+\resizebox{\linewidth}{!}{%
+\color{revcolor}\begin{tabular}{llrrrrrrrl}
+\toprule
+\textbf{Pair} & \textbf{Model} & \textbf{2K} & \textbf{8K} & \textbf{16K} & \textbf{32K} & \textbf{64K} & \textbf{256K} & \textbf{8K--64K} & \textbf{Paired $\Delta$ [95\% Cluster CI]} \\
+\midrule
+Primary & NoPE & 97.22\% & 3.89\% & 0.00\% & 0.00\% & 0.00\% & 0.00\% & 0.97\% & --- \\
+Primary & Polar & 96.11\% & 72.78\% & 45.00\% & 18.89\% & 8.33\% & 3.33\% & \textbf{36.25\%} & \textbf{+35.42\%} $[+29.31, +41.81]$ (30/30) \\
+Seed 1 (202701) & NoPE & 95.00\% & 5.00\% & 0.00\% & 0.00\% & 0.00\% & 0.00\% & 1.25\% & --- \\
+Seed 1 (202701) & Polar & 98.33\% & 79.44\% & 50.56\% & 15.56\% & 6.11\% & 0.00\% & \textbf{37.92\%} & \textbf{+36.81\%} $[+30.14, +43.48]$ (30/30) \\
+Seed 2 (202702) & NoPE & 98.33\% & 9.44\% & 1.11\% & 0.00\% & 0.00\% & 0.00\% & 2.64\% & --- \\
+Seed 2 (202702) & Polar & 86.67\% & 82.22\% & 61.67\% & 22.78\% & 2.22\% & 0.00\% & \textbf{42.22\%} & \textbf{+39.58\%} $[+32.78, +45.97]$ (29/30) \\
+\bottomrule
+\end{tabular}}
+\caption{\rev{Complete length-wise natural-text exact five-token retrieval on 30 independent FinePDFs documents (E4). Rightmost column reports 10,000-resample document-cluster paired bootstrap 95\% CIs and positive-document counts ($30$ documents total; pooled three-pair contrast $+37.27\%$ $[+32.08, +42.55]$, $30/30$ positive). Note slight per-document vs.\ cell-rounded mean differences ($+35.42\%$ vs.\ $+35.28\%$).}}
+\label{table:e4_lengthwise_bootstrap}
+\end{table}
+
+\paragraph{Full 18-Document Ceiling Sensitivity and Head Specificity (E5).}
+Re-running E5 across the complete equal-weighted 18-document BPB panel (8 FinePDFs, 5 PG-19, 5 Proof-Pile; Table~\ref{table:e5_full_18doc}) replaces an earlier 6-document subset ($7.533$ BPB) and aligns E5 with E2 and Table~\ref{tab:endpoints}. Ceilings $H\in\{128,256,512\}$ eliminate 256K collapse on both models while \texttt{hl:256} halves the 2K BPB penalty of \texttt{p90} on NoPE ($+0.022$ vs.\ $+0.038$). Applying \texttt{hl:256} to the second-highest $H_0$ head or a random Block 2 head yields $0.0$ recovery on both NoPE ($8.121$ / $8.097$) and Polar ($1.856$ / $1.855$).
+
+\begin{table}[!ht]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\resizebox{\linewidth}{!}{%
+\color{revcolor}\begin{tabular}{llrrrrlrrrr}
+\toprule
+ & \multicolumn{5}{c}{\textbf{Primary NoPE}} & \multicolumn{5}{c}{\textbf{Primary Polar}} \\
+\cmidrule(lr){2-6}\cmidrule(lr){7-11}
+\textbf{Condition} & \textbf{Target} & \textbf{2K} & \textbf{64K} & \textbf{256K} & \textbf{$\Delta$256K} & \textbf{Target} & \textbf{2K} & \textbf{64K} & \textbf{256K} & \textbf{$\Delta$256K} \\
+\midrule
+Uncapped & B2/H5 ($\infty$) & 1.432 & 5.886 & 8.097 & $+0.000$ & B2/H6 ($\infty$) & 1.416 & 1.602 & 1.855 & $+0.000$ \\
+\texttt{p99} outlier & B2/H5 (484.6k) & 1.432 & 5.877 & 8.126 & $-0.029$ & B2/H6 (162.4k) & 1.416 & 1.595 & 1.839 & $+0.016$ \\
+\texttt{p90} outlier & B2/H5 (70.6) & 1.470 & 1.516 & 1.591 & $+6.506$ & B2/H6 (139.2) & 1.427 & 1.411 & 1.521 & $+0.334$ \\
+\texttt{hl:1024} outlier & B2/H5 (1024) & 1.438 & 1.833 & 2.173 & $+5.923$ & B2/H6 (1024) & 1.419 & 1.409 & 1.527 & $+0.328$ \\
+\texttt{hl:512} outlier & B2/H5 (512) & 1.445 & 1.531 & 1.663 & $+6.434$ & B2/H6 (512) & 1.422 & \textbf{1.408} & \textbf{1.521} & $+0.334$ \\
+\textbf{\texttt{hl:256} outlier} & B2/H5 (256) & 1.454 & \textbf{1.506} & \textbf{1.595} & $+6.501$ & B2/H6 (256) & 1.425 & 1.409 & \textbf{1.521} & $+0.334$ \\
+\texttt{hl:128} outlier & B2/H5 (128) & 1.463 & 1.509 & 1.588 & $+6.509$ & B2/H6 (128) & 1.427 & 1.411 & \textbf{1.521} & $+0.334$ \\
+\texttt{hl:256} 2nd-$H_0$ head & B2/H7 (256) & 1.432 & 5.921 & 8.121 & $-0.024$ & B2/H0 (256) & 1.416 & 1.602 & 1.856 & $-0.001$ \\
+\texttt{hl:256} random head & B2/H4 (256) & 1.432 & 5.886 & 8.097 & $+0.000$ & B2/H5 (256) & 1.416 & 1.602 & 1.855 & $+0.000$ \\
+\bottomrule
+\end{tabular}}
+\caption{\rev{Ceiling sensitivity and head specificity across the full equal-weighted 18-document BPB panel (E5; lower BPB is better; $\Delta$256K $=$ uncapped $-$ condition). Alternative same-layer heads yield zero recovery.}}
+\label{table:e5_full_18doc}
+\end{table}
+
+\paragraph{Cold-Cache Serving Repeatability (E6).}
+To measure repeatable cold-cache full-prefix latency across 10 timed repetitions after an untimed warmup on one NVIDIA L40S, we invalidate token 0 per repetition so Polar's \texttt{LLM} engine cannot hit its 256-token block prefix cache (an earlier E6 run repeated an identical prompt on the same engine instance, hitting $130{,}816$ cached prefix tokens at 128K and timing only the 256-token tail block at $0.065$\,s). Table~\ref{table:serving_repeatability_e6} reports the corrected cold-cache medians and interquartile ranges:
 \begin{itemize}
-  \item \textbf{Recurrent and Hybrid Decoders:} Raven Native exhibits strictly length-invariant decode latency of $3.27$--$3.32$\,ms/token ($301$--$305$\,tokens/s) from 2K to 128K context. Atma-Raven-Titans decodes at $2.25$--$2.30$\,ms/token ($434$--$444$\,tokens/s) through 128K context, confirming that fixed-size recurrent state tables isolate decode latency from prefix length.
-  \item \textbf{Paged Attention Decoders:} NoPE, RoPE, and Polar exhibit identical short-context decode latencies ($2.20$--$2.31$\,ms/token at 2K), scaling monotonically to $14.81$--$15.51$\,ms/token ($65$--$68$\,tokens/s) at 128K as every decode step traverses the growing KV cache ($7.01$--$7.27$\,GiB peak memory).
-  \item \textbf{TDA Upstream Prefill:} Using the official Triton parallel kernel, TDA achieves prefill throughput of $86{,}532$\,tokens/s at 2K, $57{,}005$\,tokens/s at 32K, and $19{,}851$\,tokens/s at 128K ($6.60$\,s TTFT). Autoregressive decode is omitted because upstream Snap Research authors provided no cached incremental decode kernel, and prefix recomputation artificially degrades decode speed.
+  \item \textbf{Cold-Cache Prefill Alignment:} Polar's 128K cold TTFT is \textbf{1.589\,s} (IQR $0.004$\,s; $82{,}469$\,tok/s), matching Table~\ref{tab:systems} ($1.62$\,s) and Table~\ref{table:serving_detailed_matrix} ($1.619$\,s), alongside NoPE ($1.434$\,s) and RoPE ($1.456$\,s).
+  \item \textbf{Recurrent vs.\ Paged-KV Decode:} Raven Native ($3.29$--$3.33$\,ms/tok) and Atma-Raven-Titans ($2.25$--$2.29$\,ms/tok) maintain prefix-invariant decode latencies through 128K, whereas NoPE, Polar, and RoPE scale from $2.18$--$2.29$\,ms/tok at 2K to $14.80$--$15.48$\,ms/tok ($64.6$--$67.6$\,tok/s) at 128K. Under \texttt{DirectScorer} full-prefix recomputation, Scaled TDA requires $10.445$\,s cold 128K prefill ($12{,}549$\,tok/s; decode omitted due to no upstream cached decode kernel).
 \end{itemize}
 
 \begin{table}[!ht]
 \centering
 \small
-\setlength{\tabcolsep}{4.5pt}
-\begin{tabular}{lcccccc}
+\setlength{\tabcolsep}{4pt}
+\resizebox{\linewidth}{!}{%
+\color{revcolor}\begin{tabular}{lcccccc}
 \toprule
-\textbf{Architecture} & \textbf{2K TTFT} & \textbf{2K Decode} & \textbf{32K TTFT} & \textbf{32K Decode} & \textbf{128K TTFT} & \textbf{128K Decode} \\
+\textbf{Architecture} & \textbf{2K Cold TTFT} & \textbf{2K Decode} & \textbf{32K Cold TTFT} & \textbf{32K Decode} & \textbf{128K Cold TTFT (IQR)} & \textbf{128K Decode} \\
 \midrule
-NoPE & 0.024\,s & 2.20\,ms (454\,t/s) & 0.227\,s & 5.24\,ms (191\,t/s) & 1.487\,s & 14.81\,ms (68\,t/s) \\
-Polar & 0.025\,s & 2.27\,ms (440\,t/s) & 0.029\,s & 5.45\,ms (183\,t/s) & 0.065\,s & 15.51\,ms (65\,t/s) \\
-RoPE & 0.023\,s & 2.31\,ms (433\,t/s) & 0.231\,s & 5.35\,ms (187\,t/s) & 1.505\,s & 14.96\,ms (67\,t/s) \\
-Raven Native & 0.045\,s & 3.27\,ms (305\,t/s) & 0.314\,s & 3.28\,ms (305\,t/s) & 1.333\,s & 3.32\,ms (301\,t/s) \\
-Atma-Raven-Titans & 0.029\,s & 2.25\,ms (444\,t/s) & 0.243\,s & 2.25\,ms (444\,t/s) & 0.999\,s & 2.30\,ms (434\,t/s) \\
-TDA (Hybrid) & 0.024\,s & \textit{Skipped} & 0.575\,s & \textit{Skipped} & 6.603\,s & \textit{Skipped} \\
+NoPE & 0.022\,s & 2.18\,ms (458\,t/s) & 0.218\,s & 5.22\,ms (192\,t/s) & 1.434\,s (0.003\,s) & 14.80\,ms (68\,t/s) \\
+Polar & 0.024\,s & 2.26\,ms (443\,t/s) & 0.237\,s & 5.44\,ms (184\,t/s) & \textbf{1.589\,s} (0.004\,s) & 15.48\,ms (65\,t/s) \\
+RoPE & 0.022\,s & 2.29\,ms (437\,t/s) & 0.224\,s & 5.33\,ms (188\,t/s) & 1.456\,s (0.009\,s) & 14.92\,ms (67\,t/s) \\
+Raven Native & 0.045\,s & 3.29\,ms (304\,t/s) & 0.310\,s & 3.30\,ms (303\,t/s) & 1.313\,s (0.001\,s) & 3.33\,ms (300\,t/s) \\
+Atma-Raven-Titans & 0.028\,s & 2.25\,ms (445\,t/s) & 0.236\,s & 2.26\,ms (443\,t/s) & 0.975\,s (0.003\,s) & 2.29\,ms (436\,t/s) \\
+TDA (Hybrid, direct) & 0.070\,s & \textit{Skipped} & 1.381\,s & \textit{Skipped} & 10.445\,s (0.055\,s) & \textit{Skipped} \\
 \bottomrule
-\end{tabular}
-\caption{Controlled serving repeatability on one NVIDIA L40S across 10 timed repetitions (batch size 1, 32 generated tokens). TTFT denotes time-to-first-token. TDA decode is omitted due to the absence of an upstream cached decode kernel.}
+\end{tabular}}
+\caption{\rev{Cold-cache serving repeatability on one NVIDIA L40S across 10 timed repetitions after warmup (batch size 1, 32 generated tokens; prefix cache invalidated per repetition). TDA uses \texttt{DirectScorer} full-prefix recomputation and omits un-cached decode.}}
 \label{table:serving_repeatability_e6}
 \end{table}
+\end{revblock}
 
 \section{Stress and Environment Diagnostics}
 \label{appendix:diagnostics}
