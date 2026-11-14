@@ -1,0 +1,43 @@
+================================================================================
+[E1 Training] Starting run pat_len8k_s1_rope_memory (arm=rope_memory, seed=20270912) on cuda (NVIDIA L40S)...
+================================================================================
+[E1 Training] Initializing matched model for arm=rope_memory with seed=20270912...
+[E1 Training] Model parameters: 378,155,200 (378.16M)
+
+===CONFIG_JSON===
+{"attn_type": "rope", "reg_mode": "baseline", "distractor": false, "memory": true, "window": false, "vocab_size": 50304, "num_hidden_layers": 16, "hidden_size": 1024, "head_dim": 128, "window_size": 1024, "seq_len": 8192, "num_chunks": 10, "batch_size": 524288, "val_tokens": 2097152, "mbs": 1, "cooldown_frac": 0.7, "sketch_dim": 64, "sigr_alpha_on": 0.01, "dist_align_weight_on": 0.01, "mem_chunk": 128, "mem_gamma_bias": 3.9, "mem_beta_bias": 0.0, "mem_kernel": "auto", "fla_custom_op": true, "wall_gate_bias": null, "eval_lengths": [8192, 16384, 32768, 65536, 131072], "needle_distances": [8192, 16384, 32768, 65536, 131072], "clean_dataset": "codelion/finepdfs-100M", "val_data": "finewebedu10B/finewebedu_val_*.bin", "num_eval_docs": 16, "num_needle_trials": 16, "needle_val_len": 5, "run_id": "pat_len8k_s1_rope_memory", "num_random_keys": 0, "dist_align_loss_weight": 0.0, "sigr_alpha": 0.0, "attn_window": null, "mem_enabled": true, "runner": "ablation.train", "experiment_group": "pat_rebuttal_len8k", "comparison_group": "pat_len8k_triplet_s1", "declared_tokens": 996147200, "enabled": true, "seed": 20270912, "init_seed": 20270912, "data_seed": 20270912, "eval_seed": 20270916, "deterministic_algorithms": false, "polar_variant": "full", "optimizer_updates": 1900, "global_batch_tokens": 524288, "gradient_accumulation_steps": 64, "shared_tensor_hash_digest": "fb9eb4a77fab9f277c4887ab3667135e678474953b56a7bb83eae646515340fa", "num_params": 378155200, "host": "default", "device": "cuda"}
+===END===
+[E1 Training] Target updates: 1900, accum_steps: 64, mbs: 1
+step:0/1900 val_loss:10.82584 wall:33.6s step_avg:33569.3ms MFU:0.0%
+step:125/1900 val_loss:4.49110 wall:1308.5s step_avg:10199.5ms MFU:55.1%
+step:250/1900 val_loss:3.89243 wall:2538.0s step_avg:9836.2ms MFU:57.1%
+step:375/1900 val_loss:3.67892 wall:3776.3s step_avg:9906.1ms MFU:56.7%
+step:500/1900 val_loss:3.56672 wall:5017.2s step_avg:9927.3ms MFU:56.6%
+step:625/1900 val_loss:3.47675 wall:6261.4s step_avg:9953.4ms MFU:56.5%
+step:750/1900 val_loss:3.40835 wall:7509.6s step_avg:9985.9ms MFU:56.3%
+step:875/1900 val_loss:3.36270 wall:8748.9s step_avg:9914.0ms MFU:56.7%
+step:1000/1900 val_loss:3.31190 wall:9989.5s step_avg:9925.1ms MFU:56.6%
+step:1125/1900 val_loss:3.26929 wall:11239.5s step_avg:10000.4ms MFU:56.2%
+step:1250/1900 val_loss:3.23907 wall:12482.0s step_avg:9939.2ms MFU:56.5%
+step:1375/1900 val_loss:3.20470 wall:13722.7s step_avg:9926.3ms MFU:56.6%
+step:1500/1900 val_loss:3.17534 wall:14965.5s step_avg:9942.1ms MFU:56.5%
+step:1625/1900 val_loss:3.15374 wall:16204.2s step_avg:9909.2ms MFU:56.7%
+step:1750/1900 val_loss:3.13128 wall:17448.1s step_avg:9951.4ms MFU:56.5%
+step:1875/1900 val_loss:3.11688 wall:18685.0s step_avg:9895.0ms MFU:56.8%
+step:1900/1900 val_loss:3.11647 wall:18942.8s step_avg:2062.5ms MFU:272.4%
+
+===CURVE_JSON===
+[{"step": 0, "val_loss": 10.82583999633789, "wall_s": 33.57, "mfu": 0.0}, {"step": 125, "val_loss": 4.491103099659085, "wall_s": 1308.5, "mfu": 55.09}, {"step": 250, "val_loss": 3.8924333304166794, "wall_s": 2538.03, "mfu": 57.12}, {"step": 375, "val_loss": 3.6789185563102365, "wall_s": 3776.29, "mfu": 56.72}, {"step": 500, "val_loss": 3.566724100150168, "wall_s": 5017.2, "mfu": 56.6}, {"step": 625, "val_loss": 3.476749966852367, "wall_s": 6261.37, "mfu": 56.45}, {"step": 750, "val_loss": 3.408351098187268, "wall_s": 7509.61, "mfu": 56.27}, {"step": 875, "val_loss": 3.3626983584836125, "wall_s": 8748.86, "mfu": 56.68}, {"step": 1000, "val_loss": 3.311899233609438, "wall_s": 9989.49, "mfu": 56.61}, {"step": 1125, "val_loss": 3.269285438582301, "wall_s": 11239.55, "mfu": 56.19}, {"step": 1250, "val_loss": 3.239070264622569, "wall_s": 12481.95, "mfu": 56.53}, {"step": 1375, "val_loss": 3.204699763096869, "wall_s": 13722.74, "mfu": 56.61}, {"step": 1500, "val_loss": 3.1753404065966606, "wall_s": 14965.5, "mfu": 56.51}, {"step": 1625, "val_loss": 3.1537390016019344, "wall_s": 16204.16, "mfu": 56.7}, {"step": 1750, "val_loss": 3.1312823807820678, "wall_s": 17448.09, "mfu": 56.46}, {"step": 1875, "val_loss": 3.1168795078992844, "wall_s": 18684.97, "mfu": 56.78}, {"step": 1900, "val_loss": 3.116466848179698, "wall_s": 18942.78, "mfu": 272.43}]
+===END===
+[E1 Training] Training complete in 18942.8s (5.26h)
+[E1 Training] Saved checkpoint to: /home/sagemaker-user/atma/checkpoints/pat_feedback/pat_len8k_s1_rope_memory
+[E1 Training] Running full structured E1 evaluation on frozen fixtures with DirectScorer...
+
+===E1_EVAL_JSON===
+{"run_id": "pat_e1_rope_memory_20270912", "arm": "rope_memory", "seed": 20270912, "elapsed_sec": 390.72, "primary_natural_text_exact_mean_8k_to_64k": 0.6944444444444444, "retrieval": {"synthetic": {"2048": {"exact_accuracy_percent": 1.1111111111111112, "token_accuracy_percent": 60.55555555555555, "prompts": 180}, "8192": {"exact_accuracy_percent": 0.5555555555555556, "token_accuracy_percent": 47.44444444444444, "prompts": 180}, "16384": {"exact_accuracy_percent": 1.6666666666666667, "token_accuracy_percent": 45.44444444444444, "prompts": 180}, "32768": {"exact_accuracy_percent": 0.0, "token_accuracy_percent": 15.333333333333332, "prompts": 180}, "65536": {"exact_accuracy_percent": 0.0, "token_accuracy_percent": 13.444444444444445, "prompts": 180}}, "real": {"2048": {"exact_accuracy_percent": 7.777777777777778, "token_accuracy_percent": 60.0, "prompts": 180}, "8192": {"exact_accuracy_percent": 1.6666666666666667, "token_accuracy_percent": 35.22222222222222, "prompts": 180}, "16384": {"exact_accuracy_percent": 1.1111111111111112, "token_accuracy_percent": 32.77777777777778, "prompts": 180}, "32768": {"exact_accuracy_percent": 0.0, "token_accuracy_percent": 7.111111111111111, "prompts": 180}, "65536": {"exact_accuracy_percent": 0.0, "token_accuracy_percent": 2.7777777777777777, "prompts": 180}}}, "bpb": {"2048": {"mean_bpb": 1.7595128569452854, "per_corpus": {"pg19": 1.3683567929773313, "proof_pile": 2.403249427041854, "finepdfs": 1.5069323508166705}}, "65536": {"mean_bpb": 1.801172635651815, "per_corpus": {"pg19": 1.3502655292566959, "proof_pile": 2.4112919485175888, "finepdfs": 1.64196042918116}}}}
+===END===
+[E1 Training] Evaluation complete:
+  Natural text exact retrieval (8K-64K mean): 0.69%
+  BPB at 64K: 1.8012
+  BPB at 2K:  1.7595
+[E1 Training] DONE -> pat_len8k_s1_rope_memory

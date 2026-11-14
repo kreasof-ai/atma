@@ -1,0 +1,81 @@
+{
+  "run_id": "pat_e1_rope_memory_20270912",
+  "arm": "rope_memory",
+  "seed": 20270912,
+  "elapsed_sec": 388.69,
+  "primary_natural_text_exact_mean_8k_to_64k": 0.0,
+  "retrieval": {
+    "synthetic": {
+      "2048": {
+        "exact_accuracy_percent": 15.0,
+        "token_accuracy_percent": 69.33333333333334,
+        "prompts": 180
+      },
+      "8192": {
+        "exact_accuracy_percent": 0.5555555555555556,
+        "token_accuracy_percent": 34.88888888888889,
+        "prompts": 180
+      },
+      "16384": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 7.555555555555555,
+        "prompts": 180
+      },
+      "32768": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 4.111111111111112,
+        "prompts": 180
+      },
+      "65536": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 1.1111111111111112,
+        "prompts": 180
+      }
+    },
+    "real": {
+      "2048": {
+        "exact_accuracy_percent": 22.77777777777778,
+        "token_accuracy_percent": 74.11111111111111,
+        "prompts": 180
+      },
+      "8192": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 3.888888888888889,
+        "prompts": 180
+      },
+      "16384": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 0.2222222222222222,
+        "prompts": 180
+      },
+      "32768": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 0.0,
+        "prompts": 180
+      },
+      "65536": {
+        "exact_accuracy_percent": 0.0,
+        "token_accuracy_percent": 0.0,
+        "prompts": 180
+      }
+    }
+  },
+  "bpb": {
+    "2048": {
+      "mean_bpb": 1.6084571639145562,
+      "per_corpus": {
+        "pg19": 1.34231779914396,
+        "proof_pile": 2.2420100103755134,
+        "finepdfs": 1.241043682224195
+      }
+    },
+    "65536": {
+      "mean_bpb": 1.868871359388864,
+      "per_corpus": {
+        "pg19": 1.4861745922709653,
+        "proof_pile": 2.4960676789022433,
+        "finepdfs": 1.6243718069933828
+      }
+    }
+  }
+}

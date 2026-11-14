@@ -14,6 +14,7 @@ Kreasof AI \\
 Jakarta, Indonesia \\
 \texttt{habibullah.akbar@kreasof.my.id}}""")
     source = source.replace(r"% \iclrfinalcopy", r"\iclrfinalcopy")
+    source = source.replace(r"\definecolor{revcolor}{rgb}{0.08,0.28,0.62}", r"\definecolor{revcolor}{rgb}{0,0,0}")
     source = source.replace(r"\end{abstract}", r"Code: \url{https://github.com/kreasof-ai/atma}" + "\n" + r"\end{abstract}")
     source = source.replace("The anonymous artifact at", "The public artifact at")
     source = source.replace("https://anonymous.4open.science/r/atma", "https://github.com/kreasof-ai/atma")
